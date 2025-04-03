@@ -1,6 +1,10 @@
 .container {
     background: #fff;
-    .paragraphText {
+	.paragraphText {
         color: red;
+        display: flex;
+		justify-content: center; /* Aligns horizontally */
+		align-items: center; /* Aligns vertically */
+		height: 100vh; /* Example height */
     }
 }
