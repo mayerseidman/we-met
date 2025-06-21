@@ -1,21 +1,22 @@
-// pages/scan.js
+// pages/scan.js - COMPLETE VERSION WITH PROPER TIMING
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Header from "../components/Header";
-// You'll need to install html5-qrcode:
-// npm install html5-qrcode
+import { useStorage } from "../hooks/useStorage";
 
 export default function ScanPage() {
+    // Get ALL data from the hook including isReady
+    const { connections, addConnection, profile, isReady } = useStorage();
+    
     const [scanning, setScanning] = useState(false);
     const [flashOn, setFlashOn] = useState(false);
     const [scannerMessage, setScannerMessage] = useState("Position QR in frame");
-    const [isProcessing, setIsProcessing] = useState(false); // NEW: Prevent multiple scans
-    const scannerRef = useRef(null); // NEW: Keep reference to scanner
+    const [isProcessing, setIsProcessing] = useState(false);
+    const scannerRef = useRef(null);
 
     useEffect(() => {
-        // Only run on client side
-        if (typeof window !== "undefined" && !isProcessing) {
-            // Import the library dynamically (since it's browser-only)
+        // Only start scanner if storage is ready
+        if (typeof window !== "undefined" && !isProcessing && isReady) {
             let Html5Qrcode;
             import("html5-qrcode").then((module) => {
                 Html5Qrcode = module.Html5Qrcode;
@@ -27,7 +28,7 @@ export default function ScanPage() {
 
                 try {
                     const scanner = new Html5Qrcode("reader");
-                    scannerRef.current = scanner; // Store reference
+                    scannerRef.current = scanner;
 
                     const config = {
                         fps: 10,
@@ -40,7 +41,6 @@ export default function ScanPage() {
 
                     setScanning(true);
 
-                    // Start scanning
                     await scanner.start(
                         { facingMode: "environment" },
                         config,
@@ -48,7 +48,6 @@ export default function ScanPage() {
                         onScanError,
                     );
 
-                    // Enable flash if requested
                     if (flashOn) {
                         try {
                             await scanner.applyVideoConstraints({
@@ -66,26 +65,30 @@ export default function ScanPage() {
                 }
             };
 
-            // Cleanup
             return () => {
                 if (scannerRef.current && scanning) {
                     scannerRef.current.stop().catch(console.error);
                 }
             };
         }
-    }, [flashOn, isProcessing]); // Added isProcessing to dependencies
+    }, [flashOn, isProcessing, isReady]); // Added isReady to dependencies
 
     const onScanSuccess = async (decodedText) => {
-        // FIXED: Prevent multiple calls
         if (isProcessing) {
             console.log("Already processing a scan, ignoring...");
             return;
         }
 
-        setIsProcessing(true); // Lock processing
+        // IMPORTANT: Wait for storage to be ready before processing
+        if (!isReady) {
+            console.log('Storage not ready yet, ignoring scan');
+            return;
+        }
+
+        setIsProcessing(true);
         setScannerMessage("Processing scan...");
 
-        // FIXED: Pause the scanner temporarily
+        // Pause the scanner
         if (scannerRef.current) {
             try {
                 await scannerRef.current.pause();
@@ -97,17 +100,20 @@ export default function ScanPage() {
         try {
             // Parse the QR data
             const connectionData = JSON.parse(decodedText);
+            console.log('Scanned QR data:', connectionData);
             
-            // Get existing connections and user profile
-            const connections = JSON.parse(localStorage.getItem("connections") || "[]");
-            const userProfile = JSON.parse(localStorage.getItem("userProfile") || "{}");
+            // Check for duplicates using current connections from hook (now properly loaded)
+            console.log('Current connections when checking duplicates:', connections);
+            console.log('Looking for name:', connectionData.name);
+            console.log('Looking for whatsapp:', connectionData.whatsapp);
 
-            // FIXED: Check if this person already exists as a contact (ever)
-            const isDuplicate = connections.some(conn => 
-                conn.name === connectionData.name && 
-                conn.contactInfo?.whatsapp === connectionData.contact?.whatsapp
-                // No time check - if they exist, they're a duplicate
-            );
+            const isDuplicate = connections.some(conn => {
+                console.log('Checking against:', conn.name, conn.whatsapp);
+                return conn.name === connectionData.name && 
+                       conn.whatsapp === connectionData.whatsapp;
+            });
+
+            console.log('Is duplicate?', isDuplicate);
 
             if (isDuplicate) {
                 setScannerMessage(`${connectionData.name} is already in your contacts!`);
@@ -128,32 +134,71 @@ export default function ScanPage() {
                 return;
             }
 
-            // FIXED: Create proper connection object with current festival
+            // Create new connection object
             const newConnection = {
-                id: `conn_${Date.now()}`, // Unique ID
                 name: connectionData.name,
-                contactInfo: connectionData.contact, // Match QR structure
-                festival: userProfile.festival || "Unknown Festival", // From current profile
-                timestamp: new Date().toISOString() // When scanned
+                whatsapp: connectionData.whatsapp,
+                instagram: connectionData.instagram,
+                email: connectionData.email,
+                festival: profile?.festival || "Unknown Festival",
+                scannedAt: new Date().toISOString(),
+                qrData: decodedText
             };
 
-            // Add to connections and save
-            connections.push(newConnection);
-            localStorage.setItem("connections", JSON.stringify(connections));
+            console.log('Adding new connection:', newConnection);
 
-            // Show success message
-            setScannerMessage(`Connected with ${connectionData.name}!`);
-
-            // Redirect after success
-            setTimeout(() => {
-                window.location.href = "/";
-            }, 2000);
+            // Add the connection using the hook
+            try {
+                console.log('About to call addConnection...');
+                const success = await addConnection(newConnection);
+                console.log('addConnection returned:', success);
+                
+                if (success) {
+                    setScannerMessage(`Connected with ${connectionData.name}!`);
+                    
+                    // Redirect after success
+                    setTimeout(() => {
+                        window.location.href = "/";
+                    }, 2000);
+                } else {
+                    console.error('addConnection returned false - connection failed');
+                    setScannerMessage("Failed to save connection. Please try again.");
+                    
+                    setTimeout(async () => {
+                        setIsProcessing(false);
+                        setScannerMessage("Position QR in frame");
+                        
+                        if (scannerRef.current) {
+                            try {
+                                await scannerRef.current.resume();
+                            } catch (error) {
+                                console.error("Error resuming scanner:", error);
+                            }
+                        }
+                    }, 2000);
+                }
+            } catch (error) {
+                console.error('Error calling addConnection:', error);
+                setScannerMessage("Failed to save connection. Please try again.");
+                
+                setTimeout(async () => {
+                    setIsProcessing(false);
+                    setScannerMessage("Position QR in frame");
+                    
+                    if (scannerRef.current) {
+                        try {
+                            await scannerRef.current.resume();
+                        } catch (error) {
+                            console.error("Error resuming scanner:", error);
+                        }
+                    }
+                }, 2000);
+            }
 
         } catch (error) {
             console.error("Failed to process QR code:", error);
             setScannerMessage("Invalid QR code. Please try again.");
 
-            // Reset and redirect after error
             setTimeout(() => {
                 window.location.href = "/";
             }, 3000);
@@ -161,15 +206,107 @@ export default function ScanPage() {
     };
 
     const onScanError = (error) => {
-        // Only log errors, don't display to user unless it's a permanent error
+        // Only log errors, don't display to user
         console.error("QR Scan error:", error);
     };
 
     const toggleFlash = () => {
-        if (!isProcessing) { // Don't allow flash toggle while processing
+        if (!isProcessing) {
             setFlashOn(!flashOn);
         }
     };
+
+    // Test scan function for development
+    const testScan = (name) => {
+        if (!isReady) {
+            alert('Storage not ready yet!');
+            return;
+        }
+
+        // Create fake QR data for different test people
+        const testData = {
+            'Alex': {
+                name: 'Alex',
+                festival: 'Afrikaburn',
+                whatsapp: '+1234567890',
+                instagram: 'alex_burns',
+                timestamp: new Date().toISOString()
+            },
+            'Sam': {
+                name: 'Sam',
+                festival: 'Burning Man',
+                whatsapp: '+0987654321',
+                instagram: 'sam_festival',
+                timestamp: new Date().toISOString()
+            },
+            'Mayer': {
+                name: 'Mayer',
+                festival: 'Mmaaaa',
+                whatsapp: '',
+                instagram: '',
+                timestamp: new Date().toISOString()
+            }
+        };
+
+        const fakeQRData = JSON.stringify(testData[name]);
+        console.log(`🧪 Testing scan for ${name}:`, fakeQRData);
+        
+        // Call the same function that real QR scanning uses
+        onScanSuccess(fakeQRData);
+    };
+
+    // Clear connections function for development
+    const clearConnections = async () => {
+        if (confirm('Clear all connections for testing?')) {
+            try {
+                // Clear localStorage
+                localStorage.removeItem('connections');
+                localStorage.removeItem('userProfile');
+                
+                // Clear IndexedDB
+                if (typeof window !== 'undefined' && 'indexedDB' in window) {
+                    const deleteRequest = indexedDB.deleteDatabase('FestivalConnectDB');
+                    deleteRequest.onsuccess = () => {
+                        console.log('IndexedDB cleared');
+                    };
+                }
+                
+                alert('All data cleared! Please refresh the page.');
+                window.location.reload();
+            } catch (error) {
+                console.error('Failed to clear data:', error);
+                alert('Failed to clear data.');
+            }
+        }
+    };
+
+    // Show loading state while storage initializes
+    if (!isReady) {
+        return (
+            <div>
+                <Header />
+                <div
+                    style={{
+                        maxWidth: "1200px",
+                        margin: "0 auto",
+                        padding: "2rem 1rem",
+                        textAlign: "center",
+                    }}
+                >
+                    <h1
+                        style={{
+                            fontSize: "1.5rem",
+                            fontWeight: "bold",
+                            marginBottom: "1.5rem",
+                        }}
+                    >
+                        Scan QR Code
+                    </h1>
+                    <p>Loading scanner...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div>
@@ -226,7 +363,7 @@ export default function ScanPage() {
                             }}
                         ></div>
 
-                        {/* Processing overlay - covers scanner but doesn't hide it */}
+                        {/* Processing overlay */}
                         {isProcessing && (
                             <div
                                 style={{
@@ -246,7 +383,6 @@ export default function ScanPage() {
                                 }}
                             >
                                 <div style={{ marginBottom: "1rem" }}>
-                                    {/* Simple spinner */}
                                     <div
                                         style={{
                                             width: "40px",
@@ -262,7 +398,7 @@ export default function ScanPage() {
                             </div>
                         )}
 
-                        {/* Scanner message overlay - only when not processing */}
+                        {/* Scanner message overlay */}
                         {!isProcessing && (
                             <div
                                 style={{
@@ -285,7 +421,7 @@ export default function ScanPage() {
                     {/* Controls */}
                     <button
                         onClick={toggleFlash}
-                        disabled={isProcessing} // FIXED: Disable during processing
+                        disabled={isProcessing}
                         style={{
                             backgroundColor: isProcessing ? "#d1d5db" : "#e5e7eb",
                             color: "#1f2937",
@@ -299,28 +435,74 @@ export default function ScanPage() {
                         {flashOn ? "Turn Off Flash" : "Toggle Flash"}
                     </button>
 
-                    {/* ADDED: Debug button for testing (remove in production) */}
+                    {/* Debug info for development */}
                     {process.env.NODE_ENV === 'development' && (
-                        <button
-                            onClick={() => {
-                                if (confirm('Clear all connections for testing?')) {
-                                    localStorage.removeItem('connections');
-                                    alert('Connections cleared!');
-                                }
-                            }}
-                            style={{
-                                backgroundColor: "#ef4444",
-                                color: "white",
-                                padding: "0.5rem 1rem",
-                                borderRadius: "0.375rem",
-                                marginTop: "1rem",
-                                border: "none",
-                                cursor: "pointer",
-                                fontSize: "0.875rem"
-                            }}
-                        >
-                            🗑️ Clear Connections (DEV)
-                        </button>
+                        <div style={{ marginTop: "1rem", textAlign: "center" }}>
+                            <p style={{ fontSize: "0.875rem", color: "#6b7280", marginBottom: "0.5rem" }}>
+                                Debug: {connections.length} connections loaded, Storage ready: {isReady ? 'Yes' : 'No'}
+                            </p>
+                            
+                            {/* Test Scan Buttons */}
+                            <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", marginBottom: "1rem" }}>
+                                <button
+                                    onClick={() => testScan('Alex')}
+                                    style={{
+                                        backgroundColor: "#3b82f6",
+                                        color: "white",
+                                        padding: "0.5rem 1rem",
+                                        borderRadius: "0.375rem",
+                                        border: "none",
+                                        cursor: "pointer",
+                                        fontSize: "0.875rem"
+                                    }}
+                                >
+                                    🧪 Test Scan: Alex
+                                </button>
+                                <button
+                                    onClick={() => testScan('Sam')}
+                                    style={{
+                                        backgroundColor: "#3b82f6",
+                                        color: "white",
+                                        padding: "0.5rem 1rem",
+                                        borderRadius: "0.375rem",
+                                        border: "none",
+                                        cursor: "pointer",
+                                        fontSize: "0.875rem"
+                                    }}
+                                >
+                                    🧪 Test Scan: Sam
+                                </button>
+                                <button
+                                    onClick={() => testScan('Mayer')}
+                                    style={{
+                                        backgroundColor: "#8b5cf6",
+                                        color: "white",
+                                        padding: "0.5rem 1rem",
+                                        borderRadius: "0.375rem",
+                                        border: "none",
+                                        cursor: "pointer",
+                                        fontSize: "0.875rem"
+                                    }}
+                                >
+                                    🔄 Test Duplicate: Mayer
+                                </button>
+                            </div>
+
+                            <button
+                                onClick={clearConnections}
+                                style={{
+                                    backgroundColor: "#ef4444",
+                                    color: "white",
+                                    padding: "0.5rem 1rem",
+                                    borderRadius: "0.375rem",
+                                    border: "none",
+                                    cursor: "pointer",
+                                    fontSize: "0.875rem"
+                                }}
+                            >
+                                🗑️ Clear All Data (DEV)
+                            </button>
+                        </div>
                     )}
                 </div>
 

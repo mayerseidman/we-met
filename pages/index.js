@@ -1,7 +1,8 @@
-// pages/index.js
+// pages/index.js - FINAL VERSION WITH INDEXEDDB
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Header from "../components/Header";
+import { useStorage } from "../hooks/useStorage";
 
 // Helper function to format relative time
 function formatRelativeTime(timestamp) {
@@ -31,11 +32,9 @@ function groupConnectionsByDay(connections) {
 
         let dayKey;
 
-        // Check if it's today
         if (date.toDateString() === today.toDateString()) {
             dayKey = "Recent";
         } else {
-            // Otherwise use the day name
             const days = [
                 "Sunday",
                 "Monday",
@@ -59,32 +58,31 @@ function groupConnectionsByDay(connections) {
 }
 
 export default function HomePage() {
-    const [connections, setConnections] = useState([]);
-    const [viewMode, setViewMode] = useState("list"); // 'list' or 'timeline'
-    const [hasProfile, setHasProfile] = useState(false);
+    // Use the IndexedDB storage hook
+    const { isReady, connections, profile } = useStorage();
+    const [viewMode, setViewMode] = useState("list");
 
-    useEffect(() => {
-        // Only run on client side
-        if (typeof window !== "undefined") {
-            // Check if user has a profile
-            const userProfile = localStorage.getItem("userProfile");
-            setHasProfile(!!userProfile);
-
-            // Load connections from localStorage
-            const savedConnections = localStorage.getItem("connections");
-            if (savedConnections) {
-                // Sort by most recent first
-                const connectionsArray = JSON.parse(savedConnections);
-                connectionsArray.sort(
-                    (a, b) => new Date(b.scannedAt) - new Date(a.scannedAt),
-                );
-                setConnections(connectionsArray);
-            }
-        }
-    }, []);
+    // Show loading while IndexedDB initializes
+    if (!isReady) {
+        return (
+            <div>
+                <Header />
+                <div
+                    style={{
+                        maxWidth: "500px",
+                        margin: "0 auto",
+                        padding: "2rem 1rem",
+                        textAlign: "center",
+                    }}
+                >
+                    <p>Loading...</p>
+                </div>
+            </div>
+        );
+    }
 
     // If no profile, suggest creating one
-    if (!hasProfile) {
+    if (!profile) {
         return (
             <div>
                 <Header />
@@ -330,7 +328,6 @@ export default function HomePage() {
                         {/* Timeline View */}
                         {viewMode === "timeline" && (
                             <div style={{ position: "relative" }}>
-                                {/* Timeline line */}
                                 <div
                                     style={{
                                         position: "absolute",
@@ -353,7 +350,6 @@ export default function HomePage() {
                                     {Object.entries(groupedConnections).map(
                                         ([day, dayConnections]) => (
                                             <div key={day}>
-                                                {/* Day marker */}
                                                 <div
                                                     style={{
                                                         position: "relative",
@@ -387,7 +383,6 @@ export default function HomePage() {
                                                     </h2>
                                                 </div>
 
-                                                {/* Day's connections */}
                                                 <div
                                                     style={{
                                                         display: "flex",

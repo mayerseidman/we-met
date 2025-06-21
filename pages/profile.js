@@ -1,62 +1,74 @@
-// pages/profile.js
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
 import Header from "../components/Header";
+import { useStorage } from "../hooks/useStorage"; // NEW: Import our hook
 
 export default function ProfileQRPage() {
-    const [profile, setProfile] = useState({
+    // CHANGED: Use storage hook instead of localStorage
+    const { isReady, profile, saveProfile } = useStorage();
+
+    // NEW: Local state for editing (separate from stored profile)
+    const [editingProfile, setEditingProfile] = useState({
         name: "",
         festival: "",
         whatsapp: "",
-        instagram: ""  // Added Instagram field
+        instagram: "",
     });
     const [isEditing, setIsEditing] = useState(true);
-    const [isLoading, setIsLoading] = useState(true);
 
+    // NEW: Update local editing state when profile loads from IndexedDB
     useEffect(() => {
-        // Only run on client side
-        if (typeof window !== "undefined") {
-            // Load profile from localStorage
-            const savedProfile = localStorage.getItem("userProfile");
-            if (savedProfile) {
-                setProfile(JSON.parse(savedProfile));
-                setIsEditing(false); // Show QR code if profile exists
-            } else {
-                setIsEditing(true); // Show form if no profile exists
-            }
-            setIsLoading(false);
+        if (profile) {
+            setEditingProfile({
+                name: profile.name || "",
+                festival: profile.festival || "",
+                whatsapp: profile.whatsapp || "",
+                instagram: profile.instagram || "",
+            });
+            setIsEditing(false); // Show QR if profile exists
+        } else {
+            setIsEditing(true); // Show form if no profile
         }
-    }, []);
+    }, [profile]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setProfile((prev) => ({
+        setEditingProfile((prev) => ({
             ...prev,
             [name]: value,
         }));
     };
 
-    const handleSubmit = (e) => {
+    // CHANGED: Use async saveProfile from hook instead of localStorage
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Save to localStorage
-        localStorage.setItem("userProfile", JSON.stringify(profile));
-
-        // Show QR code view
-        setIsEditing(false);
+        try {
+            const success = await saveProfile(editingProfile);
+            if (success) {
+                setIsEditing(false); // Show QR code view
+            } else {
+                alert("Failed to save profile. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error saving profile:", error);
+            alert("Failed to save profile. Please try again.");
+        }
     };
 
-    // Generate QR code data
+    // CHANGED: Generate QR data using editingProfile when editing, or stored profile when viewing
+    const currentProfile = isEditing ? editingProfile : profile;
     const qrData = JSON.stringify({
-        name: profile.name,
-        festival: profile.festival,
-        whatsapp: profile.whatsapp,
-        instagram: profile.instagram,  // Include Instagram in QR data
+        name: currentProfile?.name || "",
+        festival: currentProfile?.festival || "",
+        whatsapp: currentProfile?.whatsapp || "",
+        instagram: currentProfile?.instagram || "",
         timestamp: new Date().toISOString(),
     });
 
-    if (isLoading) {
+    // NEW: Show loading while IndexedDB initializes
+    if (!isReady) {
         return (
             <div>
                 <Header />
@@ -85,7 +97,7 @@ export default function ProfileQRPage() {
                 }}
             >
                 {isEditing ? (
-                    // Profile Edit Form
+                    // Profile Edit Form (mostly unchanged, just using editingProfile)
                     <div>
                         <h1
                             style={{
@@ -95,7 +107,7 @@ export default function ProfileQRPage() {
                                 textAlign: "center",
                             }}
                         >
-                            {profile.name
+                            {editingProfile.name
                                 ? "Edit Your Profile"
                                 : "Create Your Festival Profile"}
                         </h1>
@@ -124,7 +136,7 @@ export default function ProfileQRPage() {
                                     type="text"
                                     id="name"
                                     name="name"
-                                    value={profile.name}
+                                    value={editingProfile.name}
                                     onChange={handleChange}
                                     required
                                     style={{
@@ -153,7 +165,7 @@ export default function ProfileQRPage() {
                                     type="text"
                                     id="festival"
                                     name="festival"
-                                    value={profile.festival}
+                                    value={editingProfile.festival}
                                     onChange={handleChange}
                                     required
                                     style={{
@@ -182,7 +194,7 @@ export default function ProfileQRPage() {
                                     type="tel"
                                     id="whatsapp"
                                     name="whatsapp"
-                                    value={profile.whatsapp}
+                                    value={editingProfile.whatsapp}
                                     onChange={handleChange}
                                     style={{
                                         width: "100%",
@@ -194,7 +206,6 @@ export default function ProfileQRPage() {
                                 />
                             </div>
 
-                            {/* Added Instagram field */}
                             <div>
                                 <label
                                     htmlFor="instagram"
@@ -211,7 +222,7 @@ export default function ProfileQRPage() {
                                     type="text"
                                     id="instagram"
                                     name="instagram"
-                                    value={profile.instagram}
+                                    value={editingProfile.instagram}
                                     onChange={handleChange}
                                     style={{
                                         width: "100%",
@@ -239,7 +250,8 @@ export default function ProfileQRPage() {
                                 Save Profile
                             </button>
 
-                            {profile.name && (
+                            {/* CHANGED: Check if profile exists using hook data */}
+                            {profile && (
                                 <button
                                     type="button"
                                     onClick={() => setIsEditing(false)}
@@ -259,7 +271,7 @@ export default function ProfileQRPage() {
                         </form>
                     </div>
                 ) : (
-                    // QR Code Display
+                    // QR Code Display (mostly unchanged, just using profile from hook)
                     <div style={{ textAlign: "center" }}>
                         <div
                             style={{
@@ -337,11 +349,11 @@ export default function ProfileQRPage() {
                                             border: "1px solid #e5e7eb",
                                         }}
                                     >
-                                        {profile.name} @ {profile.festival}
+                                        {profile?.name} @ {profile?.festival}
                                     </div>
                                 </div>
 
-                                {profile.whatsapp && (
+                                {profile?.whatsapp && (
                                     <div style={{ marginBottom: "0.75rem" }}>
                                         <div
                                             style={{
@@ -365,8 +377,7 @@ export default function ProfileQRPage() {
                                     </div>
                                 )}
 
-                                {/* Display Instagram if provided */}
-                                {profile.instagram && (
+                                {profile?.instagram && (
                                     <div>
                                         <div
                                             style={{
@@ -385,7 +396,8 @@ export default function ProfileQRPage() {
                                                 border: "1px solid #e5e7eb",
                                             }}
                                         >
-                                            @{profile.instagram.replace('@', '')}
+                                            @
+                                            {profile.instagram.replace("@", "")}
                                         </div>
                                     </div>
                                 )}
@@ -409,7 +421,7 @@ export default function ProfileQRPage() {
                 )}
             </div>
 
-            {/* Bottom Navigation */}
+            {/* Bottom Navigation (unchanged) */}
             <div
                 style={{
                     position: "fixed",
