@@ -207,7 +207,7 @@ export default function ScanPage() {
 
     const onScanError = (error) => {
         // Only log errors, don't display to user
-        console.error("QR Scan error:", error);
+        // console.error("QR Scan error:", error);
     };
 
     const toggleFlash = () => {
