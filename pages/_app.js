@@ -4,8 +4,10 @@ import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }) {
     useEffect(() => {
-        // Register service worker on client side
-        if ("serviceWorker" in navigator) {
+        // Only register in production or when explicitly testing
+        if ('serviceWorker' in navigator && 
+            (process.env.NODE_ENV === 'production' || 
+             window.location.search.includes('sw=true'))) {
             navigator.serviceWorker
                 .register("/sw.js")
                 .then((registration) => {

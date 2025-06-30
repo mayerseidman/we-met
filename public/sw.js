@@ -1,120 +1,97 @@
-// public/sw.js
-const CACHE_NAME = "festival-connect-v1";
-const STATIC_CACHE_URLS = [
-    "/",
-    "/profile",
-    "/scan",
-    "/_next/static/css/",
-    "/_next/static/chunks/",
-];
+const CACHE_NAME = 'festival-connect-v3';
 
-// Install event - cache static assets
-self.addEventListener("install", (event) => {
-    console.log("[SW] Installing Service Worker");
-    event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            console.log("[SW] Caching app shell");
-            // Don't fail if some resources don't cache
-            return Promise.allSettled(
-                STATIC_CACHE_URLS.map((url) =>
-                    cache
-                        .add(url)
-                        .catch((err) =>
-                            console.log(`[SW] Failed to cache ${url}:`, err),
-                        ),
-                ),
-            );
-        }),
-    );
-    self.skipWaiting();
+// Install - just activate, don't pre-cache anything
+self.addEventListener('install', (event) => {
+  console.log('[SW] Installing...');
+  self.skipWaiting();
 });
 
-// Activate event - clean up old caches
-self.addEventListener("activate", (event) => {
-    console.log("[SW] Activating Service Worker");
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log("[SW] Deleting old cache:", cacheName);
-                        return caches.delete(cacheName);
-                    }
-                }),
-            );
-        }),
-    );
-    self.clients.claim();
+// Activate - clean up old caches
+self.addEventListener('activate', (event) => {
+  console.log('[SW] Activating...');
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+  self.clients.claim();
 });
 
-// Fetch event - serve from cache when offline
-self.addEventListener("fetch", (event) => {
-    // Only handle GET requests
-    if (event.request.method !== "GET") {
-        return;
-    }
+// Fetch - simple network-first strategy
+self.addEventListener('fetch', (event) => {
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') return;
+  
+  // Skip non-HTTP requests  
+  if (!event.request.url.startsWith('http')) return;
+  
+  // Skip Next.js hot reload files
+  if (event.request.url.includes('_next/static/chunks/webpack') ||
+      event.request.url.includes('react-refresh') ||
+      event.request.url.includes('_buildManifest') ||
+      event.request.url.includes('_ssgManifest')) {
+    return; // Let these go to network normally
+  }
 
-    // Skip non-HTTP requests
-    if (!event.request.url.startsWith("http")) {
-        return;
-    }
-
-    event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            // If we have a cached response, use it
-            if (cachedResponse) {
-                console.log("[SW] Serving from cache:", event.request.url);
-                return cachedResponse;
-            }
-
-            // Otherwise, try to fetch from network
-            return fetch(event.request)
-                .then((response) => {
-                    // Don't cache non-successful responses
-                    if (
-                        !response ||
-                        response.status !== 200 ||
-                        response.type !== "basic"
-                    ) {
-                        return response;
-                    }
-
-                    // Clone the response for caching
-                    const responseToCache = response.clone();
-
-                    caches.open(CACHE_NAME).then((cache) => {
-                        // Only cache GET requests for our domain
-                        if (
-                            event.request.url.startsWith(self.location.origin)
-                        ) {
-                            console.log("[SW] Caching:", event.request.url);
-                            cache.put(event.request, responseToCache);
-                        }
-                    });
-
-                    return response;
-                })
-                .catch(() => {
-                    // Network failed - if it's a navigation request, serve a basic page
-                    if (event.request.mode === "navigate") {
-                        return caches.match("/").then((response) => {
-                            return (
-                                response ||
-                                new Response(
-                                    "Offline - Service Worker Working!",
-                                    {
-                                        headers: {
-                                            "Content-Type": "text/html",
-                                        },
-                                    },
-                                )
-                            );
-                        });
-                    }
-
-                    // For other requests, just fail
-                    throw new Error("Network failed and no cache available");
-                });
-        }),
-    );
+  event.respondWith(
+    // Try network first
+    fetch(event.request)
+      .then((response) => {
+        // If successful, cache it for later
+        if (response && response.status === 200) {
+          // Only cache our main pages and basic assets
+          if (event.request.url.includes(self.location.origin) &&
+              (event.request.url.endsWith('/') || 
+               event.request.url.endsWith('/profile') ||
+               event.request.url.endsWith('/scan') ||
+               event.request.url.includes('.css') ||
+               (event.request.url.includes('.js') && 
+                !event.request.url.includes('_next/static/chunks/pages') &&
+                !event.request.url.includes('webpack')))) {
+            
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+          }
+        }
+        return response;
+      })
+      .catch(() => {
+        // Network failed - try cache
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) {
+            console.log('[SW] Serving from cache:', event.request.url);
+            return cachedResponse;
+          }
+          
+          // If it's a page navigation and we have nothing cached, 
+          // return a basic offline page
+          if (event.request.mode === 'navigate') {
+            return new Response(`
+              <!DOCTYPE html>
+              <html>
+                <head><title>Festival Connect - Offline</title></head>
+                <body style="font-family: Arial; text-align: center; padding: 50px;">
+                  <h1>You're Offline</h1>
+                  <p>Festival Connect will work once you're back online!</p>
+                  <p>Your saved connections are safe in your device storage.</p>
+                </body>
+              </html>
+            `, {
+              headers: { 'Content-Type': 'text/html' }
+            });
+          }
+          
+          // For other requests, just fail
+          return new Response('Offline', { status: 503 });
+        });
+      })
+  );
 });
