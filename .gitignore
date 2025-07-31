@@ -39,3 +39,5 @@ notes.txt
 
 # ideas
 /.idea/*
+/lib/generated/prisma
+.env
