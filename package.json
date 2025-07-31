@@ -6,11 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "init-db": "bash scripts/init_db.sh",
+    "migrate": "npx prisma migrate dev",
+    "generate": "npx prisma generate"
   },
   "dependencies": {
+    "@prisma/client": "^6.10.1",
     "html5-qrcode": "^2.3.8",
     "next": "^13.4.19",
+    "prisma": "^6.10.1",
     "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

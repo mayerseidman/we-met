@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String           @id @default(uuid())
+  name              String
+  alias             String?
+  email             String?          @unique
+  whatsapp          String?          @unique
+  instagram         String?          @unique
+  bio               String?
+  photoUrl          String?
+  createdAt         DateTime         @default(now())
+  lastUpdatedAt     DateTime         @updatedAt
+
+  attendedfestivals FestivalParticipant[] @relation("UserAttendedFestivals")
+  activeFestivalId  String?          @unique
+
+  connectionsInitiated  Connection[] @relation("initiatedConnections")
+  connectionsReceived   Connection[] @relation("receivedConnections")
+  
+  activeFestival    FestivalParticipant? @relation("UserActiveFestival", fields: [activeFestivalId], references: [id])
+}
+
+model Festival {
+  id              String           @id @default(uuid())
+  name            String
+  description     String
+  startDate       DateTime
+  endDate         DateTime?
+  active          Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+
+  connections     Connection[]
+  participants    FestivalParticipant[]
+}
+
+model Connection {
+  id           String   @id @default(uuid())
+  userId       String
+  targetUserId String
+  festivalId   String
+  note         String?
+  scannedAt    DateTime @default(now())
+  createdAt    DateTime @default(now())
+
+  user         User     @relation("initiatedConnections", fields: [userId], references: [id])
+  targetUser   User     @relation("receivedConnections", fields: [targetUserId], references: [id])
+  festival     Festival @relation(fields: [festivalId], references: [id])
+}
+
+model FestivalParticipant {
+  id          String   @id @default(uuid())
+  userId      String
+  festivalId  String
+  year        Int
+  createdAt    DateTime @default(now())
+
+  user        User     @relation("UserAttendedFestivals", fields: [userId], references: [id])
+  userActive  User?    @relation("UserActiveFestival")
+  festival    Festival @relation(fields: [festivalId], references: [id])
+
+  @@unique([userId, festivalId, year])
+}
