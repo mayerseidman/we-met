@@ -1,9 +1,11 @@
 const nextConfig = {
     reactStrictMode: true,
     swcMinify: true,
-    output: 'export',  // ADD THIS - tells Next.js to generate static files
+    output: 'export',
     images: {
-        unoptimized: true,  // ADD THIS - GitHub Pages doesn't support Next.js image optimization
+        unoptimized: true,
     },
+    basePath: '/we-met',  // ADD THIS LINE
+    assetPrefix: '/we-met',  // ADD THIS LINE TOO
 }
 module.exports = nextConfig
