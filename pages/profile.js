@@ -415,7 +415,7 @@ export default function ProfileQRPage() {
                                 textDecoration: "none",
                             }}
                         >
-                            Scan Someone's QR
+                            Scan Someone&apos;s QR
                         </Link>
                     </div>
                 )}
