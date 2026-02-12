@@ -1,0 +1,228 @@
+@use "../variables" as *;
+
+// ─── LAYOUT ──────────────────────────────────────────────────
+.page {
+    min-height: 100vh;
+    background-color: $cream;
+    display: flex;
+    flex-direction: column;
+    font-family: $font-mono;
+}
+
+.content {
+    flex: 1;
+    padding: $spacing-xl $spacing-lg 5rem;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.loading {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: $spacing-xl $spacing-md;
+    text-align: center;
+    font-family: $font-mono;
+}
+
+// ─── DEV PANEL ───────────────────────────────────────────────
+.devPanel {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: $spacing-md;
+    border-radius: $radius-sm;
+    color: $white;
+    font-size: 0.75rem;
+    font-family: $font-mono;
+
+    &__title {
+        font-weight: bold;
+        margin-bottom: $spacing-sm;
+    }
+}
+
+.devToggle {
+    display: block;
+    margin-bottom: $spacing-xs;
+    cursor: pointer;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    input {
+        margin-right: $spacing-xs;
+    }
+}
+
+// ─── TAB BAR ─────────────────────────────────────────────────
+.tabBar {
+    background-color: $cream;
+    z-index: 100;
+    border-bottom: 1px solid $brown;
+
+    &__inner {
+        display: flex;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+}
+
+.tabButton {
+    flex: 1;
+    padding: $spacing-md;
+    background-color: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-family: $font-mono;
+    font-size: $spacing-md;
+    font-weight: bold;
+    color: $gray;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    transition: all $transition-normal;
+
+    &--active {
+        border-bottom-color: $orange;
+        color: $black;
+    }
+}
+
+// ─── FORM ────────────────────────────────────────────────────
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+
+    &__heading {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: $spacing-md;
+    }
+
+    &__description {
+        font-size: $spacing-md;
+        line-height: 1.5;
+        color: $black;
+        margin-bottom: $spacing-xl;
+    }
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    font-size: $spacing-md;
+    font-weight: bold;
+    margin-bottom: $spacing-sm;
+}
+
+.requiredStar {
+    color: $orange;
+}
+
+.input,
+.textarea {
+    width: 100%;
+    padding: 0.875rem;
+    font-family: $font-mono;
+    font-size: $spacing-md;
+    border: 1px solid $brown;
+    background-color: $cream;
+    color: $black;
+    box-sizing: border-box;
+}
+
+.textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.inputWrapper {
+    position: relative;
+
+    .input {
+        padding-right: 3rem;
+    }
+
+    &__icon {
+        position: absolute;
+        right: $spacing-md;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.25rem;
+    }
+}
+
+// ─── PHOTO UPLOADER ──────────────────────────────────────────
+.photoUploader {
+    border: 2px dashed $brown;
+    padding: $spacing-xl;
+    text-align: center;
+    background-color: $cream;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+
+    &__preview {
+        max-width: 200px;
+        max-height: 200px;
+        margin-bottom: $spacing-sm;
+    }
+
+    &__changeText {
+        color: $black;
+        font-size: $spacing-md;
+    }
+
+    &__emptyHint {
+        color: $light-gray;
+        margin-bottom: $spacing-sm;
+    }
+
+    &__addBtn {
+        background: none;
+        border: none;
+        text-decoration: underline;
+        font-family: $font-mono;
+        font-size: $spacing-md;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    &__fileInput {
+        display: none;
+    }
+}
+
+// ─── FORM BUTTONS ────────────────────────────────────────────
+.submitBtn {
+    width: 100%;
+    padding: $spacing-md;
+    background-color: $tan;
+    border: none;
+    font-family: $font-mono;
+    font-size: $spacing-md;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: $spacing-xl;
+    transition: background-color $transition-fast;
+}
+
+.cancelBtn {
+    width: 100%;
+    padding: $spacing-md;
+    background-color: $light-beige;
+    border: none;
+    font-family: $font-mono;
+    font-size: $spacing-md;
+    font-weight: bold;
+    cursor: pointer;
+}

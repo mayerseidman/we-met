@@ -1,0 +1,168 @@
+@import '../variables';
+
+.profileView {
+    padding: $spacing-lg $spacing-lg;
+    padding-bottom: 6rem;
+    font-family: $font-mono;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+// ── Photo ─────────────────────────────────────────────────────
+.photoSection {
+    display: flex;
+    justify-content: center;
+}
+
+.photo {
+    width: 160px;
+    height: 160px;
+    border-radius: $radius-full;
+    object-fit: cover;
+}
+
+.photoPlaceholder {
+    width: 160px;
+    height: 160px;
+    border-radius: $radius-full;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: bold;
+    background-color: rgba(255, 107, 53, 0.15); // light orange
+    color: $dark-orange;
+}
+
+// ── Name ──────────────────────────────────────────────────────
+.name {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-top: $spacing-md;
+    margin-bottom: $spacing-lg;
+    color: $black;
+}
+
+// ── Location Pill ─────────────────────────────────────────────
+.locationPill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    padding: $spacing-md $spacing-lg;
+    background-color: #f6e7cf;
+    border: 1px solid rgba(146, 42, 23, 0.12);
+    color: #000;
+    border-radius: 4px; // ← slight rounding, not full pill
+    margin-bottom: $spacing-xl;
+    width: 100%; // ← full width like the mockup
+}
+
+.locationIcon {
+    font-size: 1rem;
+}
+
+.locationText {
+    font-size: 0.875rem;
+    color: $black;
+}
+
+// ── Sections ──────────────────────────────────────────────────
+.section {
+    margin-bottom: $spacing-lg;
+}
+
+.sectionLabel {
+    font-size: 0.875rem;
+    font-weight: bold;
+    color: $medium-gray;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: $spacing-md;
+}
+
+.aboutText {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: $black;
+    margin: 0;
+    &::before {
+        content: '';
+        display: block;
+        margin-top: -0.35em;
+    }
+}
+
+// ── Contact Rows ──────────────────────────────────────────────
+.contactRow {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-md;
+    border: 1px solid $brown;
+    margin-bottom: $spacing-md;
+    background: $off-white;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.contactIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: $radius-full;
+    background-color: rgba(245, 114, 47, 0.1);
+    border: 1px solid rgba(238, 207, 191, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    svg {
+        width: 20px;
+        height: 20px;
+        color: $dark-orange;
+    }
+}
+
+.contactText {
+    font-size: 1rem;
+    font-weight: bold;
+    color: $black;
+    flex: 1;
+}
+
+// ── Edit Button ───────────────────────────────────────────────
+.editButton {
+    width: 100%;
+    padding: $spacing-md;
+    background-color: $orange;
+    color: $black;
+    border: none;
+    font-family: $font-mono;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: $spacing-sm;
+    transition: opacity $transition-fast;
+    letter-spacing: 0.5px;
+
+    transition: all $transition-fast;
+      
+    &:hover {
+        opacity: 0.85;
+        transform: translateY(-2.5px);
+    }
+    
+    &:active {
+        opacity: 0.7;
+        transform: translateY(0);
+    }
+
+    &:active {
+        opacity: 0.8;
+    }
+}

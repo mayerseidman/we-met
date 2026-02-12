@@ -1,0 +1,74 @@
+@use "../variables" as *;
+
+.drawerOverlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+}
+
+.drawer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: $cream;
+    border-top-left-radius: $radius-lg;
+    border-top-right-radius: $radius-lg;
+    z-index: 2001;
+    max-height: 70vh;
+    overflow: auto;
+    font-family: $font-mono;
+    animation: slideUp 0.3s ease-out;
+
+    &__handle {
+        width: 40px;
+        height: 4px;
+        background-color: $brown;
+        border-radius: 2px;
+        margin: $spacing-md auto;
+    }
+
+    &__header {
+        padding: 0 $spacing-lg $spacing-md;
+        border-bottom: 1px solid $brown;
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-align: center;
+            color: $gray;
+        }
+    }
+}
+
+.drawerOption {
+    padding: 1.25rem $spacing-lg;
+    border-bottom: 1px solid $light-beige;
+    cursor: pointer;
+    background-color: transparent;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color $transition-fast;
+    font-size: $spacing-md;
+    font-weight: normal;
+
+    &--active {
+        background-color: $light-beige;
+        font-weight: bold;
+    }
+
+    &__check {
+        font-size: 1.25rem;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}

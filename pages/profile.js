@@ -1,53 +1,367 @@
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { QRCodeSVG } from "qrcode.react";
 import Header from "../components/Header";
-import { useStorage } from "../hooks/useStorage"; // NEW: Import our hook
+import { useStorage } from "../hooks/useStorage";
+import ProfileView from "../components/ProfileView";
+import styles from "../styles/pages/profile.module.scss";
 
-export default function ProfileQRPage() {
-    // CHANGED: Use storage hook instead of localStorage
+// Constants
+const DEV_MODE_OPTIONS = [
+    { key: 'newUser',   label: 'New User' },
+    { key: 'hasInfo',   label: 'Has Info' },
+    { key: 'hasPhoto',  label: 'Has Photo' },
+    { key: 'isEditing', label: 'Editing' },
+    { key: 'showErrors',label: 'Show Errors' },
+];
+
+const SAMPLE_DATA = {
+    name: "Big Maestro",
+    phone: "+1 114-432-3087",
+    instagram: "bigmaestrotimo",
+    location: "Columbus, Ohio",
+    about: "Write something so people can remember you like your favorite color or your cat's name or whatever :)",
+    photo: null,
+};
+
+const PLACEHOLDER_HEADSHOT = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop";
+
+const EMPTY_PROFILE = {
+    name: "",
+    phone: "",
+    instagram: "",
+    location: "",
+    about: "",
+    photo: null,
+};
+
+const FORM_FIELDS = [
+    {
+        name: 'name',
+        label: 'NAME',
+        type: 'text',
+        placeholder: 'What can we call you?',
+        required: true,
+        errorMessage: 'Name is required',
+    },
+    {
+        name: 'phone',
+        label: 'PHONE',
+        type: 'tel',
+        placeholder: 'What are your digits?',
+        required: true,
+        errorMessage: 'Enter a valid phone number: +1 (123) 456-7890',
+    },
+    {
+        name: 'instagram',
+        label: 'INSTAGRAM',
+        type: 'text',
+        placeholder: "What's your handle?",
+        required: true,
+        errorMessage: 'Phone number or Instagram are required',
+    },
+    {
+        name: 'location',
+        label: 'LOCATION',
+        type: 'text',
+        placeholder: 'Where do you live?',
+        required: false,
+    },
+    {
+        name: 'about',
+        label: 'ABOUT',
+        type: 'textarea',
+        placeholder: "Write something so people can remember you like your favorite color or your cat's name or whatever :)",
+        required: false,
+    },
+];
+
+// Component: Dev Mode Toggle
+const DevModeToggle = ({ devMode, setDevMode, onClear }) => (
+    <div className={styles.devMode}>
+        <div className={styles.devModeTitle}>DEV MODE</div>
+        {DEV_MODE_OPTIONS.map(({ key, label }) => (
+            <label key={key}>
+                <input 
+                    type="checkbox" 
+                    checked={devMode[key]} 
+                    onChange={(e) => setDevMode({...devMode, [key]: e.target.checked})} 
+                />
+                {" "}{label}
+            </label>
+        ))}
+        <button onClick={onClear} className={styles.devClearBtn}>
+            Clear Profile
+        </button>
+    </div>
+);
+
+// Component: Form Field
+const FormField = ({ field, value, onChange, showError }) => {
+    const { name, label, type, placeholder, required, errorMessage, icon } = field;
+    const hasError = showError && required && !value;
+    const inputClassName = hasError ? styles.error : '';
+
+    if (type === 'textarea') {
+        return (
+            <div className={styles.formGroup}>
+                <label>
+                    {label}
+                    {required && <span className={styles.required}>*</span>}
+                </label>
+                <textarea
+                    name={name}
+                    value={value}
+                    onChange={onChange}
+                    required={required}
+                    placeholder={placeholder}
+                    className={inputClassName}
+                />
+                {hasError && errorMessage && (
+                    <div className={styles.errorMessage}>{errorMessage}</div>
+                )}
+            </div>
+        );
+    }
+
+    if (icon) {
+        return (
+            <div className={styles.formGroup}>
+                <label>{label}</label>
+                <div className={styles.locationWrapper}>
+                    <input
+                        type={type}
+                        name={name}
+                        value={value}
+                        onChange={onChange}
+                        placeholder={placeholder}
+                        className={inputClassName}
+                    />
+                    <span className={styles.locationIcon}>{icon}</span>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className={styles.formGroup}>
+            <label>
+                {label}
+                {required && <span className={styles.required}>*</span>}
+            </label>
+            <input
+                type={type}
+                name={name}
+                value={value}
+                onChange={onChange}
+                required={required}
+                placeholder={placeholder}
+                className={inputClassName}
+            />
+            {hasError && errorMessage && (
+                <div className={styles.errorMessage}>{errorMessage}</div>
+            )}
+        </div>
+    );
+};
+
+// Component: Photo Upload
+const PhotoUpload = ({ photoPreview, onPhotoChange, onRemovePhoto, showError }) => {
+    const hasError = showError && !photoPreview;
+
+    return (
+        <div className={styles.formGroup}>
+            <label>PHOTO</label>
+            <div
+                onClick={() => document.getElementById("photoInput").click()}
+                className={`${styles.photoUpload} ${hasError ? styles.error : ''}`}
+            >
+                {photoPreview ? (
+                    <>
+                        <img 
+                            src={photoPreview} 
+                            alt="Preview" 
+                            className={styles.photoPreview}
+                        />
+                        <div className={styles.photoButtons}>
+                            <button 
+                                type="button" 
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    document.getElementById("photoInput").click();
+                                }}
+                            >
+                                Change
+                            </button>
+                            <hr className={styles.divider} />
+                            <button 
+                                type="button" 
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onRemovePhoto();
+                                }}
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <p className={styles.photoPlaceholder}>
+                            Say Cheeeese, help people remember you!
+                        </p>
+                        <button type="button" className={styles.link}>
+                            <span className={styles.addPhotoWrapper}>
+                                <span className={styles.addIcon}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M11 11V7H13V11H17V13H13V17H11V13H7V11H11ZM12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z"></path>
+                                    </svg>
+                                </span>
+                                Add Photo
+                            </span>
+                        </button>
+                    </>
+                )}
+                <input 
+                    type="file" 
+                    id="photoInput" 
+                    accept="image/*" 
+                    onChange={onPhotoChange}
+                />
+            </div>
+            {hasError && (
+                <div className={styles.errorMessage}>
+                    ⚠ Unsupported file type - choose a photo file<br/>
+                    ⚠ File too large - choose a file under 10MB
+                </div>
+            )}
+        </div>
+    );
+};
+
+// Component: Submit Button
+const SubmitButton = ({ isSaving, showSaved, isFormValid }) => {
+    const buttonClass = `${styles.saveButton} ${isSaving ? styles.saving : ''} ${showSaved ? styles.saved : ''}`;
+    const buttonText = showSaved ? "✓ Saved!" : isSaving ? "Saving..." : "SAVE PROFILE";
+    
+    return (
+        <button
+            type="submit"
+            disabled={isSaving || !isFormValid}
+            className={buttonClass}
+        >
+            {isSaving && <span className={styles.spinner} />}
+            {buttonText}
+        </button>
+    );
+};
+
+// Main Component
+export default function ProfilePage() {
     const { isReady, profile, saveProfile } = useStorage();
-
-    // NEW: Local state for editing (separate from stored profile)
-    const [editingProfile, setEditingProfile] = useState({
-        name: "",
-        festival: "",
-        whatsapp: "",
-        instagram: "",
+    const [editingProfile, setEditingProfile] = useState(EMPTY_PROFILE);
+    const [photoPreview, setPhotoPreview] = useState(null);
+    const [initialProfile, setInitialProfile] = useState(null);
+    const [hasChanges, setHasChanges] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [devMode, setDevMode] = useState({
+        newUser: false,
+        hasInfo: false,
+        hasPhoto: false,
+        isEditing: false,
+        showErrors: false,
     });
-    const [isEditing, setIsEditing] = useState(true);
 
-    // NEW: Update local editing state when profile loads from IndexedDB
     useEffect(() => {
-        if (profile) {
-            setEditingProfile({
-                name: profile.name || "",
-                festival: profile.festival || "",
-                whatsapp: profile.whatsapp || "",
-                instagram: profile.instagram || "",
-            });
-            setIsEditing(false); // Show QR if profile exists
-        } else {
-            setIsEditing(true); // Show form if no profile
+        // ── DEV: New User ──────────────────────────────────────────
+        if (devMode.newUser) {
+            const data = devMode.hasInfo
+                ? { ...SAMPLE_DATA, photo: devMode.hasPhoto ? PLACEHOLDER_HEADSHOT : null }
+                : { ...EMPTY_PROFILE };
+            setEditingProfile(data);
+            setInitialProfile(null);         // no saved profile
+            setPhotoPreview(devMode.hasInfo && devMode.hasPhoto ? PLACEHOLDER_HEADSHOT : null);
+            setIsEditing(true);              // always show form
+            return;
         }
-    }, [profile]);
+
+        // ── DEV: Returning User ────────────────────────────────────
+        if (!devMode.newUser && (devMode.hasInfo || devMode.hasPhoto || devMode.isEditing)) {
+            const data = {
+                ...SAMPLE_DATA,
+                photo: devMode.hasPhoto ? PLACEHOLDER_HEADSHOT : null,
+            };
+            setEditingProfile(data);
+            setInitialProfile(data);
+            setPhotoPreview(devMode.hasPhoto ? PLACEHOLDER_HEADSHOT : null);
+            setIsEditing(devMode.isEditing); // editing = simulate clicking Edit Profile
+            return;
+        }
+
+        // ── REAL: Existing profile ─────────────────────────────────
+        if (profile) {
+            const profileData = {
+                name: profile.name || "",
+                phone: profile.phone || "",
+                instagram: profile.instagram || "",
+                location: profile.location || "",
+                about: profile.about || "",
+                photo: profile.photo || null,
+            };
+            setEditingProfile(profileData);
+            setInitialProfile(profileData);
+            setPhotoPreview(profile.photo || null);
+            setIsEditing(false);
+            return;
+        }
+
+        // ── REAL: New user, no profile ─────────────────────────────
+        setEditingProfile(EMPTY_PROFILE);
+        setInitialProfile(null);
+        setPhotoPreview(null);
+        setIsEditing(true);
+
+    }, [profile, devMode.newUser, devMode.hasInfo, devMode.hasPhoto, devMode.isEditing]);
+
+    // Detect changes
+    useEffect(() => {
+        if (!initialProfile) {
+            setHasChanges(!!(editingProfile.name && editingProfile.phone && editingProfile.instagram));
+        } else {
+            setHasChanges(JSON.stringify(editingProfile) !== JSON.stringify(initialProfile));
+        }
+    }, [editingProfile, initialProfile]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setEditingProfile((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+        setEditingProfile(prev => ({ ...prev, [name]: value }));
     };
 
-    // CHANGED: Use async saveProfile from hook instead of localStorage
+    const handlePhotoChange = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPhotoPreview(reader.result);
+                setEditingProfile(prev => ({ ...prev, photo: reader.result }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleRemovePhoto = () => {
+        setPhotoPreview(null);
+        setEditingProfile(prev => ({ ...prev, photo: null }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+            console.log('Saving:', JSON.stringify(editingProfile)); // ← ADD
 
         try {
             const success = await saveProfile(editingProfile);
             if (success) {
-                setIsEditing(false); // Show QR code view
+                alert("Profile saved successfully!");
+                setInitialProfile(editingProfile);
+                setIsEditing(false);
             } else {
                 alert("Failed to save profile. Please try again.");
             }
@@ -57,407 +371,69 @@ export default function ProfileQRPage() {
         }
     };
 
-    // CHANGED: Generate QR data using editingProfile when editing, or stored profile when viewing
-    const currentProfile = isEditing ? editingProfile : profile;
-    const qrData = JSON.stringify({
-        name: currentProfile?.name || "",
-        festival: currentProfile?.festival || "",
-        whatsapp: currentProfile?.whatsapp || "",
-        instagram: currentProfile?.instagram || "",
-        timestamp: new Date().toISOString(),
-    });
+    const handleClear = () => {
+        localStorage.clear();
+        setEditingProfile(EMPTY_PROFILE);
+        setInitialProfile(null);
+        setPhotoPreview(null);
+        setIsEditing(true);
+        setDevMode({ newUser: false, hasInfo: false, hasPhoto: false, isEditing: false, showErrors: false });
+    };
 
-    // NEW: Show loading while IndexedDB initializes
     if (!isReady) {
         return (
-            <div>
+            <div className={styles.container}>
                 <Header />
-                <div
-                    style={{
-                        maxWidth: "500px",
-                        margin: "0 auto",
-                        padding: "2rem 1rem",
-                        textAlign: "center",
-                    }}
-                >
-                    <p>Loading...</p>
+                <div className={styles.content}>
+                    <p className={styles.loading}>Loading...</p>
                 </div>
             </div>
         );
     }
 
+    const isFormValid = editingProfile.name && editingProfile.phone && editingProfile.instagram && hasChanges;
+
     return (
-        <div>
+        <div className={styles.container}>
+            <DevModeToggle devMode={devMode} setDevMode={setDevMode} onClear={handleClear} />
             <Header />
-            <div
-                style={{
-                    maxWidth: "500px",
-                    margin: "0 auto",
-                    padding: "2rem 1rem",
-                }}
-            >
+
+            <div className={styles.content}>
                 {isEditing ? (
-                    // Profile Edit Form (mostly unchanged, just using editingProfile)
-                    <div>
-                        <h1
-                            style={{
-                                fontSize: "1.5rem",
-                                fontWeight: "bold",
-                                marginBottom: "1.5rem",
-                                textAlign: "center",
-                            }}
-                        >
-                            {editingProfile.name
-                                ? "Edit Your Profile"
-                                : "Create Your Festival Profile"}
-                        </h1>
-
-                        <form
-                            onSubmit={handleSubmit}
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "1rem",
-                            }}
-                        >
-                            <div>
-                                <label
-                                    htmlFor="name"
-                                    style={{
-                                        display: "block",
-                                        fontSize: "0.875rem",
-                                        fontWeight: "500",
-                                        marginBottom: "0.25rem",
-                                    }}
-                                >
-                                    Your Name
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    value={editingProfile.name}
+                    <>
+                        <h1 className={styles.headerTitle}>Profile</h1>
+                        <p className={styles.headerSubtitle}>
+                            Set up your profile so others can find you after the magic fades
+                        </p>
+                        <form onSubmit={handleSubmit} className={styles.form}>
+                            {FORM_FIELDS.map(field => (
+                                <FormField
+                                    key={field.name}
+                                    field={field}
+                                    value={editingProfile[field.name]}
                                     onChange={handleChange}
-                                    required
-                                    style={{
-                                        width: "100%",
-                                        padding: "0.5rem",
-                                        border: "1px solid #ccc",
-                                        borderRadius: "0.375rem",
-                                    }}
-                                    placeholder="How should people remember you?"
+                                    showError={devMode.showErrors}
                                 />
-                            </div>
-
-                            <div>
-                                <label
-                                    htmlFor="festival"
-                                    style={{
-                                        display: "block",
-                                        fontSize: "0.875rem",
-                                        fontWeight: "500",
-                                        marginBottom: "0.25rem",
-                                    }}
-                                >
-                                    Festival Name
-                                </label>
-                                <input
-                                    type="text"
-                                    id="festival"
-                                    name="festival"
-                                    value={editingProfile.festival}
-                                    onChange={handleChange}
-                                    required
-                                    style={{
-                                        width: "100%",
-                                        padding: "0.5rem",
-                                        border: "1px solid #ccc",
-                                        borderRadius: "0.375rem",
-                                    }}
-                                    placeholder="Which festival are you attending?"
-                                />
-                            </div>
-
-                            <div>
-                                <label
-                                    htmlFor="whatsapp"
-                                    style={{
-                                        display: "block",
-                                        fontSize: "0.875rem",
-                                        fontWeight: "500",
-                                        marginBottom: "0.25rem",
-                                    }}
-                                >
-                                    WhatsApp Number
-                                </label>
-                                <input
-                                    type="tel"
-                                    id="whatsapp"
-                                    name="whatsapp"
-                                    value={editingProfile.whatsapp}
-                                    onChange={handleChange}
-                                    style={{
-                                        width: "100%",
-                                        padding: "0.5rem",
-                                        border: "1px solid #ccc",
-                                        borderRadius: "0.375rem",
-                                    }}
-                                    placeholder="+1234567890"
-                                />
-                            </div>
-
-                            <div>
-                                <label
-                                    htmlFor="instagram"
-                                    style={{
-                                        display: "block",
-                                        fontSize: "0.875rem",
-                                        fontWeight: "500",
-                                        marginBottom: "0.25rem",
-                                    }}
-                                >
-                                    Instagram Username
-                                </label>
-                                <input
-                                    type="text"
-                                    id="instagram"
-                                    name="instagram"
-                                    value={editingProfile.instagram}
-                                    onChange={handleChange}
-                                    style={{
-                                        width: "100%",
-                                        padding: "0.5rem",
-                                        border: "1px solid #ccc",
-                                        borderRadius: "0.375rem",
-                                    }}
-                                    placeholder="@username (without the @)"
-                                />
-                            </div>
-
-                            <button
-                                type="submit"
-                                style={{
-                                    width: "100%",
-                                    backgroundColor: "#2563eb",
-                                    color: "white",
-                                    padding: "0.5rem",
-                                    borderRadius: "0.375rem",
-                                    border: "none",
-                                    marginTop: "0.5rem",
-                                    cursor: "pointer",
-                                }}
-                            >
-                                Save Profile
-                            </button>
-
-                            {/* CHANGED: Check if profile exists using hook data */}
-                            {profile && (
-                                <button
-                                    type="button"
-                                    onClick={() => setIsEditing(false)}
-                                    style={{
-                                        width: "100%",
-                                        backgroundColor: "#e5e7eb",
-                                        color: "#374151",
-                                        padding: "0.5rem",
-                                        borderRadius: "0.375rem",
-                                        border: "none",
-                                        cursor: "pointer",
-                                    }}
-                                >
-                                    Cancel
-                                </button>
-                            )}
+                            ))}
+                            <PhotoUpload
+                                photoPreview={photoPreview}
+                                onPhotoChange={handlePhotoChange}
+                                onRemovePhoto={handleRemovePhoto}
+                                showError={devMode.showErrors}
+                            />
+                            <SubmitButton 
+                                isSaving={devMode.isSaving}     
+                                showSaved={devMode.showSaved}   
+                                isFormValid={isFormValid} 
+                            />
                         </form>
-                    </div>
+                    </>
                 ) : (
-                    // QR Code Display (mostly unchanged, just using profile from hook)
-                    <div style={{ textAlign: "center" }}>
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                marginBottom: "1.5rem",
-                            }}
-                        >
-                            <h1
-                                style={{
-                                    fontSize: "1.5rem",
-                                    fontWeight: "bold",
-                                }}
-                            >
-                                Your Festival Connect QR
-                            </h1>
-                            <button
-                                onClick={() => setIsEditing(true)}
-                                style={{
-                                    backgroundColor: "#e5e7eb",
-                                    color: "#374151",
-                                    padding: "0.3rem 0.7rem",
-                                    borderRadius: "0.375rem",
-                                    border: "none",
-                                    fontSize: "0.875rem",
-                                    cursor: "pointer",
-                                }}
-                            >
-                                Edit
-                            </button>
-                        </div>
-
-                        <div
-                            style={{
-                                backgroundColor: "white",
-                                padding: "1.5rem",
-                                borderRadius: "0.75rem",
-                                boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                                marginBottom: "1.5rem",
-                                border: "1px solid #e5e7eb",
-                            }}
-                        >
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    marginBottom: "1.5rem",
-                                }}
-                            >
-                                <QRCodeSVG
-                                    value={qrData}
-                                    size={250}
-                                    includeMargin={true}
-                                    level="H"
-                                />
-                            </div>
-
-                            <div style={{ textAlign: "left" }}>
-                                <div style={{ marginBottom: "0.75rem" }}>
-                                    <div
-                                        style={{
-                                            fontSize: "0.875rem",
-                                            color: "#6b7280",
-                                            marginBottom: "0.25rem",
-                                        }}
-                                    >
-                                        Festival Name
-                                    </div>
-                                    <div
-                                        style={{
-                                            padding: "0.5rem",
-                                            backgroundColor: "#f9fafb",
-                                            borderRadius: "0.375rem",
-                                            border: "1px solid #e5e7eb",
-                                        }}
-                                    >
-                                        {profile?.name} @ {profile?.festival}
-                                    </div>
-                                </div>
-
-                                {profile?.whatsapp && (
-                                    <div style={{ marginBottom: "0.75rem" }}>
-                                        <div
-                                            style={{
-                                                fontSize: "0.875rem",
-                                                color: "#6b7280",
-                                                marginBottom: "0.25rem",
-                                            }}
-                                        >
-                                            WhatsApp
-                                        </div>
-                                        <div
-                                            style={{
-                                                padding: "0.5rem",
-                                                backgroundColor: "#f9fafb",
-                                                borderRadius: "0.375rem",
-                                                border: "1px solid #e5e7eb",
-                                            }}
-                                        >
-                                            {profile.whatsapp}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {profile?.instagram && (
-                                    <div>
-                                        <div
-                                            style={{
-                                                fontSize: "0.875rem",
-                                                color: "#6b7280",
-                                                marginBottom: "0.25rem",
-                                            }}
-                                        >
-                                            Instagram
-                                        </div>
-                                        <div
-                                            style={{
-                                                padding: "0.5rem",
-                                                backgroundColor: "#f9fafb",
-                                                borderRadius: "0.375rem",
-                                                border: "1px solid #e5e7eb",
-                                            }}
-                                        >
-                                            @
-                                            {profile.instagram.replace("@", "")}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        <Link
-                            href="/scan"
-                            style={{
-                                display: "inline-block",
-                                backgroundColor: "#2563eb",
-                                color: "white",
-                                padding: "0.5rem 1.5rem",
-                                borderRadius: "0.375rem",
-                                textDecoration: "none",
-                            }}
-                        >
-                            Scan Someone&apos;s QR
-                        </Link>
-                    </div>
+                    <ProfileView 
+                        profile={editingProfile}
+                        onEdit={() => setIsEditing(true)}
+                    />
                 )}
-            </div>
-
-            {/* Bottom Navigation (unchanged) */}
-            <div
-                style={{
-                    position: "fixed",
-                    bottom: "0",
-                    left: "0",
-                    right: "0",
-                    backgroundColor: "white",
-                    borderTop: "1px solid #e5e7eb",
-                }}
-            >
-                <div
-                    style={{
-                        maxWidth: "1200px",
-                        margin: "0 auto",
-                        display: "grid",
-                        gridTemplateColumns: "repeat(3, 1fr)",
-                        padding: "1rem",
-                    }}
-                >
-                    <Link href="/" style={{ textAlign: "center" }}>
-                        Connections
-                    </Link>
-                    <Link
-                        href="/profile"
-                        style={{
-                            textAlign: "center",
-                            fontWeight: "bold",
-                            color: "#2563eb",
-                        }}
-                    >
-                        Show my QR
-                    </Link>
-                    <Link href="/scan" style={{ textAlign: "center" }}>
-                        Scan a QR
-                    </Link>
-                </div>
             </div>
         </div>
     );

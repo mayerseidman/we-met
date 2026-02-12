@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "rm -rf .next & lsof -ti:3000 | xargs kill -9 2>/dev/null; next dev & sleep 2 && open -a 'Google Chrome' http://localhost:3000 https://prettier.io/playground https://vercel.com/mayerseidmans-projects/we-met",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clean": "lsof -ti:3000,3001,3002,3003 | xargs kill -9"
   },
   "dependencies": {
     "axios": "^1.13.2",
@@ -14,7 +15,9 @@
     "next": "^13.4.19",
     "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-qr-code": "^2.0.18",
+    "sass": "^1.97.3"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",

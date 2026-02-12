@@ -1,11 +1,11 @@
 const nextConfig = {
     reactStrictMode: true,
     swcMinify: true,
-    output: 'export',
+    output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
     images: {
         unoptimized: true,
     },
-    basePath: '/we-met',  // ADD THIS LINE
-    assetPrefix: '/we-met',  // ADD THIS LINE TOO
+    basePath: process.env.NODE_ENV === 'production' ? '/we-met' : '',
+    assetPrefix: process.env.NODE_ENV === 'production' ? '/we-met' : '',
 }
 module.exports = nextConfig

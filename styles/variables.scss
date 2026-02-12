@@ -1,0 +1,46 @@
+// Design System Variables
+
+// Colors
+$cream: #FFEFD7;
+$brown-light: #C3B3A2;
+$brown: #8B7355;
+$tan: #B89B7E;
+$light-tan: #C9B8A0;
+$light-beige: #E5D4C1;
+$beige: #EBD9C0;
+$orange: #F5722F;
+$dark-orange: #CC4A20;
+$gray: #6b7280;
+$dark-gray: #666;
+$medium-gray: #7e7e7e;
+$light-gray: #999;
+$white: #ffffff;
+$off-white: #FFFBF5;
+$black: #000000;
+$green: #4CAF50;
+
+// Fonts
+$font-mono: 'Chivo Mono', monospace;
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+
+// Border radius
+$radius-sm: 0.5rem;
+$radius-md: 0.75rem;
+$radius-lg: 1rem;
+$radius-full: 50%;
+
+// Transitions
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+// Breakpoints
+$mobile: 768px;
+$tablet: 1024px;
+$desktop: 1280px;

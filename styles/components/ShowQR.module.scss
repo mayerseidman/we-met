@@ -1,0 +1,112 @@
+@use "../variables" as *;
+
+// ─── SHOW QR LAYOUT ──────────────────────────────────────────
+.showQr {
+    text-align: center;
+}
+
+.divider {
+    width: 70%;
+    height: 1px;
+    background-color: $brown;
+    margin: $spacing-lg auto;
+}
+
+.profileName {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: $spacing-lg;
+}
+
+.addMeHeading {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: $spacing-xs;
+}
+
+.addMeSubtext {
+    font-size: 0.875rem;
+    color: $gray;
+    margin-bottom: $spacing-lg;
+}
+
+.qrWrapper {
+    background-color: $white;
+    padding: $spacing-md;
+    margin-bottom: $spacing-lg;
+    display: inline-block;
+}
+
+// ─── EVENT PICKER ────────────────────────────────────────────
+.eventGroup {
+    text-align: left;
+    max-width: 400px;
+    margin: 0 auto $spacing-md;
+}
+
+.eventLabel {
+    display: block;
+    font-size: $spacing-md;
+    font-weight: bold;
+    margin-bottom: $spacing-sm;
+}
+
+.eventSelect {
+    width: 100%;
+    padding: $spacing-md;
+    font-family: $font-mono;
+    font-size: $spacing-md;
+    border: 1px solid $brown;
+    background-color: $cream;
+    cursor: pointer;
+}
+
+.eventTrigger {
+    width: 100%;
+    padding: $spacing-md;
+    font-family: $font-mono;
+    font-size: $spacing-md;
+    border: 1px solid $brown;
+    background-color: $cream;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+// ─── INFO NOTE ───────────────────────────────────────────────
+.infoNote {
+    font-size: 0.875rem;
+    color: $gray;
+    margin-bottom: $spacing-xl;
+
+    &__icon {
+        margin-right: $spacing-xs;
+    }
+}
+
+.infoLink {
+    text-decoration: underline;
+    color: $black;
+}
+
+// ─── ADD PROFILE PROMPT (no-profile state) ──────────────────
+.addProfilePrompt {
+    font-size: 0.875rem;
+    color: $gray;
+    max-width: 400px;
+    margin: 0 auto $spacing-xl;
+}
+
+.addProfileBtn {
+    width: 80%;
+    max-width: 400px;
+    padding: $spacing-md;
+    background-color: $orange;
+    color: $black;
+    border: none;
+    font-size: $spacing-md;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: $font-mono;
+}

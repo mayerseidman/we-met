@@ -1,0 +1,29 @@
+@use "../variables" as *;
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: $radius-full;
+    object-fit: cover;
+    border: 3px solid $brown;
+    margin: 0 auto;
+    display: block;
+}
+
+.avatarPlaceholder {
+    width: 150px;
+    height: 150px;
+    border-radius: $radius-full;
+    background-color: $light-tan;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    border: 3px solid $brown;
+
+    &__text {
+        text-align: center;
+        font-size: 0.875rem;
+        color: $black;
+    }
+}

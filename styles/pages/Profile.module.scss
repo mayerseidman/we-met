@@ -1,0 +1,335 @@
+@import '../variables';
+
+.container {
+    min-height: 100vh;
+    background-color: $cream;
+    display: flex;
+    flex-direction: column;
+    font-family: $font-mono;
+}
+
+.devMode {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: $spacing-md;
+    border-radius: 8px;
+    color: $white;
+    font-size: 0.75rem;
+    font-family: $font-mono;
+
+    &Title {
+        font-weight: bold;
+        margin-bottom: $spacing-sm;
+    }
+
+    label {
+        display: block;
+        margin-bottom: $spacing-xs;
+        cursor: pointer;
+    }
+    .devClearBtn {
+        margin-top: $spacing-sm;
+        width: 100%;
+        padding: $spacing-xs $spacing-sm;
+        background: #ff4444;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-family: $font-mono;
+        font-size: 0.75rem;
+        cursor: pointer;
+        
+        &:hover {
+            background: #cc0000;
+        }
+    }
+}
+
+.content {
+    flex: 1;
+    padding: $spacing-md $spacing-md;
+    padding-bottom: 5rem;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.header {
+    &Title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: $spacing-md;
+        color: $black;
+    }
+
+    &Subtitle {
+        font-size: 1rem;
+        line-height: 1.5;
+        color: $black;
+        margin-bottom: $spacing-xl;
+    }
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+}
+
+.formGroup {
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: $spacing-sm;
+        font-size: 0.875rem;
+        color: $medium-gray;
+    }
+
+    .required {
+        color: #FF6B35;
+        position: relative;
+        bottom: 4px;
+        left: 2px;
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        padding: 0.875rem;
+        font-family: $font-mono;
+        font-size: 1rem;
+        border: 1px solid $brown;
+        background-color: $cream;
+        color: $black;
+        &.error {
+        border-color: $orange;
+        }
+
+        &::placeholder {
+            color: $brown-light;
+        }
+    }
+
+    textarea {
+        min-height: 120px;
+        line-height: 1.5;
+        resize: vertical; // let them manually resize too
+    }
+
+    input:focus,
+    textarea:focus {
+        outline: none;
+        border-color: darken($brown, 10%);
+        box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.25); // visible glow
+    }
+}
+
+.locationWrapper {
+    position: relative;
+
+    .locationIcon {
+        position: absolute;
+        right: $spacing-md;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.25rem;
+    }
+
+    input {
+        padding-right: 3rem;
+    }
+}
+
+.errorMessage {
+    color: $orange;
+    font-size: 0.875rem;
+    margin-top: $spacing-xs;
+}
+
+.photoUpload {
+    border: 1.5px dashed $brown;
+    padding-bottom: $spacing-lg;
+    padding-top: $spacing-lg;
+    text-align: center;
+    background-color: $cream;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+
+    &.error {
+        border-color: $orange;
+    }
+
+    .photoPreview {
+        max-width: 200px;
+        max-height: 200px;
+        margin-bottom: 0.5rem;
+    }
+
+    .photoText {
+        color: $black;
+        font-size: 1rem;
+    }
+
+    .photoButtons {
+        display: flex;
+        gap: $spacing-sm;
+        justify-content: center;
+        align-items: center; 
+
+        button {
+            background: none;
+            border: none;
+            text-decoration: underline;
+            font-family: $font-mono;
+            font-size: 0.875rem;
+            cursor: pointer;
+            color: $black;
+
+            &:hover {
+                color: $orange;
+            }
+        }
+        .divider {
+            width: 1px;
+            height: 16px;
+            background-color: $brown;
+            border: none;
+            margin: 0;
+            opacity: 0.5;
+            line-height: 1;
+        }
+    }
+
+    .link {  
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        font-size: 1rem;
+    }
+
+    .photoPlaceholder {
+        /*color: $light-gray;*/
+        color: $brown-light;
+        margin-bottom: $spacing-md;
+        padding-top: 0px;
+        margin-top: 0px;
+    }
+
+    .addPhotoBtn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: $spacing-xs;
+        color: #333;
+        font-size: 0.875rem;
+        text-decoration: underline;
+        background: none;
+        border: none;
+        cursor: pointer;
+        
+        &:hover {
+            color: $orange;
+        }
+    }
+
+    .addPhotoWrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: $spacing-sm;
+        text-decoration: underline; // text stays underlined
+    }
+
+    .addIcon {
+        width: 22px;  // or whatever size you want
+        height: 22px;
+        display: block;
+        svg {
+            width: 100%;
+            height: 100%;
+            display: block; // removes extra space
+        }
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+}
+
+.link {
+    color: #333;
+    font-size: 0.875rem;
+    text-decoration: underline;
+    font-family: $font-mono;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color $transition-fast;
+    
+    &:hover {
+        color: $orange;
+    }
+}
+
+.saveButton {
+    width: 100%;
+    padding: $spacing-md;
+    color: $black;
+    background-color: $orange;
+    border: none;
+    font-family: $font-mono;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: $spacing-sm;
+    transition: background-color $transition-fast;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+
+    &:hover:not(:disabled) {
+        opacity: 0.9;
+    }
+
+    &.saving {
+        background-color: #D3C4B0;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    &.saved {
+        background-color: $green;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        background-color: #FFBC9D;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+}
+
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid $black;
+    border-top-color: transparent;
+    border-radius: $radius-full;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading {
+    text-align: center;
+    font-family: $font-mono;
+}

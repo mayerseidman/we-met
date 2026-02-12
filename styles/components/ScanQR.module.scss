@@ -1,0 +1,29 @@
+@use "../variables" as *;
+
+// ─── SCAN QR ─────────────────────────────────────────────────
+.scanQr {
+    text-align: center;
+}
+
+.scanHeading {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: $spacing-xl;
+}
+
+.scanSubtext {
+    font-size: $spacing-md;
+    color: $gray;
+    margin-bottom: $spacing-xl;
+}
+
+.openCameraBtn {
+    display: inline-block;
+    background-color: $tan;
+    color: $black;
+    padding: $spacing-md $spacing-lg;
+    text-decoration: none;
+    font-family: $font-mono;
+    font-weight: bold;
+    font-size: $spacing-md;
+}

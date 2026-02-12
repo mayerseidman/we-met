@@ -38,6 +38,7 @@ export function useStorage() {
     const saveProfile = async (profileData) => {
         try {
             const savedProfile = await storageManager.saveProfile(profileData);
+            console.log('savedProfile returned:', JSON.stringify(savedProfile)); // ← ADD
             setProfile(savedProfile);
             return true;
         } catch (error) {

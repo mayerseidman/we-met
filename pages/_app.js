@@ -1,8 +1,13 @@
 // pages/_app.js
+import { useEffect, useState } from "react";
+import { useRouter } from 'next/router';
+
+import BottomNav from '../components/BottomNav'
+
 import "../styles/globals.css";
-import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }) {
+    const [isFirstVisit, setIsFirstVisit] = useState(null);
     useEffect(() => {
         // Only register in production or when explicitly testing
         if ('serviceWorker' in navigator && 
@@ -19,7 +24,17 @@ function MyApp({ Component, pageProps }) {
         }
     }, []);
 
-    return <Component {...pageProps} />;
+    useEffect(() => {
+        const hasVisited = localStorage.getItem('hasVisited');
+        setIsFirstVisit(!hasVisited);
+    }, [useRouter.pathname]);
+
+    return (
+        <>
+            <Component {...pageProps} />
+            { isFirstVisit && <BottomNav /> }
+        </>
+    );
 }
 
 export default MyApp;
