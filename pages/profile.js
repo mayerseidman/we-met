@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { useStorage } from "../hooks/useStorage";
 import ProfileView from "../components/ProfileView";
-import styles from "../styles/pages/profile.module.scss";
+import styles from "../styles/pages/Profile.module.scss";
 
 // Constants
 const DEV_MODE_OPTIONS = [
