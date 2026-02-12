@@ -64,6 +64,8 @@ const NavItem = React.memo(({ href, icon, label, isActive, activeColor }) => {
     );
 });
 
+NavItem.displayName = 'NavItem';
+
 // Helper: Check if route is active
 const isRouteActive = (pathname, activeRoutes) => {
     return activeRoutes.includes(pathname);
