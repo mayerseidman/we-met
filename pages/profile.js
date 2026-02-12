@@ -380,17 +380,6 @@ export default function ProfilePage() {
         setDevMode({ newUser: false, hasInfo: false, hasPhoto: false, isEditing: false, showErrors: false });
     };
 
-    if (!isReady) {
-        return (
-            <div className={styles.container}>
-                <Header />
-                <div className={styles.content}>
-                    <p className={styles.loading}>Loading...</p>
-                </div>
-            </div>
-        );
-    }
-
     const isFormValid = editingProfile.name && editingProfile.phone && editingProfile.instagram && hasChanges;
 
     return (
