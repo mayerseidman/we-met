@@ -285,7 +285,7 @@
     font-weight: bold;
     cursor: pointer;
     margin-top: $spacing-sm;
-    transition: background-color $transition-fast;
+    transition: background-color $transition-normal;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -306,10 +306,9 @@
     }
 
     &:disabled {
+        background: #E1D1BD;
         cursor: not-allowed;
-        background-color: #FFBC9D;
-        cursor: not-allowed;
-        opacity: 0.7;
+        opacity: 0.6;
     }
 }
 

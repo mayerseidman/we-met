@@ -1,10 +1,6 @@
 import styles from "../styles/components/ProfileView.module.scss";
 
 const ProfileView = ({ profile, onEdit }) => {
-    console.log('ProfileView profile:', profile); // ← ADD THIS
-    console.log('phone value:', profile.phone);
-    console.log('phone truthy:', !!profile.phone);
-    console.log('full profile:', JSON.stringify(profile));
     return (
         <div className={styles.profileView}>
 
