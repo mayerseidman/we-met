@@ -8,20 +8,30 @@ export function useStorage() {
 
     useEffect(() => {
         const initStorage = async () => {
-            await storageManager.init();
-
-            const [connectionsData, profileData] = await Promise.all([
-                storageManager.getConnections(),
-                storageManager.getProfile(),
-            ]);
-
-            setConnections(connectionsData);
-            setProfile(profileData);
-            setIsReady(true);
+            try {
+                console.log('Starting storage init...');
+                await storageManager.init();
+                console.log('Storage manager initialized');
+                
+                const [connectionsData, profileData] = await Promise.all([
+                    storageManager.getConnections(),
+                    storageManager.getProfile(),
+                ]);
+                
+                console.log('Data loaded:', { connectionsData, profileData });
+                setConnections(connectionsData);
+                setProfile(profileData);
+                setIsReady(true);
+                console.log('isReady set to true');
+            } catch (error) {
+                console.error('Storage initialization failed:', error);
+                // Set ready anyway so app doesn't hang
+                setIsReady(true);
+            }
         };
-
         initStorage();
     }, []);
+   
 
     const addConnection = async (connectionData) => {
         try {
