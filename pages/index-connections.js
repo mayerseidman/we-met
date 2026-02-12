@@ -62,25 +62,6 @@ export default function HomePage() {
     const { isReady, connections, profile } = useStorage();
     const [viewMode, setViewMode] = useState("list");
 
-    // Show loading while IndexedDB initializes
-    if (!isReady) {
-        return (
-            <div>
-                <Header />
-                <div
-                    style={{
-                        maxWidth: "500px",
-                        margin: "0 auto",
-                        padding: "2rem 1rem",
-                        textAlign: "center",
-                    }}
-                >
-                    <p>Loading...</p>
-                </div>
-            </div>
-        );
-    }
-
     // If no profile, suggest creating one
     if (!profile) {
         return (
