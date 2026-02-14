@@ -30,6 +30,7 @@
         margin-bottom: $spacing-xs;
         cursor: pointer;
     }
+    
     .devClearBtn {
         margin-top: $spacing-sm;
         width: 100%;
@@ -60,7 +61,7 @@
 .header {
     &Title {
         font-size: 2rem;
-        font-weight: bold;
+        font-weight: 900;
         margin-bottom: $spacing-md;
         color: $black;
     }
@@ -82,14 +83,16 @@
 .formGroup {
     label {
         display: block;
-        font-weight: bold;
+        font-weight: 900;
         margin-bottom: $spacing-sm;
-        font-size: 0.875rem;
-        color: $medium-gray;
+        font-size: 0.75rem;
+        color: $dark-gray;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
     .required {
-        color: #FF6B35;
+        color: $orange;
         position: relative;
         bottom: 4px;
         left: 2px;
@@ -101,29 +104,36 @@
         padding: 0.875rem;
         font-family: $font-mono;
         font-size: 1rem;
-        border: 1px solid $brown;
-        background-color: $cream;
+        font-weight: 600;
+        border: 2px solid $black; // thinner
+        border-radius: 2px; // less rounded
+        background-color: $white;
         color: $black;
+        box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1); // OUTSET, smaller
+        transition: all $transition-fast;
+        
         &.error {
-        border-color: $orange;
+            border-color: $orange;
+            background: rgba(245, 114, 47, 0.05);
         }
 
         &::placeholder {
-            color: $brown-light;
+            color: $light-gray;
+            font-weight: 500;
+        }
+        
+        &:focus {
+            outline: none;
+            border-color: $orange;
+            box-shadow: 0 0 0 3px rgba(245, 114, 47, 0.2);
+            transform: translate(-1px, -1px);
         }
     }
 
     textarea {
         min-height: 120px;
         line-height: 1.5;
-        resize: vertical; // let them manually resize too
-    }
-
-    input:focus,
-    textarea:focus {
-        outline: none;
-        border-color: darken($brown, 10%);
-        box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.25); // visible glow
+        resize: vertical;
     }
 }
 
@@ -136,6 +146,7 @@
         top: 50%;
         transform: translateY(-50%);
         font-size: 1.25rem;
+        pointer-events: none;
     }
 
     input {
@@ -146,31 +157,42 @@
 .errorMessage {
     color: $orange;
     font-size: 0.875rem;
+    font-weight: 700;
     margin-top: $spacing-xs;
 }
 
 .photoUpload {
-    border: 1.5px dashed $brown;
+    border: 3px dashed $black;
+    border-radius: 12px;
     padding-bottom: $spacing-lg;
     padding-top: $spacing-lg;
     text-align: center;
-    background-color: $cream;
+    background-color: $white;
     cursor: pointer;
-    transition: background-color $transition-fast;
+    transition: all $transition-fast;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+        border-color: $orange;
+    }
 
     &.error {
         border-color: $orange;
+        background: rgba(245, 114, 47, 0.05);
     }
 
     .photoPreview {
         max-width: 200px;
         max-height: 200px;
         margin-bottom: 0.5rem;
+        border: $border-medium;
+        border-radius: 12px;
     }
 
     .photoText {
         color: $black;
         font-size: 1rem;
+        font-weight: 600;
     }
 
     .photoButtons {
@@ -185,6 +207,7 @@
             text-decoration: underline;
             font-family: $font-mono;
             font-size: 0.875rem;
+            font-weight: 700;
             cursor: pointer;
             color: $black;
 
@@ -192,13 +215,14 @@
                 color: $orange;
             }
         }
+        
         .divider {
             width: 1px;
             height: 16px;
-            background-color: $brown;
+            background-color: $black;
             border: none;
             margin: 0;
-            opacity: 0.5;
+            opacity: 0.3;
             line-height: 1;
         }
     }
@@ -211,11 +235,11 @@
     }
 
     .photoPlaceholder {
-        /*color: $light-gray;*/
-        color: $brown-light;
+        color: $medium-gray;
         margin-bottom: $spacing-md;
         padding-top: 0px;
         margin-top: 0px;
+        font-weight: 600;
     }
 
     .addPhotoBtn {
@@ -223,8 +247,9 @@
         flex-direction: column;
         align-items: center;
         gap: $spacing-xs;
-        color: #333;
+        color: $black;
         font-size: 0.875rem;
+        font-weight: 700;
         text-decoration: underline;
         background: none;
         border: none;
@@ -240,17 +265,18 @@
         flex-direction: row;
         align-items: center;
         gap: $spacing-sm;
-        text-decoration: underline; // text stays underlined
+        text-decoration: underline;
     }
 
     .addIcon {
-        width: 22px;  // or whatever size you want
+        width: 22px;
         height: 22px;
         display: block;
+        
         svg {
             width: 100%;
             height: 100%;
-            display: block; // removes extra space
+            display: block;
         }
     }
 
@@ -260,8 +286,9 @@
 }
 
 .link {
-    color: #333;
+    color: $black;
     font-size: 0.875rem;
+    font-weight: 700;
     text-decoration: underline;
     font-family: $font-mono;
     background: none;
@@ -277,38 +304,50 @@
 .saveButton {
     width: 100%;
     padding: $spacing-md;
-    color: $black;
+    color: $white;
     background-color: $orange;
-    border: none;
+    border: $border-thick;
+    border-radius: 12px;
     font-family: $font-mono;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     cursor: pointer;
     margin-top: $spacing-sm;
-    transition: background-color $transition-normal;
+    box-shadow: $shadow-large;
+    transition: all $transition-fast;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: $spacing-sm;
 
     &:hover:not(:disabled) {
-        opacity: 0.9;
+        transform: translate(3px, 3px);
+        box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+    }
+
+    &:active:not(:disabled) {
+        transform: translate(6px, 6px);
+        box-shadow: none;
     }
 
     &.saving {
-        background-color: #D3C4B0;
+        background-color: $medium-gray;
         cursor: not-allowed;
         opacity: 0.7;
     }
 
     &.saved {
         background-color: $green;
+        border-color: $black;
     }
 
     &:disabled {
-        background: #E1D1BD;
+        background: $light-gray;
         cursor: not-allowed;
         opacity: 0.6;
+        box-shadow: none;
     }
 }
 
@@ -316,7 +355,7 @@
     display: inline-block;
     width: 16px;
     height: 16px;
-    border: 2px solid $black;
+    border: 2px solid $white;
     border-top-color: transparent;
     border-radius: $radius-full;
     animation: spin 1s linear infinite;

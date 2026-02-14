@@ -32,7 +32,7 @@ function MyApp({ Component, pageProps }) {
     return (
         <>
             <Component {...pageProps} />
-            { isFirstVisit && <BottomNav /> }
+            { !isFirstVisit && <BottomNav /> }
         </>
     );
 }

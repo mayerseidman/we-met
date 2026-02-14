@@ -1,35 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Meets from './meets';
-import Landing from './landing';
+import { useStorage } from '../hooks/useStorage';
 
 export default function HomePage() {
     const router = useRouter();
-    const [isFirstVisit, setIsFirstVisit] = useState(null); // null = loading
+    const { profile } = useStorage();
     
     useEffect(() => {
-        // Check if user has visited before
-        const hasVisited = localStorage.getItem('hasVisited');
-        
-        if (!hasVisited) {
-            // First time visitor
-            setIsFirstVisit(true);
+        // If profile exists, go to meets, if no profile, go to landing
+        if (!profile) {
+            router.push('/meets');
         } else {
-            // Returning visitor
-            setIsFirstVisit(false);
+            router.push('/landing');
         }
-    }, []);
+    }, [profile, router]);
     
-    // Show loading while checking
-    if (isFirstVisit === null) {
-        return null; // or a loading spinner
-    }
-    
-    // First visit: show landing page
-    if (!isFirstVisit) {
-        return <Landing />;
-    }
-    
-    // Returning visit: show Meets
-    return <Meets />;
+    return null; // Just a redirect page
 }
