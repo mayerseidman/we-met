@@ -1,13 +1,14 @@
 // pages/_app.js
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
-
 import BottomNav from '../components/BottomNav'
-
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
-    const [isFirstVisit, setIsFirstVisit] = useState(null);
+    const router = useRouter();
+    const [isFirstVisit, setIsFirstVisit] = useState(null); // null = checking
+    const [isChecking, setIsChecking] = useState(true); // NEW: track if we're still checking
+    
     useEffect(() => {
         // Only register in production or when explicitly testing
         if ('serviceWorker' in navigator && 
@@ -23,16 +24,23 @@ function MyApp({ Component, pageProps }) {
                 });
         }
     }, []);
-
+    
     useEffect(() => {
         const hasVisited = localStorage.getItem('hasVisited');
         setIsFirstVisit(!hasVisited);
-    }, [useRouter.pathname]);
-
+        setIsChecking(false); // Done checking
+    }, [router.pathname]);
+    
+    // Don't show nav on home (redirect) page or landing page
+    const hideNav = router.pathname === '/' || router.pathname === '/landing';
+    
+    // Don't show nav while checking OR if first visit OR if on hidden pages
+    const showNav = !isChecking && !isFirstVisit && !hideNav;
+    
     return (
         <>
             <Component {...pageProps} />
-            { !isFirstVisit && <BottomNav /> }
+            {showNav && <BottomNav />}
         </>
     );
 }

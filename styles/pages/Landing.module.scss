@@ -8,38 +8,49 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f5e6dc;
-
-    &::before {
+    background: $cream;
+    
+    // Optional: Very subtle bottom gradient (much lighter than before)
+    &::after {
         content: '';
         position: absolute;
-        top: 0;
+        bottom: 0;
         left: 0;
         width: 100%;
-        height: 100%;
-        background: rgba(255, 140, 90, 0.25);
+        height: 30%;
+        background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.03) 0%,
+            transparent 100%
+        );
         pointer-events: none;
+        z-index: 1;
     }
-    /*background: linear-gradient(
-        to top,
-        #000000 0%,
-        rgba(0, 0, 0, 0.9) 25%,
-        rgba(0, 0, 0, 0.3) 70%,
-        transparent 100%
-    );*/
 }
 
 // ── Floating Bubbles ──────────────────────────────────────────
+.bubbles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
 .bubble {
     position: absolute;
-    background: #1a1a1a;
-    color: $white;
+    background: $white;
+    color: $black;
+    /*border: 2px solid $black;*/
     border-radius: 20px;
-    padding: 12px 16px;
-    font-size: 18px;
-    font-weight: bold;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    animation: float 3s ease-in-out infinite;
+    padding: 10px 16px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: $font-mono;
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.15);
+    animation: floatGentle 4s ease-in-out infinite;
 
     &::after {
         content: '';
@@ -48,196 +59,199 @@
         left: 20px;
         width: 0;
         height: 0;
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-top: 10px solid #000;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid $white;
+        filter: drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.1));
     }
 }
 
-// Just scatter them randomly - no "clusters"
+// Scattered positioning - 2 on each side
+// Bubbles positioned in a circle around the logo
+
+.floatingEmoji {
+    position: absolute;
+    font-size: 2rem;
+    animation: floatGentle 5s ease-in-out infinite;
+    opacity: 0.5;
+}
+
+// Top left area
 .bubble1 {
-    top: 8%;
-    left: 12%;
+    top: 9%;
+    left: calc(50% - 160px);
     animation-delay: 0s;
-    transform: rotate(-8deg);
-    font-size: 17px;
+    padding: 16px 20px;
 }
 
+// Top right area  
 .bubble2 {
-    top: 28%;
-    left: 6%;
+    top: 17%;
+    left: calc(50% + 80px);
     animation-delay: 1.2s;
-    transform: rotate(12deg);
-    font-size: 20px;
 }
 
+// Middle left
 .bubble3 {
-    top: 14%;
-    right: 8%;
-    animation-delay: 0.7s;
-    transform: rotate(5deg);
-    font-size: 16px;
+    top: 28%;
+    left: calc(50% - 170px);
+    animation-delay: 0.6s;
 }
 
+// Middle right
 .bubble4 {
-    top: 35%;
-    right: 18%;
-    animation-delay: 2.1s;
-    transform: rotate(-15deg);
-    font-size: 19px;
-}
-
-.bubble5 {
-    bottom: 25%;
-    left: 15%;
+    top: 48%;
+    left: calc(50% + 200px);
     animation-delay: 1.8s;
-    transform: rotate(7deg);
-    font-size: 18px;
 }
 
-.bubble6 {
-    bottom: 10%;
-    left: 8%;
-    animation-delay: 0.3s;
-    transform: rotate(-4deg);
-    font-size: 21px;
-}
-
-.bubble7 {
-    bottom: 22%;
-    right: 10%;
-    animation-delay: 1.5s;
-    transform: rotate(10deg);
-    font-size: 17px;
-}
-
-.bubble8 {
-    bottom: 8%;
-    right: 20%;
+// Bottom left
+.bubble5 {
+    top: 68%;
+    left: calc(50% - 200px);
     animation-delay: 2.4s;
-    transform: rotate(-6deg);
-    font-size: 19px;
 }
 
-// More chaotic float animation
-@keyframes float {
-    0% {
-        transform: translateY(0px) translateX(0px) rotate(var(--rotate, 0deg));
-    }
-    33% {
-        transform: translateY(-15px) translateX(5px) rotate(var(--rotate, 0deg));
-    }
-    66% {
-        transform: translateY(-8px) translateX(-3px) rotate(var(--rotate, 0deg));
-    }
-    100% {
-        transform: translateY(0px) translateX(0px) rotate(var(--rotate, 0deg));
-    }
+// Hearts
+.emoji1 {
+    top: 10%;
+    left: calc(50% + 20px);
+    transform: translateX(-50%);
+    animation-delay: 0.5s;
 }
 
-// ── Dark Gradient Overlay ─────────────────────────────────────
+.emoji2 {
+    top: 35%;
+    left: calc(50% + 120px); 
+    animation-delay: 2.2s;
+}
 
-/*.overlay {
-    height: 55%;
-    background: linear-gradient(
-        to top,
-        #000000 0%,
-        rgba(0, 0, 0, 0.9) 45%,
-        transparent 100%
-    );
-    filter: blur(1px);
-}*/
+// Gentle floating animation
+@keyframes floatGentle {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px);
+    }
+    25% {
+        transform: translateY(-12px) translateX(4px);
+    }
+    50% {
+        transform: translateY(-18px) translateX(-3px);
+    }
+    75% {
+        transform: translateY(-8px) translateX(5px);
+    }
+}
 
 // ── Content ───────────────────────────────────────────────────
 .content {
-    padding: 40px;
-    color: $white;
+    color: $black;
     text-align: center;
     width: 100%;
-    max-width: 800px;
-    z-index: 4;
-    position: relative; // only needed for z-index
+    max-width: 600px;
+    z-index: 3;
+    position: relative;
 }
 
-.logo {
-    width: 80px;
-    height: 80px;
+// Logo circle (central focal point)
+.logoCircle {
+    width: 140px;
+    height: 140px;
     background: $orange;
-    border-radius: 20px;
-    margin: 0 auto 16px;
+    border-radius: 50%;
+    border: 3px solid $black;
+    margin: 0 auto 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 40px;
+    font-size: 3.5rem;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
 }
 
 .title {
-    font-size: 3rem;
-    color: #000;
-    font-weight: bold;
+    font-size: 4rem;
+    font-weight: 900;
     margin-bottom: 16px;
     letter-spacing: 2px;
     font-family: $font-mono;
+    text-transform: uppercase;
+    color: $black;
+    line-height: 1;
 }
 
 .tagline {
-    font-size: 1rem;
-    color: #000;
+    font-size: 1.125rem;
+    font-weight: 400;
     line-height: 1.6;
     margin-bottom: 40px;
-    opacity: 0.95;
+    color: $black;
+    font-family: $font-sans;
+    padding-left: 40px;
+    padding-right: 40px;
 }
 
 .cta {
     background: $orange;
     color: $white;
-    border: none;
+    border: 3px solid $black;
+    border-radius: 12px;
     padding: 18px 48px;
     font-size: 1.125rem;
-    font-weight: bold;
-    border-radius: 50px;
+    font-weight: 900;
     cursor: pointer;
     font-family: $font-mono;
     letter-spacing: 1px;
-    margin-bottom: 16px;
-    transition: transform $transition-fast, opacity $transition-fast;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.25);
+    transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
 
     &:hover {
-        transform: scale(1.05);
-        opacity: 0.95;
+        transform: translate(2px, 2px);
+        box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.25);
     }
 
     &:active {
-        transform: scale(0.98);
+        transform: translate(5px, 5px);
+        box-shadow: none;
+    }
+    
+    &::after {
+        content: '→';
+        font-size: 1.25rem;
     }
 }
 
 // ── Auth Section ──────────────────────────────────────────────
 .auth {
-    margin-top: 16px;
+    margin-top: 20px;
 }
 
 .authLabel {
     font-size: 0.875rem;
-    color: #555;
+    font-weight: 600;
+    color: $medium-gray;
+    font-family: $font-mono;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .authLink {
     background: none;
     border: none;
-    color: #555;
+    color: $black;
     font-size: 0.875rem;
-    font-weight: bold;
+    font-weight: 900;
     margin-left: 8px;
     cursor: pointer;
     font-family: $font-mono;
-    text-decoration: none;
+    text-decoration: underline;
     padding: 0;
+    text-transform: uppercase;
 
     &:hover {
-        text-decoration: underline;
+        color: $orange;
     }
 }

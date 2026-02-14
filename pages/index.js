@@ -4,16 +4,36 @@ import { useStorage } from '../hooks/useStorage';
 
 export default function HomePage() {
     const router = useRouter();
-    const { profile } = useStorage();
+    const { profile, isReady } = useStorage(); // isReady already exists!
+    
+    console.log("PROFILE:", profile, "isReady:", isReady);
     
     useEffect(() => {
-        // If profile exists, go to meets, if no profile, go to landing
-        if (!profile) {
+        // Don't redirect until storage is ready
+        if (!isReady) return;
+        
+        // Once ready, redirect based on profile
+        if (profile) {
             router.push('/meets');
         } else {
             router.push('/landing');
         }
-    }, [profile, router]);
+    }, [profile, isReady, router]);
     
-    return null; // Just a redirect page
+    // Show loading screen while checking
+    if (!isReady) {
+        return (
+            <div style={{ 
+                height: '100vh', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                background: '#FFEFD7'
+            }}>
+                {/* Optional: add loading spinner or logo */}
+            </div>
+        );
+    }
+    
+    return null;
 }
