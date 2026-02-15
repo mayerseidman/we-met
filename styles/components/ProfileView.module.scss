@@ -1,10 +1,7 @@
 @import '../variables';
 
 .profileView {
-    padding: $spacing-lg $spacing-lg;
-    padding-bottom: 6rem;
     font-family: $font-mono;
-    max-width: 600px;
     margin: 0 auto;
     width: 100%;
 }
@@ -49,6 +46,9 @@
     margin-bottom: 24px;
     color: $black;
     letter-spacing: 1px;
+    @media (max-width: 480px) {  // Mobile only
+        font-size: 2.25rem;
+    }
 }
 
 // ── Sections ──────────────────────────────────────────────────
@@ -71,14 +71,25 @@
 */    background: #fff;
     border: 2px solid $black; // thinner
     border-radius: 2px; // less rounded
-    padding: $spacing-lg;
+    padding: $spacing-md;
+    transition: all $transition-fast;
     box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.15); // smaller shadow
+
+    &:hover {
+        transform: translate(-1px, -1px); // smaller movement
+        box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+    }
+    
+    &:active {
+        transform: translate(0, 0);
+        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+    }
 }
 
 // Location row inside about
 .aboutRow {
     display: flex;
-    align-items: center;
+    align-items: start;
     gap: 1.25rem;
     margin-bottom: 16px;
     
@@ -124,14 +135,13 @@
     display: flex;
     align-items: center;
     gap: $spacing-md;
-    padding: 1.25rem;
+    padding: 1rem;
     border: 2px solid $black; // thinner
     border-radius: 2px; // less rounded
     margin-bottom: $spacing-md;
     background: $white;
     box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.15); // smaller shadow
     transition: all $transition-fast;
-    cursor: pointer;
     text-decoration: none;
     color: $black;
     
@@ -177,7 +187,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
-    margin-top: 24px;
+    margin-top: 8px;
     box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.25);
     transition: all $transition-fast;
       

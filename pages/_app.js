@@ -6,8 +6,7 @@ import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
     const router = useRouter();
-    const [isFirstVisit, setIsFirstVisit] = useState(null); // null = checking
-    const [isChecking, setIsChecking] = useState(true); // NEW: track if we're still checking
+    const [isChecking, setIsChecking] = useState(true);
     
     useEffect(() => {
         // Only register in production or when explicitly testing
@@ -26,16 +25,14 @@ function MyApp({ Component, pageProps }) {
     }, []);
     
     useEffect(() => {
-        const hasVisited = localStorage.getItem('hasVisited');
-        setIsFirstVisit(!hasVisited);
         setIsChecking(false); // Done checking
     }, [router.pathname]);
     
     // Don't show nav on home (redirect) page or landing page
     const hideNav = router.pathname === '/' || router.pathname === '/landing';
     
-    // Don't show nav while checking OR if first visit OR if on hidden pages
-    const showNav = !isChecking && !isFirstVisit && !hideNav;
+    // Don't show nav while checking OR if on hidden pages
+    const showNav = !isChecking && !hideNav;
     
     return (
         <>

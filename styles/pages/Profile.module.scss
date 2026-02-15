@@ -51,9 +51,9 @@
 
 .content {
     flex: 1;
-    padding: $spacing-md $spacing-md;
+    padding: $spacing-xl $spacing-md;
     padding-bottom: 5rem;
-    max-width: 600px;
+    max-width: 480px;
     margin: 0 auto;
     width: 100%;
 }
@@ -300,74 +300,109 @@
         color: $orange;
     }
 }
-
-.saveButton {
+.button {
     width: 100%;
     padding: $spacing-md;
-    color: $white;
     background-color: $orange;
-    border: $border-thick;
-    border-radius: 12px;
+    color: $white;
+    border: 3.5px solid $black;
+    border-radius: 2px; 
     font-family: $font-mono;
     font-size: 1rem;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
-    margin-top: $spacing-sm;
-    box-shadow: $shadow-large;
-    transition: all $transition-fast;
+    margin-top: 8px;
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $spacing-sm;
-
+    gap: 8px;
+      
     &:hover:not(:disabled) {
-        transform: translate(3px, 3px);
-        box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+        transform: translate(2px, 2px);
+        box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
     }
-
+    
     &:active:not(:disabled) {
         transform: translate(6px, 6px);
         box-shadow: none;
     }
 
-    &.saving {
-        background-color: $medium-gray;
+    // Disabled state (invalid form or no changes)
+    &:disabled:not(.saving):not(.saved) {
+        background-color: #E1D1BD;
+        color: $black;
         cursor: not-allowed;
-        opacity: 0.7;
+        opacity: 1; // Keep full opacity with the muted background
     }
-
-    &.saved {
-        background-color: $green;
-        border-color: $black;
-    }
-
-    &:disabled {
-        background: $light-gray;
+    
+    // Saving state - animated stripes
+    &.saving, &.saved {
         cursor: not-allowed;
-        opacity: 0.6;
-        box-shadow: none;
+        /*background: repeating-linear-gradient(
+            45deg,
+            $orange,
+            $orange 10px,
+            darken($orange, 8%) 10px,
+            darken($orange, 8%) 20px
+        );*/
     }
 }
 
-.spinner {
+.buttonContent {
+    animation: textSwap 1s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dotsContainer {
     display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid $white;
-    border-top-color: transparent;
-    border-radius: $radius-full;
-    animation: spin 1s linear infinite;
-}
+    line-height: 0.5;
+    vertical-align: middle;
+    margin-left: -10px;
+    letter-spacing: -5px;
+    margin-bottom: 5px;
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
+    .dot {
+        animation-name: blink;
+        animation-duration: 1.4s;
+        animation-iteration-count: infinite;
+        animation-fill-mode: both;
+        font-size: 1.5rem;
+        transition: opacity 0.3s ease;
+
+        &:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        &:nth-child(3) {
+            animation-delay: 0.4s;
+        }
     }
 }
 
-.loading {
-    text-align: center;
-    font-family: $font-mono;
+@keyframes textSwap {
+    0% {
+        opacity: 0;
+        transform: translateY(-3px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0.2;
+    }
+    20% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.2;
+    }
 }

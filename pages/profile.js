@@ -4,13 +4,21 @@ import { useStorage } from "../hooks/useStorage";
 import ProfileView from "../components/ProfileView";
 import styles from "../styles/pages/Profile.module.scss";
 
-// Constants
+// ══════════════════════════════════════════════════════════════
+// ProfilePage Component
+// ══════════════════════════════════════════════════════════════
+// Main profile page with edit form and view mode
+
+// ── Constants ─────────────────────────────────────────────────
+
 const DEV_MODE_OPTIONS = [
     { key: 'newUser',   label: 'New User' },
     { key: 'hasInfo',   label: 'Has Info' },
     { key: 'hasPhoto',  label: 'Has Photo' },
     { key: 'isEditing', label: 'Editing' },
     { key: 'showErrors',label: 'Show Errors' },
+    { key: 'isSaving',  label: 'Saving State' },
+    { key: 'isSaved',   label: 'Saved State' },
 ];
 
 const SAMPLE_DATA = {
@@ -74,7 +82,8 @@ const FORM_FIELDS = [
     },
 ];
 
-// Component: Dev Mode Toggle
+// ── Sub-Components ────────────────────────────────────────────
+
 const DevModeToggle = ({ devMode, setDevMode, onClear }) => (
     <div className={styles.devMode}>
         <div className={styles.devModeTitle}>DEV MODE</div>
@@ -94,7 +103,6 @@ const DevModeToggle = ({ devMode, setDevMode, onClear }) => (
     </div>
 );
 
-// Component: Form Field
 const FormField = ({ field, value, onChange, showError }) => {
     const { name, label, type, placeholder, required, errorMessage, icon } = field;
     const hasError = showError && required && !value;
@@ -163,7 +171,6 @@ const FormField = ({ field, value, onChange, showError }) => {
     );
 };
 
-// Component: Photo Upload
 const PhotoUpload = ({ photoPreview, onPhotoChange, onRemovePhoto, showError }) => {
     const hasError = showError && !photoPreview;
 
@@ -237,24 +244,52 @@ const PhotoUpload = ({ photoPreview, onPhotoChange, onRemovePhoto, showError }) 
     );
 };
 
-// Component: Submit Button
-const SubmitButton = ({ isSaving, showSaved, isFormValid }) => {
-    const buttonClass = `${styles.saveButton} ${isSaving ? styles.saving : ''} ${showSaved ? styles.saved : ''}`;
-    const buttonText = showSaved ? "✓ Saved!" : isSaving ? "Saving..." : "SAVE PROFILE";
+const SubmitButton = ({ buttonState, isFormValid }) => {
+    const getButtonClass = () => {
+        const classes = [styles.button];
+        if (buttonState === 'saving') classes.push(styles.saving);
+        if (buttonState === 'saved') classes.push(styles.saved);
+        return classes.join(' ');
+    };
+
+    const getButtonContent = () => {
+        switch (buttonState) {
+            case 'saving':
+                return (
+                    <span key="saving" className={styles.buttonContent}>
+                        SAVING
+                        <span className={styles.dotsContainer}>
+                            <span className={styles.dot}>.</span>
+                            <span className={styles.dot}>.</span>
+                            <span className={styles.dot}>.</span>
+                        </span>
+                    </span>
+                );
+            case 'saved':
+                return (
+                    <span className={styles.buttonContent}>
+                        <span className={styles.buttonIcon}>✓</span>
+                        SAVED!
+                    </span>
+                );
+            default:
+                return <span className={styles.buttonContent}>SAVE PROFILE</span>;
+        }
+    };
     
     return (
         <button
             type="submit"
-            disabled={isSaving || !isFormValid}
-            className={buttonClass}
+            disabled={buttonState !== 'default' || !isFormValid}
+            className={getButtonClass()}
         >
-            {isSaving && <span className={styles.spinner} />}
-            {buttonText}
+            {getButtonContent()}
         </button>
     );
 };
 
-// Main Component
+// ── Main Component ────────────────────────────────────────────
+
 export default function ProfilePage() {
     const { isReady, profile, saveProfile } = useStorage();
     const [editingProfile, setEditingProfile] = useState(EMPTY_PROFILE);
@@ -262,13 +297,19 @@ export default function ProfilePage() {
     const [initialProfile, setInitialProfile] = useState(null);
     const [hasChanges, setHasChanges] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [buttonState, setButtonState] = useState('default'); // 'default' | 'saving' | 'saved'
     const [devMode, setDevMode] = useState({
         newUser: false,
         hasInfo: false,
         hasPhoto: false,
         isEditing: false,
         showErrors: false,
+        isSaving: false,
+        isSaved: false,
     });
+
+    // Override button state with dev mode if active
+    const effectiveButtonState = devMode.isSaving ? 'saving' : devMode.isSaved ? 'saved' : buttonState;
 
     useEffect(() => {
         // ── DEV: New User ──────────────────────────────────────────
@@ -277,9 +318,9 @@ export default function ProfilePage() {
                 ? { ...SAMPLE_DATA, photo: devMode.hasPhoto ? PLACEHOLDER_HEADSHOT : null }
                 : { ...EMPTY_PROFILE };
             setEditingProfile(data);
-            setInitialProfile(null);         // no saved profile
+            setInitialProfile(null);
             setPhotoPreview(devMode.hasInfo && devMode.hasPhoto ? PLACEHOLDER_HEADSHOT : null);
-            setIsEditing(true);              // always show form
+            setIsEditing(true);
             return;
         }
 
@@ -292,7 +333,7 @@ export default function ProfilePage() {
             setEditingProfile(data);
             setInitialProfile(data);
             setPhotoPreview(devMode.hasPhoto ? PLACEHOLDER_HEADSHOT : null);
-            setIsEditing(devMode.isEditing); // editing = simulate clicking Edit Profile
+            setIsEditing(devMode.isEditing);
             return;
         }
 
@@ -354,20 +395,30 @@ export default function ProfilePage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-            console.log('Saving:', JSON.stringify(editingProfile)); // ← ADD
+        console.log('Saving:', JSON.stringify(editingProfile));
+
+        setButtonState('saving');
 
         try {
             const success = await saveProfile(editingProfile);
+            
             if (success) {
-                alert("Profile saved successfully!");
+                setButtonState('saved');
                 setInitialProfile(editingProfile);
-                setIsEditing(false);
+                
+                // Return to default after 2 seconds
+                setTimeout(() => {
+                    setButtonState('default');
+                    setIsEditing(false);
+                }, 2000);
             } else {
                 alert("Failed to save profile. Please try again.");
+                setButtonState('default');
             }
         } catch (error) {
             console.error("Error saving profile:", error);
             alert("Failed to save profile. Please try again.");
+            setButtonState('default');
         }
     };
 
@@ -377,7 +428,16 @@ export default function ProfilePage() {
         setInitialProfile(null);
         setPhotoPreview(null);
         setIsEditing(true);
-        setDevMode({ newUser: false, hasInfo: false, hasPhoto: false, isEditing: false, showErrors: false });
+        setButtonState('default');
+        setDevMode({ 
+            newUser: false, 
+            hasInfo: false, 
+            hasPhoto: false, 
+            isEditing: false, 
+            showErrors: false,
+            isSaving: false,
+            isSaved: false,
+        });
     };
 
     const isFormValid = editingProfile.name && editingProfile.phone && editingProfile.instagram && hasChanges;
@@ -411,8 +471,7 @@ export default function ProfilePage() {
                                 showError={devMode.showErrors}
                             />
                             <SubmitButton 
-                                isSaving={devMode.isSaving}     
-                                showSaved={devMode.showSaved}   
+                                buttonState={effectiveButtonState}
                                 isFormValid={isFormValid} 
                             />
                         </form>

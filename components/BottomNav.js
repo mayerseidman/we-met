@@ -4,7 +4,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styles from '../styles/components/BottomNav.module.scss';
 
-// Constants
+// ══════════════════════════════════════════════════════════════
+// BottomNav Component
+// ══════════════════════════════════════════════════════════════
+
+// ── Constants ─────────────────────────────────────────────────
+
 const NAV_ITEMS = [
     {
         href: '/profile',
@@ -41,42 +46,19 @@ const NAV_ITEMS = [
     },
 ];
 
-// Component: Nav Item
-const NavItem = React.memo(({ href, icon, label, isActive, activeColor }) => {
-    const router = useRouter();
-    const itemClass = `${ styles.navItem } ${isActive ? styles.active : styles.inactive }`;
-    
-    const handleClick = (e) => {
-        e.preventDefault();
-        router.push(href);
-    };
-    
-    return (
-        <a 
-            href={ href } 
-            onClick={ handleClick } 
-            className={ itemClass }
-            style={{ '--active-color': activeColor }}
-        >
-            { icon }
-            <span className={ styles.label }>{ label }</span>
-        </a>
-    );
-});
-
-NavItem.displayName = 'NavItem';
-
-// Helper: Check if route is active
-const isRouteActive = (pathname, activeRoutes) => {
-    return activeRoutes.includes(pathname);
-};
-
 const SCROLL_THRESHOLD = {
     SHOW: 10,
     HIDE: 50,
 };
 
-// Hook: Scroll visibility
+// ── Helper Functions ──────────────────────────────────────────
+
+const isRouteActive = (pathname, activeRoutes) => {
+    return activeRoutes.includes(pathname);
+};
+
+// ── Custom Hooks ──────────────────────────────────────────────
+
 const useScrollVisibility = () => {
     const [isVisible, setIsVisible] = useState(true);
 
@@ -89,11 +71,9 @@ const useScrollVisibility = () => {
 
             if (!ticking) {
                 window.requestAnimationFrame(() => {
-                    // Show when scrolling up or at top
                     if (currentScrollY < lastY || currentScrollY < SCROLL_THRESHOLD.SHOW) {
                         setIsVisible(true);
                     } 
-                    // Hide when scrolling down past threshold
                     else if (currentScrollY > lastY && currentScrollY > SCROLL_THRESHOLD.HIDE) {
                         setIsVisible(false);
                     }
@@ -107,30 +87,54 @@ const useScrollVisibility = () => {
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     return isVisible;
 };
 
-// Main Component
+// ── Sub-Components ────────────────────────────────────────────
+
+const NavItem = React.memo(({ href, icon, label, isActive, activeColor }) => {
+    const router = useRouter();
+    const itemClass = `${styles.navItem} ${isActive ? styles.active : styles.inactive}`;
+    
+    const handleClick = (e) => {
+        e.preventDefault();
+        router.push(href);
+    };
+    
+    return (
+        <a 
+            href={href} 
+            onClick={handleClick} 
+            className={itemClass}
+            style={{ '--active-color': activeColor }}
+        >
+            {icon}
+            <span className={styles.label}>{label}</span>
+        </a>
+    );
+});
+
+NavItem.displayName = 'NavItem';
+
+// ── Main Component ────────────────────────────────────────────
+
 export default function BottomNav() {
     const router = useRouter();
     const isVisible = useScrollVisibility();
 
     return (
-        <nav className={ `${ styles.nav } ${ isVisible ? styles.visible : styles.hidden }` }>
+        <nav className={`${styles.nav} ${isVisible ? styles.visible : styles.hidden}`}>
             {NAV_ITEMS.map((item) => (
                 <NavItem
-                    key={ item.href }
-                    href={ item.href }
-                    icon={ item.icon }
-                    label={ item.label }
-                    activeColor={ item.activeColor }
-                    isActive={ isRouteActive(router.pathname, item.activeRoutes)}
+                    key={item.href}
+                    href={item.href}
+                    icon={item.icon}
+                    label={item.label}
+                    activeColor={item.activeColor}
+                    isActive={isRouteActive(router.pathname, item.activeRoutes)}
                 />
             ))}
         </nav>

@@ -11,8 +11,8 @@
     padding: $spacing-sm;
     height: 80px;
     background-color: $cream;
-    border-top: 1px solid $brown;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.085);
+    border-top: 2px solid $medium-gray;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
     transition: transform $transition-slow;
     z-index: 1000;
 
@@ -32,7 +32,6 @@
     align-items: center;
     text-decoration: none;
     color: $black;
-    font-size: 16px;
     gap: $spacing-xs;
     font-family: $font-mono;
     font-weight: 600;
@@ -44,7 +43,7 @@
     }
 
     &.inactive {
-        color: $dark-gray;
+        color: $medium-gray;
         transition: all 0.2s ease;
         
         &:hover {
@@ -67,6 +66,10 @@
         display: block;
         flex-shrink: 0;
         pointer-events: none;
+        @media (max-width: 480px) {
+            width: 26px;
+            margin-bottom: 1px;
+        }
     }
 
     .label {
@@ -75,5 +78,8 @@
         white-space: nowrap;
         pointer-events: none;
         user-select: none;
+        @media (max-width: 480px) {
+            font-size: 14px;
+        }
     }
 }
