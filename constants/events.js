@@ -12,3 +12,5 @@ export const EVENTS = [
 
 export const formatEvent = (event) =>
   event.count !== null ? `${event.name} (${event.count})` : event.name;
+
+  

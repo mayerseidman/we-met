@@ -3,84 +3,19 @@ import Header from "../components/Header";
 import { useStorage } from "../hooks/useStorage";
 import ProfileView from "../components/ProfileView";
 import styles from "../styles/pages/Profile.module.scss";
+import { 
+    isValidPhone, 
+    FORM_FIELDS, 
+    SAMPLE_DATA, 
+    PLACEHOLDER_HEADSHOT, 
+    EMPTY_PROFILE, 
+    DEV_MODE_OPTIONS 
+} from '../constants/constants';
 
 // ══════════════════════════════════════════════════════════════
 // ProfilePage Component
 // ══════════════════════════════════════════════════════════════
 // Main profile page with edit form and view mode
-
-// ── Constants ─────────────────────────────────────────────────
-
-const DEV_MODE_OPTIONS = [
-    { key: 'newUser',   label: 'New User' },
-    { key: 'hasInfo',   label: 'Has Info' },
-    { key: 'hasPhoto',  label: 'Has Photo' },
-    { key: 'isEditing', label: 'Editing' },
-    { key: 'showErrors',label: 'Show Errors' },
-    { key: 'isSaving',  label: 'Saving State' },
-    { key: 'isSaved',   label: 'Saved State' },
-];
-
-const SAMPLE_DATA = {
-    name: "Big Maestro",
-    phone: "+1 114-432-3087",
-    instagram: "bigmaestrotimo",
-    location: "Columbus, Ohio",
-    about: "Write something so people can remember you like your favorite color or your cat's name or whatever :)",
-    photo: null,
-};
-
-const PLACEHOLDER_HEADSHOT = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop";
-
-const EMPTY_PROFILE = {
-    name: "",
-    phone: "",
-    instagram: "",
-    location: "",
-    about: "",
-    photo: null,
-};
-
-const FORM_FIELDS = [
-    {
-        name: 'name',
-        label: 'NAME',
-        type: 'text',
-        placeholder: 'What can we call you?',
-        required: true,
-        errorMessage: 'Name is required',
-    },
-    {
-        name: 'phone',
-        label: 'PHONE',
-        type: 'tel',
-        placeholder: 'What are your digits?',
-        required: true,
-        errorMessage: 'Enter a valid phone number: +1 (123) 456-7890',
-    },
-    {
-        name: 'instagram',
-        label: 'INSTAGRAM',
-        type: 'text',
-        placeholder: "What's your handle?",
-        required: true,
-        errorMessage: 'Phone number or Instagram are required',
-    },
-    {
-        name: 'location',
-        label: 'LOCATION',
-        type: 'text',
-        placeholder: 'Where do you live?',
-        required: false,
-    },
-    {
-        name: 'about',
-        label: 'ABOUT',
-        type: 'textarea',
-        placeholder: "Write something so people can remember you like your favorite color or your cat's name or whatever :)",
-        required: false,
-    },
-];
 
 // ── Sub-Components ────────────────────────────────────────────
 
@@ -104,8 +39,26 @@ const DevModeToggle = ({ devMode, setDevMode, onClear }) => (
 );
 
 const FormField = ({ field, value, onChange, showError }) => {
-    const { name, label, type, placeholder, required, errorMessage, icon } = field;
-    const hasError = showError && required && !value;
+    const { name, label, type, placeholder, required, errorMessage, invalidMessage, icon } = field;
+    
+    // Enhanced validation logic
+    let hasError = false;
+    let displayMessage = errorMessage;
+    
+    if (showError && required) {
+        if (name === 'phone') {
+            if (!value) {
+                hasError = true;
+                displayMessage = errorMessage;
+            } else if (!isValidPhone(value)) {
+                hasError = true;
+                displayMessage = invalidMessage;
+            }
+        } else {
+            hasError = !value;
+        }
+    }
+    
     const inputClassName = hasError ? styles.error : '';
 
     if (type === 'textarea') {
@@ -123,8 +76,13 @@ const FormField = ({ field, value, onChange, showError }) => {
                     placeholder={placeholder}
                     className={inputClassName}
                 />
-                {hasError && errorMessage && (
-                    <div className={styles.errorMessage}>{errorMessage}</div>
+                {hasError && displayMessage && (
+                    <div className={styles.errorMessage}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path>
+                        </svg>
+                        {displayMessage}
+                    </div>
                 )}
             </div>
         );
@@ -164,8 +122,13 @@ const FormField = ({ field, value, onChange, showError }) => {
                 placeholder={placeholder}
                 className={inputClassName}
             />
-            {hasError && errorMessage && (
-                <div className={styles.errorMessage}>{errorMessage}</div>
+            {hasError && displayMessage && (
+                <div className={styles.errorMessage}>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path>
+                    </svg>
+                    {displayMessage}
+                </div>
             )}
         </div>
     );
@@ -235,9 +198,19 @@ const PhotoUpload = ({ photoPreview, onPhotoChange, onRemovePhoto, showError }) 
                 />
             </div>
             {hasError && (
-                <div className={styles.errorMessage}>
-                    ⚠ Unsupported file type - choose a photo file<br/>
-                    ⚠ File too large - choose a file under 10MB
+                <div className={styles.photoErrors}>
+                    <div className={styles.errorMessage}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path>
+                        </svg>
+                        <span>Photo files only</span>
+                    </div>
+                    <div className={styles.errorMessage}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path>
+                        </svg>
+                        <span>Must be under 10MB</span>
+                    </div>
                 </div>
             )}
         </div>
@@ -268,12 +241,16 @@ const SubmitButton = ({ buttonState, isFormValid }) => {
             case 'saved':
                 return (
                     <span className={styles.buttonContent}>
-                        <span className={styles.buttonIcon}>✓</span>
+                        <span className={styles.buttonIcon}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,255,1)">
+                                <path d="M4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12ZM12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM17.4571 9.45711L16.0429 8.04289L11 13.0858L8.20711 10.2929L6.79289 11.7071L11 15.9142L17.4571 9.45711Z"></path>
+                            </svg>
+                        </span>
                         SAVED!
                     </span>
                 );
             default:
-                return <span className={styles.buttonContent}>SAVE PROFILE</span>;
+                return <span key="default" className={styles.buttonContent}>SAVE PROFILE</span>;
         }
     };
     
@@ -297,7 +274,7 @@ export default function ProfilePage() {
     const [initialProfile, setInitialProfile] = useState(null);
     const [hasChanges, setHasChanges] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const [buttonState, setButtonState] = useState('default'); // 'default' | 'saving' | 'saved'
+    const [buttonState, setButtonState] = useState('default');
     const [devMode, setDevMode] = useState({
         newUser: false,
         hasInfo: false,
@@ -308,11 +285,9 @@ export default function ProfilePage() {
         isSaved: false,
     });
 
-    // Override button state with dev mode if active
     const effectiveButtonState = devMode.isSaving ? 'saving' : devMode.isSaved ? 'saved' : buttonState;
 
     useEffect(() => {
-        // ── DEV: New User ──────────────────────────────────────────
         if (devMode.newUser) {
             const data = devMode.hasInfo
                 ? { ...SAMPLE_DATA, photo: devMode.hasPhoto ? PLACEHOLDER_HEADSHOT : null }
@@ -324,7 +299,6 @@ export default function ProfilePage() {
             return;
         }
 
-        // ── DEV: Returning User ────────────────────────────────────
         if (!devMode.newUser && (devMode.hasInfo || devMode.hasPhoto || devMode.isEditing)) {
             const data = {
                 ...SAMPLE_DATA,
@@ -337,7 +311,6 @@ export default function ProfilePage() {
             return;
         }
 
-        // ── REAL: Existing profile ─────────────────────────────────
         if (profile) {
             const profileData = {
                 name: profile.name || "",
@@ -354,7 +327,6 @@ export default function ProfilePage() {
             return;
         }
 
-        // ── REAL: New user, no profile ─────────────────────────────
         setEditingProfile(EMPTY_PROFILE);
         setInitialProfile(null);
         setPhotoPreview(null);
@@ -362,7 +334,6 @@ export default function ProfilePage() {
 
     }, [profile, devMode.newUser, devMode.hasInfo, devMode.hasPhoto, devMode.isEditing]);
 
-    // Detect changes
     useEffect(() => {
         if (!initialProfile) {
             setHasChanges(!!(editingProfile.name && editingProfile.phone && editingProfile.instagram));
@@ -406,7 +377,6 @@ export default function ProfilePage() {
                 setButtonState('saved');
                 setInitialProfile(editingProfile);
                 
-                // Return to default after 2 seconds
                 setTimeout(() => {
                     setButtonState('default');
                     setIsEditing(false);
@@ -440,8 +410,8 @@ export default function ProfilePage() {
         });
     };
 
-    const isFormValid = editingProfile.name && editingProfile.phone && editingProfile.instagram && hasChanges;
-
+    const isFormValid = editingProfile.name && isValidPhone(editingProfile.phone) && editingProfile.instagram && hasChanges;
+    
     return (
         <div className={styles.container}>
             <DevModeToggle devMode={devMode} setDevMode={setDevMode} onClear={handleClear} />
@@ -449,7 +419,7 @@ export default function ProfilePage() {
 
             <div className={styles.content}>
                 {isEditing ? (
-                    <>
+                    <div key="edit" className={styles.editMode}>
                         <h1 className={styles.headerTitle}>Profile</h1>
                         <p className={styles.headerSubtitle}>
                             Set up your profile so others can find you after the magic fades
@@ -475,9 +445,10 @@ export default function ProfilePage() {
                                 isFormValid={isFormValid} 
                             />
                         </form>
-                    </>
+                    </div>
                 ) : (
                     <ProfileView 
+                        key="view"
                         profile={editingProfile}
                         onEdit={() => setIsEditing(true)}
                     />
