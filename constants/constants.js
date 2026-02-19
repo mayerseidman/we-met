@@ -26,7 +26,7 @@ export const FORM_FIELDS = [
         placeholder: 'What are your digits?',
         required: true,
         errorMessage: 'Phone is required',
-        invalidMessage: 'Enter a valid phone number: +1 (123) 456-7890',
+        invalidMessage: 'Must be valid number: +1 (123) 123-1234',
     },
     {
         name: 'instagram',
