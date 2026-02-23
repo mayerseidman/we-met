@@ -135,7 +135,8 @@ const DesktopEventSelect = ({ selectedEvent, onEventChange }) => (
 const InfoNote = () => (
     <p className={styles.infoNote}>
         <span className={styles.infoIcon}>ⓘ</span>
-        They don't have it?{" "}
+        They don't have it?
+
         <a href="#" className={styles.infoLink}>
             What to Do
         </a>
