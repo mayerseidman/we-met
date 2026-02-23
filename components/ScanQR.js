@@ -6,7 +6,7 @@ export default function ScanQR() {
         <div className={styles.scanQr}>
             <h1 className={styles.scanHeading}>Scan QR</h1>
             <p className={styles.scanSubtext}>
-                Scan someone&apos;s QR code to add them to your connections
+                Scan someone's QR code to add them to your connections
             </p>
             <Link href="/scan" className={styles.openCameraBtn}>
                 Open Camera
