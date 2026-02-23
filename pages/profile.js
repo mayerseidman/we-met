@@ -192,7 +192,7 @@ export default function ProfilePage() {
             <div className={styles.content}>
                 {isEditing ? (
                     <div key="edit" className={styles.editMode}>
-                        {initialProfile ? "Edit Profile" : "Add Profile"}
+                        <h1 className={styles.headerTitle}>{initialProfile ? "Edit Profile" : "Add Profile"}</h1>
                         {!initialProfile && (
                             <p className={styles.headerSubtitle}>
                                 Set up your profile so others can find you after the magic fades
