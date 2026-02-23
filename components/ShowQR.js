@@ -135,8 +135,7 @@ const DesktopEventSelect = ({ selectedEvent, onEventChange }) => (
 const InfoNote = () => (
     <p className={styles.infoNote}>
         <span className={styles.infoIcon}>ⓘ</span>
-        {/* eslint-disable-next-line react/no-unescaped-entities */}
-        They don't have it?
+        They don&apos;t have it?{" "}
 
         <a href="#" className={styles.infoLink}>
             What to Do
