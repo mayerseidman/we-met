@@ -1,7 +1,7 @@
 @import '../variables';
 
 // ══════════════════════════════════════════════════════════════
-// EventDrawer Component Styles (Mobile Drawer)
+// ConnectDrawer Component Styles (Modal Overlay)
 // ══════════════════════════════════════════════════════════════
 
 .backdrop {
@@ -32,7 +32,7 @@
     background-color: $cream;
     border-top: 3px solid $black;
     border-radius: 12px 12px 0 0;
-    z-index: 1000;
+    z-index: 10000000;
     max-height: 70vh;
     overflow: hidden;
     display: flex;
@@ -89,56 +89,99 @@
     }
 }
 
-// ── Event List ────────────────────────────────────────────────
-.eventList {
+// ── Actions ───────────────────────────────────────────────────
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    padding: $spacing-md;
     overflow-y: auto;
-    padding: $spacing-sm;
 }
 
-.eventItem {
-    width: 100%;
+.actionCard {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: $spacing-md;
+    gap: $spacing-md;
+    padding: $spacing-lg;
     background: $white;
     border: 2px solid $black;
     border-radius: 2px;
-    margin-bottom: $spacing-sm;
-    font-family: $font-mono;
-    font-size: 1rem;
-    font-weight: 600;
-    color: $black;
     cursor: pointer;
     transition: all $transition-fast;
     box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
     
     &:hover {
-        border-color: $orange;
         transform: translate(-1px, -1px);
-        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
+        box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.15);
+        border-color: $orange;
     }
     
     &:active {
         transform: translate(1px, 1px);
         box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
     }
+}
+
+// ── Action Icon ───────────────────────────────────────────────
+.actionIcon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $cream;
+    border: 2px solid $black;
+    border-radius: 2px;
+    flex-shrink: 0;
     
-    &.selected {
-        background-color: rgba(245, 114, 47, 0.1);
-        border-color: $orange;
-        font-weight: 900;
+    svg {
+        width: 24px;
+        height: 24px;
+        stroke-width: 2;
+        stroke: $black;
     }
 }
 
-.eventName {
+.actionCard:hover .actionIcon {
+    background: $orange;
+    
+    svg {
+        stroke: $white;
+    }
+}
+
+// ── Action Text ───────────────────────────────────────────────
+.actionText {
     flex: 1;
     text-align: left;
 }
 
-.checkmark {
-    font-size: 1.25rem;
-    color: $orange;
+.actionLabel {
+    font-size: 1.125rem;
     font-weight: 900;
-    margin-left: $spacing-sm;
+    margin: 0 0 $spacing-xs 0;
+    color: $black;
+}
+
+.actionDescription {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin: 0;
+    color: $medium-gray;
+}
+
+// ── Action Arrow ──────────────────────────────────────────────
+.actionArrow {
+    flex-shrink: 0;
+    
+    svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2;
+        stroke: $medium-gray;
+    }
+}
+
+.actionCard:hover .actionArrow svg {
+    stroke: $orange;
 }

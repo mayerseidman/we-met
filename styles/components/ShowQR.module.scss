@@ -1,112 +1,247 @@
-@use "../variables" as *;
+@import '../variables';
 
-// ─── SHOW QR LAYOUT ──────────────────────────────────────────
-.showQr {
+// ══════════════════════════════════════════════════════════════
+// ShowQR Option D - WHATSAPP CARD WITH OVERLAPPING AVATAR
+// ══════════════════════════════════════════════════════════════
+
+.showQr,
+.emptyState {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: $spacing-lg 0;
+    padding-bottom: 5rem;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+// ── Avatar Wrapper (overlaps card) ────────────────────────────
+.avatarWrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: -50px; // Negative margin to overlap card
+    z-index: 2;
+    position: relative;
+}
+
+// ── QR Card (with padding-top to account for avatar) ──────────
+.qrCard {
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    padding: 58px 1rem 0rem;
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: $spacing-lg;
+    position: relative;
+    z-index: 1;
+}
+
+// ── Name ──────────────────────────────────────────────────────
+.name {
+    font-size: 2rem;
+    font-weight: 900;
     text-align: center;
+    margin: 0;
+    color: $black;
+    letter-spacing: 1px;
+    
+    @media (max-width: 480px) {
+        font-size: 1.75rem;
+    }
 }
 
-.divider {
-    width: 70%;
-    height: 1px;
-    background-color: $brown;
-    margin: $spacing-lg auto;
+// ── Subtitle (descriptive, not instructive) ───────────────────
+.subtitle {
+    font-size: 1rem;
+    color: $medium-gray;
+    font-weight: 600;
+    text-align: center;
+    margin: 0 0 $spacing-xl 0;
 }
 
-.profileName {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: $spacing-lg;
-}
-
-.addMeHeading {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: $spacing-xs;
-}
-
-.addMeSubtext {
-    font-size: 0.875rem;
-    color: $gray;
-    margin-bottom: $spacing-lg;
-}
-
+// ── QR Code (inside card) ─────────────────────────────────────
 .qrWrapper {
-    background-color: $white;
-    padding: $spacing-md;
-    margin-bottom: $spacing-lg;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    line-height: 0;
+    position: relative;
+    bottom: 2px;
+    
+    svg {
+        width: 80%;
+        display: block;
+        // QR code without extra border since card provides container
+        
+        // Remove any default padding/margin from the SVG itself
+        margin: 0;
+        padding: 0;
+    }
 }
 
-// ─── EVENT PICKER ────────────────────────────────────────────
-.eventGroup {
-    text-align: left;
-    max-width: 400px;
-    margin: 0 auto $spacing-md;
+// ── Event Section (outside card) ──────────────────────────────
+.eventSection {
+    margin-bottom: $spacing-lg;
 }
 
 .eventLabel {
     display: block;
-    font-size: $spacing-md;
-    font-weight: bold;
+    font-weight: 900;
     margin-bottom: $spacing-sm;
+    font-size: 0.75rem;
+    color: $dark-gray;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.eventSelect {
-    width: 100%;
-    padding: $spacing-md;
-    font-family: $font-mono;
-    font-size: $spacing-md;
-    border: 1px solid $brown;
-    background-color: $cream;
-    cursor: pointer;
-}
-
+.eventSelect,
 .eventTrigger {
     width: 100%;
-    padding: $spacing-md;
+    padding: 0.875rem;
+    padding-right: 3rem; // More space for chevron
     font-family: $font-mono;
-    font-size: $spacing-md;
-    border: 1px solid $brown;
-    background-color: $cream;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    font-size: 1rem;
+    font-weight: 600;
+    border: 2px solid $black;
+    border-radius: 2px;
+    background-color: $white;
+    color: $black;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+    transition: all $transition-fast;
     cursor: pointer;
-}
+    appearance: none; // Remove default browser styling
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    
+    // Add custom arrow background for select
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    
+    &:focus {
+        outline: none;
+        border-color: $orange;
+        box-shadow: 0 0 0 3px rgba(245, 114, 47, 0.2);
+        transform: translate(1px, 1px);
+    }
 
-// ─── INFO NOTE ───────────────────────────────────────────────
-.infoNote {
-    font-size: 0.875rem;
-    color: $gray;
-    margin-bottom: $spacing-xl;
-
-    &__icon {
-        margin-right: $spacing-xs;
+    &:hover {
+        border-color: $orange;
     }
 }
 
+.eventTrigger {
+    // Override background image for button (not select)
+    background-image: none;
+}
+
+.eventTrigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+
+    .arrow {
+        font-size: 0.75rem;
+    }
+}
+
+// ── Info Note ─────────────────────────────────────────────────
+.infoNote {
+    font-size: 0.875rem;
+    color: $dark-gray;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+    margin: 0;
+    justify-content: center;
+}
+
+.infoIcon {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
 .infoLink {
+    color: $black;
+    font-weight: normal;
     text-decoration: underline;
+    transition: color $transition-fast;
+    
+    &:hover {
+        color: $orange;
+    }
+}
+
+// ── Empty State ───────────────────────────────────────────────
+.photoPlaceholder {
+    width: 145px;
+    height: 145px;
+    border-radius: $radius-full;
+    border: 3px solid $black;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    background-color: rgba(245, 114, 47, 0.15);
+    color: $dark-orange;
+    margin-bottom: $spacing-lg;
+}
+
+.emptyHeading {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin: 0 0 $spacing-sm 0;
     color: $black;
 }
 
-// ─── ADD PROFILE PROMPT (no-profile state) ──────────────────
-.addProfilePrompt {
-    font-size: 0.875rem;
-    color: $gray;
-    max-width: 400px;
-    margin: 0 auto $spacing-xl;
+.emptyText {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: $black;
+    text-align: center;
+    margin-bottom: $spacing-xl;
+    max-width: 360px;
 }
 
 .addProfileBtn {
-    width: 80%;
-    max-width: 400px;
+    width: 100%;
+    max-width: 360px;
+    height: 58px;
     padding: $spacing-md;
     background-color: $orange;
-    color: $black;
-    border: none;
-    font-size: $spacing-md;
-    font-weight: bold;
-    cursor: pointer;
+    color: $white;
+    border: 3.5px solid $black;
+    border-radius: 2px;
     font-family: $font-mono;
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.25);
+    transition: all $transition-fast;
+
+    &:hover {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
+    }
+
+    &:active {
+        transform: translate(6px, 6px);
+        box-shadow: none;
+    }
 }

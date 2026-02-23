@@ -4,35 +4,44 @@ import { EVENTS, formatEvent } from "../constants/events";
 export default function EventDrawer({ selectedEvent, onSelect, onClose }) {
     return (
         <>
-            <div className={styles.drawerOverlay} onClick={onClose} />
+            {/* Backdrop */}
+            <div className={styles.backdrop} onClick={onClose} />
+            
+            {/* Drawer */}
             <div className={styles.drawer}>
-                <div className={styles.drawer__handle} />
-                <div className={styles.drawer__header}>
-                    <h3>Select Event</h3>
+                <div className={styles.header}>
+                    <h3 className={styles.title}>Select Event</h3>
+                    <button 
+                        className={styles.closeButton}
+                        onClick={onClose}
+                        aria-label="Close"
+                    >
+                        ✕
+                    </button>
                 </div>
-                {EVENTS.map((event) => {
-                    const label = formatEvent(event);
-                    const active = selectedEvent === label;
-                    return (
-                        <div
-                            key={event.name}
-                            className={`${styles.drawerOption} ${
-                                active ? styles["drawerOption--active"] : ""
-                            }`}
-                            onClick={() => {
-                                onSelect(label);
-                                onClose();
-                            }}
-                        >
-                            <span>{label}</span>
-                            {active && (
-                                <span className={styles.drawerOption__check}>
-                                    ✓
-                                </span>
-                            )}
-                        </div>
-                    );
-                })}
+
+                <div className={styles.eventList}>
+                    {EVENTS.map((event) => {
+                        const label = formatEvent(event);
+                        const isSelected = selectedEvent === label;
+                        
+                        return (
+                            <button
+                                key={event.name}
+                                className={`${styles.eventItem} ${isSelected ? styles.selected : ''}`}
+                                onClick={() => {
+                                    onSelect(label);
+                                    onClose();
+                                }}
+                            >
+                                <span className={styles.eventName}>{label}</span>
+                                {isSelected && (
+                                    <span className={styles.checkmark}>✓</span>
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
             </div>
         </>
     );

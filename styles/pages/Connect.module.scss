@@ -9,12 +9,26 @@
     font-family: $font-mono;
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
 .content {
     flex: 1;
-    padding: $spacing-xl $spacing-lg 5rem;
-    max-width: 600px;
+    padding: 0 $spacing-md 5rem;
+    max-width: 480px;
     margin: 0 auto;
     width: 100%;
+    animation: fadeIn 0.4s ease-out;
+    h1 {
+        text-align: center;
+        margin-bottom: 0;
+    }
 }
 
 .loading {
@@ -60,39 +74,68 @@
 
 // ─── TAB BAR ─────────────────────────────────────────────────
 .tabBar {
+    border-bottom: 1px solid $dark-gray;
     background-color: $cream;
+    position: sticky;
+    top: 0;
     z-index: 100;
-    border-bottom: 1px solid $brown;
-
+    
     &__inner {
         display: flex;
-        max-width: 600px;
+        max-width: 480px;
         margin: 0 auto;
     }
 }
-
 .tabButton {
     flex: 1;
-    padding: $spacing-md;
-    background-color: transparent;
+    padding: 1rem;
+    padding-bottom: 0.55rem;
+    background: none;
     border: none;
-    border-bottom: 3px solid transparent;
+    border-bottom: 4px solid transparent; // Add transparent border to all
     font-family: $font-mono;
-    font-size: $spacing-md;
-    font-weight: bold;
-    color: $gray;
+    font-size: 1rem;
     cursor: pointer;
+    transition: all $transition-fast;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $spacing-sm;
-    transition: all $transition-normal;
+    gap: 0.5rem;
+    position: relative;
+    color: $medium-gray;
+    font-weight: normal;
+    
+    svg {
+        width: 18px;
+        height: 18px;
+        stroke-width: 2;
+    }
 
+    &:hover:not(&--active) {
+        background-color: rgba(245, 114, 47, 0.05);
+        font-weight: bold;
+        color: $orange;
+    }
+
+    &:active:not(&--active) {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+    
     &--active {
-        border-bottom-color: $orange;
-        color: $black;
+        color: $orange;
+        border-bottom: 2px solid $orange;
+        font-weight: bold;
+        
+        /*svg {
+            stroke: $orange;
+        }*/
+        
+        /*&:hover {
+            background-color: rgba(245, 114, 47, 0.05);
+        }*/
     }
 }
+
 
 // ─── FORM ────────────────────────────────────────────────────
 .form {

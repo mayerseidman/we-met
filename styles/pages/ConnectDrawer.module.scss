@@ -1,0 +1,78 @@
+@import '../variables';
+
+// ══════════════════════════════════════════════════════════════
+// ConnectPage (Drawer Version) Styles
+// ══════════════════════════════════════════════════════════════
+
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: $cream;
+}
+
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-3xl;
+    font-weight: 600;
+    color: $dark-gray;
+}
+
+// ── Full View (Show/Scan) ─────────────────────────────────────
+.fullView {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.backButton {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    padding: $spacing-md;
+    background: none;
+    border: none;
+    font-family: $font-mono;
+    font-size: 1rem;
+    font-weight: 700;
+    color: $black;
+    cursor: pointer;
+    transition: all $transition-fast;
+    
+    svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2;
+    }
+    
+    &:hover {
+        color: $orange;
+        
+        svg {
+            stroke: $orange;
+        }
+    }
+    
+    &:active {
+        transform: translateX(-2px);
+    }
+}
+
+.viewContent {
+    flex: 1;
+    overflow-y: auto;
+}

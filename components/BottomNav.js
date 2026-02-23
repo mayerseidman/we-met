@@ -23,7 +23,7 @@ const NAV_ITEMS = [
         ),
     },
     {
-        href: '/connect',
+        id: 'connect', // Add id to identify connect button
         label: 'CONNECT',
         activeRoutes: ['/connect', '/scan'],
         activeColor: '#FF6B35',
@@ -95,24 +95,32 @@ const useScrollVisibility = () => {
 
 // ── Sub-Components ────────────────────────────────────────────
 
-const NavItem = React.memo(({ href, icon, label, isActive, activeColor }) => {
+const NavItem = React.memo(({ item, isActive, activeColor, onConnectClick }) => {
     const router = useRouter();
     const itemClass = `${styles.navItem} ${isActive ? styles.active : styles.inactive}`;
     
     const handleClick = (e) => {
         e.preventDefault();
-        router.push(href);
+        
+        if (item.id === 'connect') {
+            onConnectClick();
+        } else if (item.href === '/profile' && router.pathname === '/profile') {
+            // Trigger custom event to tell Profile page to switch to view mode
+            window.dispatchEvent(new CustomEvent('profileViewRequest'));
+        } else if (item.href) {
+            router.push(item.href);
+        }
     };
     
     return (
         <a 
-            href={href} 
+            href={item.href || '#'} 
             onClick={handleClick} 
             className={itemClass}
             style={{ '--active-color': activeColor }}
         >
-            {icon}
-            <span className={styles.label}>{label}</span>
+            {item.icon}
+            <span className={styles.label}>{item.label}</span>
         </a>
     );
 });
@@ -121,20 +129,20 @@ NavItem.displayName = 'NavItem';
 
 // ── Main Component ────────────────────────────────────────────
 
-export default function BottomNav() {
+export default function BottomNav({ onConnectClick }) {
     const router = useRouter();
     const isVisible = useScrollVisibility();
+
 
     return (
         <nav className={`${styles.nav} ${isVisible ? styles.visible : styles.hidden}`}>
             {NAV_ITEMS.map((item) => (
                 <NavItem
-                    key={item.href}
-                    href={item.href}
-                    icon={item.icon}
-                    label={item.label}
+                    key={item.id || item.href}
+                    item={item}
                     activeColor={item.activeColor}
                     isActive={isRouteActive(router.pathname, item.activeRoutes)}
+                    onConnectClick={onConnectClick}
                 />
             ))}
         </nav>

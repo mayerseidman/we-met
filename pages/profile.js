@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useRouter } from 'next/router';
 import Header from "../components/Header";
 import ProfileView from "../components/ProfileView";
 import DevModeToggle from "../components/profile/DevModeToggle";
@@ -40,6 +41,18 @@ export default function ProfilePage() {
     });
 
     const effectiveButtonState = devMode.isSaving ? 'saving' : devMode.isSaved ? 'saved' : buttonState;
+
+    useEffect(() => {
+       const handleProfileViewRequest = () => {
+           if (profile && !devMode.isEditing) {
+               setIsEditing(false);
+           }
+       };
+       
+       window.addEventListener('profileViewRequest', handleProfileViewRequest);
+       return () => window.removeEventListener('profileViewRequest', handleProfileViewRequest);
+    }, [profile, devMode.isEditing]);
+
 
     useEffect(() => {
         if (devMode.newUser) {
@@ -179,7 +192,7 @@ export default function ProfilePage() {
             <div className={styles.content}>
                 {isEditing ? (
                     <div key="edit" className={styles.editMode}>
-                        <h1 className={styles.headerTitle}>Profile</h1>
+                        <h1 className={styles.headerTitle}>Edit Profile</h1>
                         {!initialProfile && (
                             <p className={styles.headerSubtitle}>
                                 Set up your profile so others can find you after the magic fades
