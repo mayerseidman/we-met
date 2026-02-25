@@ -28,9 +28,10 @@
 .avatarWrapper {
     display: flex;
     justify-content: center;
-    margin-bottom: -50px; // Negative margin to overlap card
+    margin-bottom: -50px; 
     z-index: 2;
     position: relative;
+    transition: all $transition-fast;
 }
 
 // ── QR Card (with padding-top to account for avatar) ──────────
@@ -46,11 +47,29 @@
     margin-bottom: $spacing-lg;
     position: relative;
     z-index: 1;
+    transition: all $transition-fast;
+}
+
+.qrCardContainer {
+    position: relative;
+    transition: all $transition-fast;
+    
+    &:hover {
+        transform: translate(-1px, -1px);
+        
+        .qrCard {
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+        }
+        
+        .avatarWrapper {
+            transform: translate(-1px, -1px);
+        }
+    }
 }
 
 // ── Name ──────────────────────────────────────────────────────
 .name {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 900;
     text-align: center;
     margin: 0;
@@ -135,9 +154,10 @@
         box-shadow: 0 0 0 3px rgba(245, 114, 47, 0.2);
         transform: translate(1px, 1px);
     }
-
     &:hover {
-        border-color: $orange;
+        transform: translate(1px, 1px);
+        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
+        border-color: $orange
     }
 }
 

@@ -9,6 +9,7 @@ function MyApp({ Component, pageProps }) {
     const router = useRouter();
     const [isChecking, setIsChecking] = useState(true);
     const [showConnectDrawer, setShowConnectDrawer] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     
     useEffect(() => {
         // Only register in production or when explicitly testing
@@ -59,8 +60,11 @@ function MyApp({ Component, pageProps }) {
     
     return (
         <>
-            <Component {...pageProps} />
-            {showNav && <BottomNav onConnectClick={handleConnectClick} />}
+            <Component 
+                {...pageProps} 
+                onDropdownToggle={setIsDropdownOpen}
+            />
+            {showNav && <BottomNav onConnectClick={handleConnectClick} isHidden={isDropdownOpen} />}
             
             {/* Global ConnectDrawer */}
             {showConnectDrawer && (

@@ -11,8 +11,8 @@
 }
 
 .avatarPlaceholder {
-    width: 125px;
-    height: 125px;
+    width: 100px;
+    height: 100px;
     border-radius: $radius-full;
     border: 3px solid $black;
     box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
@@ -32,7 +32,7 @@
 }
 
 .avatarInitials {
-    font-size: 3.5rem;
+    font-size: 2.75rem;
     font-weight: 900;
     color: $dark-orange;
     letter-spacing: 2px;

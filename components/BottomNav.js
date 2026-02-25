@@ -129,13 +129,13 @@ NavItem.displayName = 'NavItem';
 
 // ── Main Component ────────────────────────────────────────────
 
-export default function BottomNav({ onConnectClick }) {
+export default function BottomNav({ onConnectClick, isHidden }) {
     const router = useRouter();
     const isVisible = useScrollVisibility();
 
 
     return (
-        <nav className={`${styles.nav} ${isVisible ? styles.visible : styles.hidden}`}>
+        <nav className={`${styles.nav} ${isVisible ? styles.visible : styles.hidden} ${isHidden ? styles.slideOut : ''}`}>
             {NAV_ITEMS.map((item) => (
                 <NavItem
                     key={item.id || item.href}

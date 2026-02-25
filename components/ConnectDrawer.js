@@ -8,23 +8,23 @@ import styles from "../styles/components/ConnectDrawer.module.scss";
 const ACTIONS = [
     {
         id: "show",
-        label: "Show My QR",
+        label: "Show QR",
         description: "Share your code with others",
         icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-                <path d="M12 18h.01"></path>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 17V16H13V13H16V15H18V17H17V19H15V21H13V18H15V17H16ZM21 21H17V19H19V17H21V21ZM3 3H11V11H3V3ZM5 5V9H9V5H5ZM13 3H21V11H13V3ZM15 5V9H19V5H15ZM3 13H11V21H3V13ZM5 15V19H9V15H5ZM18 13H21V15H18V13ZM6 6H8V8H6V6ZM6 16H8V18H6V16ZM16 6H18V8H16V6Z">
+                </path>
             </svg>
         ),
     },
     {
         id: "scan",
         label: "Scan QR",
-        description: "Add someone to your connections",
+        description: "Scan another person's code",
         icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15 3H21V8H19V5H15V3ZM9 3V5H5V8H3V3H9ZM15 21V19H19V16H21V21H15ZM9 21H3V16H5V19H9V21ZM3 11H21V13H3V11Z">
+                </path>
             </svg>
         ),
     },
@@ -73,8 +73,9 @@ const ActionCard = ({ action, onClick }) => (
             <p className={styles.actionDescription}>{action.description}</p>
         </div>
         <div className={styles.actionArrow}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="m9 18 6-6-6-6"/>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M1.99974 12.9999L1.9996 11L15.5858 11V5.58582L22 12L15.5858 18.4142V13L1.99974 12.9999Z">
+                </path>
             </svg>
         </div>
     </button>

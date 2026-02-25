@@ -32,13 +32,14 @@ const TABS = [
     },
 ];
 
-export default function ConnectPage() {
+export default function ConnectPage({ onDropdownToggle }) {
     const router = useRouter();
     const { profile, isReady } = useStorage();
     const [activeTab, setActiveTab] = useState("show"); // Default to show
     const [showEventDrawer, setShowEventDrawer] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState("Afrikaburn 2025");
     const [isMobile, setIsMobile] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     // ── Effects ───────────────────────────────────────────────
     useEffect(() => {
@@ -113,12 +114,9 @@ export default function ConnectPage() {
                         hasPhoto={!!(profile?.photo)}
                         qrData={qrData}
                         selectedEvent={selectedEvent}
-                        isMobile={isMobile}
-                        showEventDrawer={showEventDrawer}
                         onSetEditing={handleSetEditing}
                         onEventChange={handleEventChange}
-                        onOpenDrawer={handleOpenDrawer}
-                        onCloseDrawer={handleCloseDrawer}
+                        onDropdownToggle={onDropdownToggle}
                     />
                 )}
             </div>

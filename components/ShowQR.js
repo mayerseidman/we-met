@@ -2,6 +2,7 @@ import QRCode from "react-qr-code";
 import styles from "../styles/components/ShowQR.module.scss";
 import Avatar from "./Avatar";
 import EventDrawer from "./EventDrawer";
+import EventDropdown from "./EventDropdown";
 import { EVENTS, formatEvent } from "../constants/events";
 
 // ══════════════════════════════════════════════════════════════
@@ -18,6 +19,7 @@ export default function ShowQR({
     showEventDrawer,
     onSetEditing,
     onEventChange,
+    onDropdownToggle,
     onOpenDrawer,
     onCloseDrawer,
 }) {
@@ -29,17 +31,19 @@ export default function ShowQR({
     // Profile with QR
     return (
         <div className={styles.showQr}>
-            <AvatarSection profile={currentProfile} hasPhoto={hasPhoto} />
+            <div className={styles.qrCardContainer}>
+                <AvatarSection profile={currentProfile} hasPhoto={hasPhoto} />
+                <QRCard profile={currentProfile} qrData={qrData} />
+            </div>
             
-            <QRCard profile={currentProfile} qrData={qrData} />
-            
-            <EventSelector
-                selectedEvent={selectedEvent}
-                isMobile={isMobile}
-                onEventChange={onEventChange}
-                onOpenDrawer={onOpenDrawer}
-            />
-            
+          <div className={styles.eventSection}>
+              <label className={styles.eventLabel}>Event</label>
+              <EventDropdown 
+                  selectedEvent={selectedEvent}
+                  onEventChange={onEventChange}
+                  onDropdownToggle={onDropdownToggle}
+              />
+          </div>
             <InfoNote />
             
             {showEventDrawer && (
@@ -83,60 +87,25 @@ const AvatarSection = ({ profile, hasPhoto }) => {
 };
 
 const QRCard = ({ profile, qrData }) => (
-    <div className={styles.qrCard}>
-        <h2 className={styles.name}>{profile.name}</h2>        
-        <div className={styles.qrWrapper}>
-            <QRCode
-                value={qrData}
-                size={220}
-                level="H"
-                style={{ display: "block", margin: 0, padding: 0 }}
-            />
+    <div className={styles.qrCardContainer}>
+        <div className={styles.qrCard}>
+            <h2 className={styles.name}>{profile.name}</h2>        
+            <div className={styles.qrWrapper}>
+                <QRCode
+                    value={qrData}
+                    size={220}
+                    level="H"
+                    style={{ display: "block", margin: 0, padding: 0 }}
+                />
+            </div>
         </div>
     </div>
-);
-
-const EventSelector = ({ selectedEvent, isMobile, onEventChange, onOpenDrawer }) => (
-    <div className={styles.eventSection}>
-        <label className={styles.eventLabel}>Event</label>
-        
-        {isMobile ? (
-            <MobileEventTrigger selectedEvent={selectedEvent} onOpenDrawer={onOpenDrawer} />
-        ) : (
-            <DesktopEventSelect selectedEvent={selectedEvent} onEventChange={onEventChange} />
-        )}
-    </div>
-);
-
-const MobileEventTrigger = ({ selectedEvent, onOpenDrawer }) => (
-    <button className={styles.eventTrigger} onClick={onOpenDrawer}>
-        <span>{selectedEvent}</span>
-        <span className={styles.arrow}>▼</span>
-    </button>
-);
-
-const DesktopEventSelect = ({ selectedEvent, onEventChange }) => (
-    <select
-        className={styles.eventSelect}
-        value={selectedEvent}
-        onChange={(e) => onEventChange(e.target.value)}
-    >
-        {EVENTS.map((event) => {
-            const label = formatEvent(event);
-            return (
-                <option key={event.name} value={label}>
-                    {label}
-                </option>
-            );
-        })}
-    </select>
 );
 
 const InfoNote = () => (
     <p className={styles.infoNote}>
         <span className={styles.infoIcon}>ⓘ</span>
-        {"They don&apos;t have it?"}{" "}
-
+        They don't have it?{" "}
         <a href="#" className={styles.infoLink}>
             What to Do
         </a>

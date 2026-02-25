@@ -23,6 +23,9 @@
     &.visible {
         transform: translateY(0);
     }
+    &.slideOut {
+        transform: translateY(100%); // Slide down out of view
+    }
 }
 
 .navItem {
