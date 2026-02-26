@@ -105,7 +105,7 @@ const QRCard = ({ profile, qrData }) => (
 const InfoNote = () => (
     <p className={styles.infoNote}>
         <span className={styles.infoIcon}>ⓘ</span>
-        They don&apos;t have it?
+        They don&apos;t have it?{" "}
         <a href="#" className={styles.infoLink}>
             What to Do
         </a>
