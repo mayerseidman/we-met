@@ -27,8 +27,8 @@
     width: 145px;
     height: 145px;
     border-radius: $radius-full;
-    border: 3px solid $black; // thinner
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2); // smaller shadow
+    border: 1.5px solid $black; // thinner
+    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
     object-fit: cover;
 }
 
@@ -36,8 +36,8 @@
     width: 145px;
     height: 145px;
     border-radius: $radius-full;
-    border: 3px solid $black; // thinner
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2); // smaller shadow
+    border: 1.5px solid $black; // thinner
+    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -79,19 +79,19 @@
 .aboutCard {
 /*    background: rgba(255, 255, 255, 0.6);
 */    background: #fff;
-    border: 2px solid $black; // thinner
+    border: 1.5px solid $black; // thinner
     border-radius: 2px; // less rounded
     padding: $spacing-md;
     transition: all $transition-fast;
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.15); // smaller shadow
+    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
 
     &:hover {
-        transform: translate(-1px, -1px); // smaller movement
-        box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+        transform: translate(-0.5px, -0.5px);
+        box-shadow: 4.5px 4.5px 0px rgba(0, 0, 0, 0.2);
     }
     
     &:active {
-        transform: translate(0, 0);
+        transform: translate(1px, 1px);
         box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
     }
 }
@@ -146,22 +146,22 @@
     align-items: center;
     gap: $spacing-md;
     padding: 1rem;
-    border: 2px solid $black; // thinner
+    border: 1.5px solid $black; // thinner
     border-radius: 2px; // less rounded
     margin-bottom: $spacing-md;
     background: $white;
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.15); // smaller shadow
+    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
     transition: all $transition-fast;
     text-decoration: none;
     color: $black;
-    
+
     &:hover {
-        transform: translate(-1px, -1px); // smaller movement
-        box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+        transform: translate(-0.5px, -0.5px);
+        box-shadow: 4.5px 4.5px 0px rgba(0, 0, 0, 0.2);
     }
     
     &:active {
-        transform: translate(0, 0);
+        transform: translate(1px, 1px);
         box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
     }
     
@@ -189,7 +189,7 @@
     padding: $spacing-md;
     background-color: $orange;
     color: $white;
-    border: 3.5px solid $black;
+    border: 2px solid $black;
     border-radius: 2px; 
     font-family: $font-mono;
     font-size: 1rem;
@@ -198,7 +198,7 @@
     letter-spacing: 1px;
     cursor: pointer;
     margin-top: 8px;
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.25);
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
     transition: all $transition-fast;
       
     &:hover {

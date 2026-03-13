@@ -1,39 +1,26 @@
 import styles from "../styles/components/Avatar.module.scss";
 
-export default function Avatar({ src, name }) {
-    // If has photo, show it
+export default function Avatar({ src, name, size }) {
+    const style = size ? { width: size, height: size, fontSize: size * 0.35 } : {};
+
     if (src) {
-        return <img src={src} alt="Profile" className={styles.avatar} />;
+        return <img src={src} alt="Profile" className={styles.avatar} style={size ? { width: size, height: size } : {}} />;
     }
-    
-    // If no photo but has name, show initials
+
     if (name) {
-        const initials = name
-            .split(' ')
-            .map(word => word[0])
-            .join('')
-            .toUpperCase()
-            .slice(0, 2);
-        
+        const initials = name.split(' ').map(word => word[0]).join('').toUpperCase().slice(0, 2);
         return (
-            <div className={styles.avatarPlaceholder}>
-                <div className={styles.avatarInitials}>
+            <div className={styles.avatarPlaceholder} style={style}>
+                <div className={styles.avatarInitials} style={size ? { fontSize: size * 0.45 } : {}}>
                     {initials}
                 </div>
             </div>
         );
     }
-    
-    // Fallback: show placeholder text
+
     return (
-        <div className={styles.avatarPlaceholder}>
-            <div className={styles.avatarPlaceholder__text}>
-                Photo
-                <br />
-                will go
-                <br />
-                here
-            </div>
+        <div className={styles.avatarPlaceholder} style={style}>
+            <div className={styles.avatarPlaceholder__text}>Photo<br />will go<br />here</div>
         </div>
     );
 }

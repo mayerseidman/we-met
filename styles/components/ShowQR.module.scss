@@ -6,7 +6,6 @@
 
 .showQr,
 .emptyState {
-    max-width: 480px;
     margin: 0 auto;
     padding: $spacing-lg 0;
     padding-bottom: 5rem;
@@ -34,13 +33,55 @@
     transition: all $transition-fast;
 }
 
+.qrAvatar {
+    & > div {
+        width: 60px;
+        height: 60px;
+        border: 1.5px solid #f5722f;
+        border-radius: 50%;
+        font-size: 1.75rem !important;
+        box-shadow: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .avatarInitials {
+        font-size: 1.75rem;
+    }
+}
+
+.qrPlaceholder {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 4px; /* square with just a hint of rounding */
+}
+
+.qrImage {
+  width: 100%;
+  height: 100%;
+  filter: blur(4px);
+  opacity: 0.4;
+}
+
+.qrOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
 // ── QR Card (with padding-top to account for avatar) ──────────
 .qrCard {
+    width: 100%;
     background: $white;
-    border: 2px solid $black;
+    border: 1.5px solid $black;
     border-radius: 2px;
-    padding: 58px 1rem 0rem;
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.15);
+    padding: 0rem 1rem 0rem;
+    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -48,23 +89,21 @@
     position: relative;
     z-index: 1;
     transition: all $transition-fast;
+
+    &:hover {
+        transform: translate(-0.5px, -0.5px); 
+        box-shadow: 4.5px 4.5px 0px rgba(0, 0, 0, 0.2);
+    }
+    
+    &:active {
+        transform: translate(1px, 1px);
+        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+    }
 }
 
 .qrCardContainer {
     position: relative;
     transition: all $transition-fast;
-    
-    &:hover {
-        transform: translate(-1px, -1px);
-        
-        .qrCard {
-            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
-        }
-        
-        .avatarWrapper {
-            transform: translate(-1px, -1px);
-        }
-    }
 }
 
 // ── Name ──────────────────────────────────────────────────────
@@ -95,17 +134,33 @@
     display: flex;
     justify-content: center;
     line-height: 0;
-    position: relative;
-    bottom: 2px;
     
     svg {
-        width: 80%;
-        display: block;
-        // QR code without extra border since card provides container
-        
-        // Remove any default padding/margin from the SVG itself
+        width: 100%;
+        display: block;        
         margin: 0;
-        padding: 0;
+        padding: 1rem;
+    }
+}
+
+.qrWrapper {
+    position: relative;
+}
+
+.qrAvatar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+/*    border: 0.25px solid black;
+*/    border-radius: 50%;
+    padding: 2px;
+    img {
+        width: 60px;
+        height: 60px;
+        border: 1.5px solid #f5722f;
+        box-shadow: none;
     }
 }
 
@@ -132,11 +187,11 @@
     font-family: $font-mono;
     font-size: 1rem;
     font-weight: 600;
-    border: 2px solid $black;
+    border: 1.5px solid $black;
     border-radius: 2px;
     background-color: $white;
     color: $black;
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+    box-shadow: 3.15px 3.15px 0px rgba(0, 0, 0, 0.1);
     transition: all $transition-fast;
     cursor: pointer;
     appearance: none; // Remove default browser styling
@@ -211,7 +266,7 @@
     height: 145px;
     border-radius: $radius-full;
     border: 3px solid $black;
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 3.15px 3.15px 0px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -244,7 +299,7 @@
     padding: $spacing-md;
     background-color: $orange;
     color: $white;
-    border: 3.5px solid $black;
+    border: 2px solid $black;
     border-radius: 2px;
     font-family: $font-mono;
     font-size: 1rem;
@@ -252,7 +307,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.25);
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
     transition: all $transition-fast;
 
     &:hover {
@@ -261,7 +316,133 @@
     }
 
     &:active {
-        transform: translate(6px, 6px);
+        transform: translate(4px, 4px);
         box-shadow: none;
     }
+}
+
+// ── Modals ────────────────────────────────────────────────────
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 0 $spacing-md;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    padding: 1.25rem;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 $spacing-md;
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.2);
+    position: relative;
+    text-align: center;
+}
+
+.modalClose {
+    position: absolute;
+    top: $spacing-sm;
+    right: $spacing-sm;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    color: $dark-gray;
+}
+
+.modalEmoji {
+    font-size: 2rem;
+    margin-bottom: $spacing-sm;
+}
+
+.modalTitle {
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin: 0 0 $spacing-sm;
+}
+
+.modalText {
+    font-size: 0.9rem;
+    color: $dark-gray;
+    margin-bottom: $spacing-lg;
+}
+
+.modalSubLabel {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: $dark-gray;
+    text-align: left;
+    margin-bottom: $spacing-sm;
+}
+
+.eventList {
+    border: 2px solid $black;
+    border-radius: 2px;
+    margin-bottom: $spacing-lg;
+    overflow: hidden;
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+.eventOption {
+    padding: $spacing-sm $spacing-md;
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    cursor: pointer;
+
+    &:last-child { border-bottom: none; }
+    &--selected { font-weight: 700; }
+}
+
+.modalActions {
+    display: flex;
+    gap: $spacing-sm;
+}
+
+.modalBtn {
+    flex: 1;
+    padding: $spacing-md;
+    background: $orange;
+    color: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    font-family: $font-mono;
+    font-weight: 900;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+
+    &:hover { transform: translate(1px, 1px); box-shadow: 1px 1px 0px rgba(0,0,0,0.2); }
+}
+
+.modalCancelBtn {
+    @extend .modalBtn;
+    background: $white;
+    color: $black;
+}
+
+.modalOverlay {
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+    animation: slideUp 0.2s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
 }

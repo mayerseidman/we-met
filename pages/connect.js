@@ -3,13 +3,13 @@ import { useRouter } from "next/router";
 import Header from "../components/Header";
 import ScanQR from "../components/ScanQR";
 import ShowQR from "../components/ShowQR";
+import DevModeToggle from "../components/profile/DevModeToggle";
 import { useStorage } from "../hooks/useStorage";
 import styles from "../styles/pages/Connect.module.scss";
 
 // ══════════════════════════════════════════════════════════════
 // ConnectPage Component
 // ══════════════════════════════════════════════════════════════
-// Main connect page - reads tab from URL param set by global drawer
 
 const TABS = [
     { 
@@ -32,14 +32,39 @@ const TABS = [
     },
 ];
 
+const DEV_PHOTO = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop";
+
+const DEV_DEFAULT = {
+    noProfile: false,
+    hasPhoto: false,
+    noPhoto: false,
+    connectBack: false,
+    mismatch: false,
+};
+
+const DEV_OPTIONS = [
+    { key: "noProfile", label: "No Profile" },
+    { key: "hasPhoto", label: "Has Photo" },
+    { key: "noPhoto", label: "No Photo" },
+    { key: "connectBack", label: "Connect Back" },
+    { key: "mismatch", label: "Mismatch" },
+];
+
 export default function ConnectPage({ onDropdownToggle }) {
     const router = useRouter();
-    const { profile, isReady } = useStorage();
-    const [activeTab, setActiveTab] = useState("show"); // Default to show
+    const { profile, isReady, clearProfile } = useStorage();
+    const [activeTab, setActiveTab] = useState("show");
     const [showEventDrawer, setShowEventDrawer] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState("Afrikaburn 2025");
     const [isMobile, setIsMobile] = useState(false);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [devMode, setDevMode] = useState(DEV_DEFAULT);
+
+    // ── Dev mode overrides ────────────────────────────────────
+    const devProfile = devMode.noProfile ? null : {
+        ...profile,
+        photo: devMode.hasPhoto ? DEV_PHOTO : profile?.photo,
+    };
+    const devHasPhoto = devMode.noPhoto ? false : devMode.hasPhoto ? true : !!(profile?.photo);
 
     // ── Effects ───────────────────────────────────────────────
     useEffect(() => {
@@ -49,7 +74,6 @@ export default function ConnectPage({ onDropdownToggle }) {
         return () => window.removeEventListener("resize", checkMobile);
     }, []);
 
-    // Read tab from URL param (set by global drawer in _app.js)
     useEffect(() => {
         const tab = router.query.tab;
         if (tab === 'show' || tab === 'scan') {
@@ -58,6 +82,15 @@ export default function ConnectPage({ onDropdownToggle }) {
     }, [router.query.tab]);
 
     // ── Handlers ──────────────────────────────────────────────
+    const handleDevMode = (key, checked) => {
+        setDevMode(prev => ({
+            ...prev,
+            ...(key === "hasPhoto" && checked ? { noPhoto: false } : {}),
+            ...(key === "noPhoto" && checked ? { hasPhoto: false } : {}),
+            [key]: checked,
+        }));
+    };
+
     const handleSetEditing = useCallback(() => {
         router.push("/profile");
     }, [router]);
@@ -76,11 +109,11 @@ export default function ConnectPage({ onDropdownToggle }) {
     }, []);
 
     // ── Derived data ──────────────────────────────────────────
-    const qrData = profile
+    const qrData = devProfile
         ? JSON.stringify({
-              name: profile.name,
-              phone: profile.phone,
-              instagram: profile.instagram,
+              name: devProfile.name,
+              phone: devProfile.phone,
+              instagram: devProfile.instagram,
               event: selectedEvent,
           })
         : "";
@@ -99,24 +132,39 @@ export default function ConnectPage({ onDropdownToggle }) {
     return (
         <div className={styles.page}>
             <Header />
-            
-            {/*<TabBar activeTab={activeTab} onSelect={setActiveTab} tabs={TABS} />*/}
+
+            {process.env.NODE_ENV === "development" && (
+                <DevModeToggle
+                    devMode={devMode}
+                    setDevMode={(updated) => {
+                            const changedKey = Object.keys(updated).find(k => updated[k] !== devMode[k]);
+                            handleDevMode(changedKey, updated[changedKey]);
+                        }}
+                    onClear={() => setDevMode(DEV_DEFAULT)}
+                    options={DEV_OPTIONS}
+                />
+            )}
 
             <div className={styles.content}>
                 <h1 className={styles.pageTitle}>
-                    {activeTab === "scan" ? "Connect ➡ Scan QR" : "Connect ➡ Show QR"}
+                    {activeTab === "scan" ? "Scan QR" : "Show QR"}
                 </h1>
                 {activeTab === "scan" ? (
                     <ScanQR />
                 ) : (
                     <ShowQR
-                        currentProfile={profile}
-                        hasPhoto={!!(profile?.photo)}
+                        currentProfile={devProfile}
+                        hasPhoto={devHasPhoto}
                         qrData={qrData}
                         selectedEvent={selectedEvent}
+                        isMobile={isMobile}
+                        showEventDrawer={showEventDrawer}
                         onSetEditing={handleSetEditing}
                         onEventChange={handleEventChange}
                         onDropdownToggle={onDropdownToggle}
+                        onOpenDrawer={handleOpenDrawer}
+                        onCloseDrawer={handleCloseDrawer}
+                        devMode={devMode}
                     />
                 )}
             </div>

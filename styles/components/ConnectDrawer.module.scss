@@ -103,24 +103,27 @@
     display: flex;
     align-items: center;
     gap: $spacing-md;
-    padding: $spacing-lg;
+    padding: 1.5rem;
     background: $white;
-    border: 2px solid $black;
+    border: 1.5px solid $black;
     border-radius: 2px;
     cursor: pointer;
     transition: all $transition-fast;
-    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
+    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.1);
     
     &:hover {
         background: rgba(245, 114, 47, 0.07);
         border-color: $orange;
-        transform: translate(-1px, -1px);
-        box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.15);
+        transform: translate(-0.5px, -0.5px);
+        box-shadow: 4.5px 4.5px 0px rgba(0, 0, 0, 0.2);
     }
     
     &:active {
         transform: translate(1px, 1px);
-        box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+    }
+    @media (max-width: 480px) {
+        padding: 1rem;
     }
 }
 
