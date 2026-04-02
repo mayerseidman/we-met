@@ -46,6 +46,7 @@ const ProfileView = ({ profile, onEdit, user, authLoading }) => {
 const ProfilePhoto = ({ profile }) => (
     <div className={styles.photoSection}>
         {profile.photo ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img 
                 src={profile.photo} 
                 alt={profile.name}

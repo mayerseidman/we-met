@@ -12,6 +12,7 @@ const PhotoUpload = ({ photoPreview, onPhotoChange, onRemovePhoto, showError }) 
             >
                 {photoPreview ? (
                     <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img 
                             src={photoPreview} 
                             alt="Preview" 

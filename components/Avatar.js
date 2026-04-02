@@ -1,10 +1,16 @@
 import styles from "../styles/components/Avatar.module.scss";
 
+
 export default function Avatar({ src, name, size }) {
     const style = size ? { width: size, height: size, fontSize: size * 0.35 } : {};
 
     if (src) {
-        return <img src={src} alt="Profile" className={styles.avatar} style={size ? { width: size, height: size } : {}} />;
+        return (
+            <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={src} alt="Profile" className={styles.avatar} style={size ? { width: size, height: size } : {}} />
+            </>
+        )
     }
 
     if (name) {
