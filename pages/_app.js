@@ -46,7 +46,7 @@ function MyApp({ Component, pageProps }) {
     // Wait until both auth and storage are ready before routing
     // Otherwise we might redirect before we know the true state
     useEffect(() => {
-        if (authLoading || !isReady || !router.isReady) return;
+        if (authLoading || !isReady) return <div style={{ minHeight: '100vh', background: '#fdf6e3' }} />
 
         const publicPages = ['/landing', '/auth'];
         if (publicPages.includes(router.pathname)) return;
