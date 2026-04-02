@@ -7,7 +7,7 @@
 .showQr,
 .emptyState {
     margin: 0 auto;
-    padding: $spacing-lg 0;
+    padding: $spacing-lg;
     padding-bottom: 5rem;
     animation: fadeIn 0.4s ease-out;
 }
@@ -22,6 +22,16 @@
     from { opacity: 0; }
     to { opacity: 1; }
 }
+
+.brandPlaceholder {
+    width: 100%;
+    padding: 2rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7.5rem;
+}
+
 
 // ── Avatar Wrapper (overlaps card) ────────────────────────────
 .avatarWrapper {
@@ -60,8 +70,9 @@
 .qrImage {
   width: 100%;
   height: 100%;
-  filter: blur(4px);
-  opacity: 0.4;
+  filter: blur(1px);
+  opacity: 0.8;
+  padding: 1rem;
 }
 
 .qrOverlay {
@@ -288,14 +299,13 @@
     line-height: 1.6;
     color: $black;
     text-align: center;
-    margin-bottom: $spacing-xl;
-    max-width: 360px;
+    margin-bottom: $spacing-lg;
+    margin-top: 0;
 }
 
 .addProfileBtn {
     width: 100%;
     max-width: 360px;
-    height: 58px;
     padding: $spacing-md;
     background-color: $orange;
     color: $white;
@@ -342,7 +352,7 @@
     width: 100%;
     max-width: 400px;
     margin: 0 $spacing-md;
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
     position: relative;
     text-align: center;
 }
@@ -360,19 +370,20 @@
 
 .modalEmoji {
     font-size: 2rem;
-    margin-bottom: $spacing-sm;
+    margin-bottom: $spacing-md;
 }
 
 .modalTitle {
     font-size: 1.25rem;
     font-weight: 900;
-    margin: 0 0 $spacing-sm;
+    margin: 0 0 0.75rem;
 }
 
 .modalText {
     font-size: 0.9rem;
     color: $dark-gray;
-    margin-bottom: $spacing-lg;
+    margin-bottom: $spacing-xl;
+    margin-top: 0;
 }
 
 .modalSubLabel {

@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/router';
+import { useAuth } from '../hooks/useAuth'
+
+import Toast from '../components/Toast';
+import { useToast } from '../hooks/useToast';
+
+
 import Header from "../components/Header";
 import ProfileView from "../components/ProfileView";
 import DevModeToggle from "../components/profile/DevModeToggle";
@@ -7,7 +13,10 @@ import FormField from "../components/profile/FormField";
 import PhotoUpload from "../components/profile/PhotoUpload";
 import SubmitButton from "../components/profile/SubmitButton";
 import { useStorage } from "../hooks/useStorage";
+import { saveUserProfile, uploadAvatar } from '../lib/db'
+
 import styles from "../styles/pages/Profile.module.scss";
+
 import { 
     isValidPhone, 
     FORM_FIELDS, 
@@ -23,6 +32,7 @@ import {
 // Main profile page with edit form and view mode
 
 export default function ProfilePage() {
+    const { user, loading: authLoading } = useAuth()
     const { isReady, profile, saveProfile } = useStorage();
     const [editingProfile, setEditingProfile] = useState(EMPTY_PROFILE);
     const [photoPreview, setPhotoPreview] = useState(null);
@@ -30,6 +40,7 @@ export default function ProfilePage() {
     const [hasChanges, setHasChanges] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [buttonState, setButtonState] = useState('default');
+    const [showErrors, setShowErrors] = useState(false)
     const [devMode, setDevMode] = useState({
         newUser: false,
         hasInfo: false,
@@ -39,6 +50,13 @@ export default function ProfilePage() {
         isSaving: false,
         isSaved: false,
     });
+
+    const { toastMessage, toastVisible, showToast, hideToast } = useToast()
+    const [touched, setTouched] = useState({});
+
+    const handleBlur = (field) => {
+      setTouched(prev => ({ ...prev, [field]: true }));
+    };
 
     const effectiveButtonState = devMode.isSaving ? 'saving' : devMode.isSaved ? 'saved' : buttonState;
 
@@ -132,32 +150,58 @@ export default function ProfilePage() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log('Saving:', JSON.stringify(editingProfile));
+        e.preventDefault()
 
-        setButtonState('saving');
+        if (!isFormValid) {
+            setShowErrors(true)
+            return
+        }
+
+        setButtonState('saving')
 
         try {
-            const success = await saveProfile(editingProfile);
+            const success = await saveProfile(editingProfile)
             
             if (success) {
-                setButtonState('saved');
-                setInitialProfile(editingProfile);
+                if (user) {
+                    let profileToSave = { ...editingProfile }
+                    console.log('photo value:', editingProfile.photo?.substring(0, 50))
+
+                    // If there's a base64 photo, upload it to Storage first
+                    if (editingProfile.photo && editingProfile.photo.startsWith('data:')) {
+                            console.log('uploading photo...')
+                            const { url, error: uploadError } = await uploadAvatar(user.id, editingProfile.photo)
+                            console.log('upload result:', url, uploadError)
+                            if (url) {
+                                profileToSave.photo = url
+                            }
+                        } else {
+                            console.log('no base64 photo — skipping upload')
+                        }
+
+                    const { success: cloudSuccess, error } = await saveUserProfile(user.id, profileToSave)
+                    console.log('cloud save result:', cloudSuccess, error)
+                }
+
+                setButtonState('saved')
+                setInitialProfile(editingProfile)
+                setShowErrors(false)
+                showToast(initialProfile ? 'Profile updated! ✅' : 'Profile created! 🎉')
                 
                 setTimeout(() => {
-                    setButtonState('default');
-                    setIsEditing(false);
-                }, 2000);
+                    setButtonState('default')
+                    setIsEditing(false)
+                }, 2000)
             } else {
-                alert("Failed to save profile. Please try again.");
-                setButtonState('default');
+                alert("Failed to save profile. Please try again.")
+                setButtonState('default')
             }
         } catch (error) {
-            console.error("Error saving profile:", error);
-            alert("Failed to save profile. Please try again.");
-            setButtonState('default');
+            console.error("Error saving profile:", error)
+            alert("Failed to save profile. Please try again.")
+            setButtonState('default')
         }
-    };
+    }
 
     const handleClear = () => {
         localStorage.clear();
@@ -200,13 +244,14 @@ export default function ProfilePage() {
                         )}
                         <form onSubmit={handleSubmit} className={styles.form}>
                             {FORM_FIELDS.map(field => (
-                                <FormField
-                                    key={field.name}
-                                    field={field}
-                                    value={editingProfile[field.name]}
-                                    onChange={handleChange}
-                                    showError={devMode.showErrors}
-                                />
+                               <FormField
+                                   key={field.name}
+                                   field={field}
+                                   value={editingProfile[field.name]}
+                                   onChange={handleChange}
+                                   onBlur={() => handleBlur(field.name)}
+                                   showError={(devMode.showErrors || showErrors) || touched[field.name]}
+                               />
                             ))}
                             <PhotoUpload
                                 photoPreview={photoPreview}
@@ -225,9 +270,12 @@ export default function ProfilePage() {
                         key="view"
                         profile={editingProfile}
                         onEdit={() => setIsEditing(true)}
+                        user={user}
+                        authLoading={authLoading}
                     />
                 )}
             </div>
+            <Toast message={toastMessage} visible={toastVisible} onHide={hideToast} />
         </div>
     );
 }

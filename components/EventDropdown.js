@@ -7,11 +7,15 @@ import { EVENTS, formatEvent } from "../constants/events";
 // ══════════════════════════════════════════════════════════════
 // Custom dropdown with retro neobrutalist styling
 
-export default function EventDropdown({ selectedEvent, onEventChange, onDropdownToggle }) {
+export default function EventDropdown({ selectedEvent, onEventChange, onOpenDrawer, onDropdownToggle }) {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
 
     const toggleDropdown = () => {
+        if (onOpenDrawer) {
+            onOpenDrawer();
+            return;
+        }
         const newState = !isOpen;
         setIsOpen(newState);
         onDropdownToggle?.(newState);

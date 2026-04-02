@@ -1,0 +1,182 @@
+@import '../variables';
+
+// ── Page Layout ───────────────────────────────────────────────
+.page {
+    min-height: 100vh;
+    background-color: $cream;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $font-mono;
+    padding: $spacing-lg;
+}
+
+.content {
+    width: 100%;
+    max-width: 400px;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+// ── Header ────────────────────────────────────────────────────
+.title {
+    font-size: 2rem;
+    font-weight: 900;
+    margin: 0 0 $spacing-sm;
+    color: $black;
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: $medium-gray;
+    text-align: center;
+    margin: 0 0 $spacing-xl;
+}
+
+// ── Form ──────────────────────────────────────────────────────
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+}
+
+.label {
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: $dark-gray;
+}
+
+.input {
+    width: 100%;
+    padding: 0.875rem;
+    font-family: $font-mono;
+    font-size: 1rem;
+    font-weight: 600;
+    border: 1.5px solid $black;
+    border-radius: 2px;
+    background-color: $white;
+    color: $black;
+    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
+    transition: all $transition-fast;
+    box-sizing: border-box;
+
+    &:focus {
+        outline: none;
+        border-color: $orange;
+        box-shadow: 0 0 0 3px rgba(245, 114, 47, 0.2);
+    }
+
+    &::placeholder {
+        color: $light-gray;
+        font-weight: 500;
+    }
+}
+
+// ── Error ─────────────────────────────────────────────────────
+.error {
+    color: #e53e3e;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin: 0;
+    padding: $spacing-sm $spacing-md;
+    background: #fff5f5;
+    border: 1.5px solid #e53e3e;
+    border-radius: 2px;
+}
+
+// ── Submit Button ─────────────────────────────────────────────
+.submitBtn {
+    width: 100%;
+    padding: $spacing-md;
+    background-color: $orange;
+    color: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    font-family: $font-mono;
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
+    transition: all $transition-fast;
+
+    &:hover:not(:disabled) {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+// ── Toggle ────────────────────────────────────────────────────
+.toggle {
+    text-align: center;
+    margin-top: $spacing-lg;
+    font-size: 0.875rem;
+    color: $dark-gray;
+}
+
+.toggleBtn {
+    background: none;
+    border: none;
+    font-family: $font-mono;
+    font-size: 0.875rem;
+    font-weight: 900;
+    color: $orange;
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover {
+        color: $black;
+    }
+}
+
+// ── Email Providers ───────────────────────────────────────────
+.emailProviders {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    margin-top: $spacing-md;
+}
+
+.providerBtn {
+    display: block;
+    width: 100%;
+    padding: $spacing-md;
+    background-color: $white;
+    color: $black;
+    border: 2px solid $black;
+    border-radius: 2px;
+    font-family: $font-mono;
+    font-size: 0.875rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
+    transition: all $transition-fast;
+    box-sizing: border-box;
+
+    &:hover {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
+    }
+}

@@ -1,5 +1,5 @@
 const nextConfig = {
-    reactStrictMode: true,
+    reactStrictMode: false,
     swcMinify: true,
     output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
     images: {

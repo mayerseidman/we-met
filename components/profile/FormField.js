@@ -1,7 +1,7 @@
 import { isValidPhone } from '../../constants/constants';
 import styles from '../../styles/pages/Profile.module.scss';
 
-const FormField = ({ field, value, onChange, showError }) => {
+const FormField = ({ field, value, onChange, showError, onBlur }) => {
     const { name, label, type, placeholder, required, errorMessage, invalidMessage, icon } = field;
     
     // Enhanced validation logic
@@ -84,6 +84,7 @@ const FormField = ({ field, value, onChange, showError }) => {
                 required={required}
                 placeholder={placeholder}
                 className={inputClassName}
+                onBlur={onBlur}
             />
             {hasError && displayMessage && (
                 <div className={styles.errorMessage}>

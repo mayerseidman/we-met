@@ -1,3 +1,9 @@
+import { signOut } from '../lib/auth'
+import { useRouter } from 'next/router'
+import Toast from './Toast'
+import { useToast } from '../hooks/useToast'
+
+
 import styles from "../styles/components/ProfileView.module.scss";
 
 // ══════════════════════════════════════════════════════════════
@@ -5,7 +11,18 @@ import styles from "../styles/components/ProfileView.module.scss";
 // ══════════════════════════════════════════════════════════════
 // Displays user profile with photo, name, about info, and contact details
 
-const ProfileView = ({ profile, onEdit }) => {
+const ProfileView = ({ profile, onEdit, user, authLoading }) => {
+    const router = useRouter()
+    const { toastMessage, toastVisible, showToast, hideToast } = useToast()
+
+    const handleSignOut = async () => {
+        showToast('See you next time! 👋')
+        setTimeout(async () => {
+            await signOut()
+            localStorage.removeItem('we-met-auth')
+            router.push('/landing')
+        }, 1500)
+    }
     return (
         <div className={styles.profileView}>
             <ProfilePhoto profile={profile} />
@@ -13,6 +30,13 @@ const ProfileView = ({ profile, onEdit }) => {
             <AboutSection profile={profile} />
             <ContactSection profile={profile} />
             <EditButton onEdit={onEdit} />
+            {/* Only show sign out if user is logged in */}
+            {user && !authLoading && (
+                <button className={styles.signOutBtn} onClick={handleSignOut}>
+                    SIGN OUT
+                </button>
+            )}
+            <Toast message={toastMessage} visible={toastVisible} onHide={hideToast} />
         </div>
     );
 };

@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "rm -rf .next & lsof -ti:3000 | xargs kill -9 2>/dev/null; next dev & sleep 2 && open -a 'Google Chrome' http://localhost:3000 https://prettier.io/playground",
+    "dev": "rm -rf .next & lsof -ti:3000 | xargs kill -9 2>/dev/null; next dev & sleep 2 && open -a 'Google Chrome' http://localhost:3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "clean": "lsof -ti:3000,3001,3002,3003 | xargs kill -9"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.100.1",
     "axios": "^1.13.2",
     "html5-qrcode": "^2.3.8",
     "next": "^13.4.19",

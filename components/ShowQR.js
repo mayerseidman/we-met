@@ -3,6 +3,7 @@ import styles from "../styles/components/ShowQR.module.scss";
 import Avatar from "./Avatar";
 import EventDrawer from "./EventDrawer";
 import EventDropdown from "./EventDropdown";
+import EmptyState from "./EmptyState";
 import { EVENTS, formatEvent } from "../constants/events";
 
 // ══════════════════════════════════════════════════════════════
@@ -22,6 +23,7 @@ export default function ShowQR({
     onOpenDrawer,
     onCloseDrawer,
     devMode = {},
+    onDismiss,
 }) {
     // Empty state
     if (!currentProfile) {
@@ -46,6 +48,7 @@ export default function ShowQR({
                     selectedEvent={selectedEvent}
                     onEventChange={onEventChange}
                     onDropdownToggle={onDropdownToggle}
+                    onOpenDrawer={isMobile ? onOpenDrawer : undefined}
                 />
             </div>
             <InfoNote />
@@ -55,6 +58,7 @@ export default function ShowQR({
                     selectedEvent={selectedEvent}
                     onSelect={onEventChange}
                     onClose={onCloseDrawer}
+                    onOpenDrawer={onOpenDrawer}
                 />
             )}
 
@@ -62,15 +66,7 @@ export default function ShowQR({
             {devMode.connectBack && (
                 <ConnectBackModal
                     profile={currentProfile}
-                    onDismiss={() => {}}
-                />
-            )}
-
-            {devMode.mismatch && (
-                <MismatchModal
-                    profile={currentProfile}
-                    selectedEvent={selectedEvent}
-                    onDismiss={() => {}}
+                    onDismiss={onDismiss}
                 />
             )}
         </div>
@@ -79,21 +75,21 @@ export default function ShowQR({
 
 // ── Sub-components ────────────────────────────────────────────
 
-const EmptyState = ({ onSetEditing }) => (
-    <div className={styles.emptyState}>
-        <div className={styles.qrCard}>
-            <div className={styles.qrPlaceholder}>
-                <img src="/qr.png" className={styles.qrImage} alt="QR placeholder" />
-            </div>
-        </div>
-        <p className={styles.emptyText}>
-            Create a profile to get your QR code and connect with people you MEET!
-        </p>
-        <button className={styles.addProfileBtn} onClick={() => onSetEditing(true)}>
-            ADD PROFILE
-        </button>
-    </div>
-);
+// const EmptyState = ({ onSetEditing }) => (
+//     <div className={styles.emptyState}>
+//         <div className={styles.qrCard}>
+//             <div className={styles.qrPlaceholder}>
+//                 <img src="/qr.png" className={styles.qrImage} alt="QR placeholder" />
+//             </div>
+//         </div>
+//         <p className={styles.emptyText}>
+//             Add your profile to connect with people you MEET!
+//         </p>
+//         <button className={styles.addProfileBtn} onClick={() => onSetEditing(true)}>
+//             ADD PROFILE
+//         </button>
+//     </div>
+// );
 
 const QRCard = ({ profile, hasPhoto, qrData, fgColor, bgColor }) => {
     const avatarSrc = hasPhoto ? profile.photo : null; 
@@ -131,7 +127,7 @@ const ConnectBackModal = ({ profile, onDismiss }) => (
             <p className={styles.modalText}>
                 <strong>{profile.name}</strong> scanned your QR code.
             </p>
-            <button className={styles.modalBtn}>ADD THEM</button>
+            <button className={styles.modalBtn}>ADD THEM BACK</button>
         </div>
     </div>
 );

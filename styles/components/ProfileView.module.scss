@@ -212,3 +212,24 @@
         box-shadow: none;
     }
 }
+
+.signOutBtn {
+    background: none;
+    border: none;
+    font-family: $font-mono;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $medium-gray;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-top: $spacing-md;
+    padding: 0;
+    display: block;
+    width: 100%;
+    text-align: center;
+    transition: color $transition-fast;
+
+    &:hover {
+        color: $black;
+    }
+}

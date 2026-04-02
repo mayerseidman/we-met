@@ -7,10 +7,6 @@ import DevModeToggle from "../components/profile/DevModeToggle";
 import { useStorage } from "../hooks/useStorage";
 import styles from "../styles/pages/Connect.module.scss";
 
-// ══════════════════════════════════════════════════════════════
-// ConnectPage Component
-// ══════════════════════════════════════════════════════════════
-
 const TABS = [
     { 
         id: "scan", 
@@ -39,7 +35,6 @@ const DEV_DEFAULT = {
     hasPhoto: false,
     noPhoto: false,
     connectBack: false,
-    mismatch: false,
 };
 
 const DEV_OPTIONS = [
@@ -47,26 +42,50 @@ const DEV_OPTIONS = [
     { key: "hasPhoto", label: "Has Photo" },
     { key: "noPhoto", label: "No Photo" },
     { key: "connectBack", label: "Connect Back" },
-    { key: "mismatch", label: "Mismatch" },
 ];
+
+const SCAN_DEV_OPTIONS = [
+    { key: "noProfile", label: "No Profile" },
+    { key: "mismatch", label: "Mismatch" },
+    { key: "scanSuccess", label: "Scan Success" },
+    { key: "scanError", label: "Scan Error" },
+    { key: "alreadyConnected", label: "Already Connected" },
+    { key: "whatToDo", label: "What To Do" },
+];
+
+const SCAN_DEV_DEFAULT = {
+    noProfile: false,
+    mismatch: false,
+    scanSuccess: false,
+    scanError: false,
+    alreadyConnected: false,
+    whatToDo: false,
+};
 
 export default function ConnectPage({ onDropdownToggle }) {
     const router = useRouter();
-    const { profile, isReady, clearProfile } = useStorage();
-    const [activeTab, setActiveTab] = useState("show");
+    const { profile, isReady } = useStorage();
     const [showEventDrawer, setShowEventDrawer] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState("Afrikaburn 2025");
     const [isMobile, setIsMobile] = useState(false);
     const [devMode, setDevMode] = useState(DEV_DEFAULT);
+    const [scanDevMode, setScanDevMode] = useState(SCAN_DEV_DEFAULT);
+    const [mounted, setMounted] = useState(false);
 
-    // ── Dev mode overrides ────────────────────────────────────
+    const [activeTab, setActiveTab] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('tab') === 'scan' ? 'scan' : 'show';
+        }
+        return 'show';
+    });
+
     const devProfile = devMode.noProfile ? null : {
         ...profile,
         photo: devMode.hasPhoto ? DEV_PHOTO : profile?.photo,
     };
     const devHasPhoto = devMode.noPhoto ? false : devMode.hasPhoto ? true : !!(profile?.photo);
 
-    // ── Effects ───────────────────────────────────────────────
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 768);
         checkMobile();
@@ -81,7 +100,10 @@ export default function ConnectPage({ onDropdownToggle }) {
         }
     }, [router.query.tab]);
 
-    // ── Handlers ──────────────────────────────────────────────
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     const handleDevMode = (key, checked) => {
         setDevMode(prev => ({
             ...prev,
@@ -108,7 +130,6 @@ export default function ConnectPage({ onDropdownToggle }) {
         setShowEventDrawer(false);
     }, []);
 
-    // ── Derived data ──────────────────────────────────────────
     const qrData = devProfile
         ? JSON.stringify({
               name: devProfile.name,
@@ -118,61 +139,92 @@ export default function ConnectPage({ onDropdownToggle }) {
           })
         : "";
 
-    // ── Loading state ─────────────────────────────────────────
-    if (!isReady) {
+    if (!mounted || !isReady) {
+        const isScan = typeof window !== 'undefined' && 
+            new URLSearchParams(window.location.search).get('tab') === 'scan';
         return (
-            <div className={styles.page}>
-                <Header />
-                <div className={styles.loading}>Loading...</div>
+            <div className={`${styles.page} ${isScan ? styles['page--scan'] : ''}`}>
+                {!isScan && <Header />}
             </div>
         );
     }
 
-    // ── Render ────────────────────────────────────────────────
     return (
-        <div className={styles.page}>
-            <Header />
+        <div
+            key={activeTab}
+            className={`${styles.page} ${activeTab === 'scan' ? styles['page--scan'] : ''}`}
+        >
+            {activeTab !== 'scan' && <Header />}
 
-            {process.env.NODE_ENV === "development" && (
+            {process.env.NODE_ENV === "development" && activeTab === "show" && (
                 <DevModeToggle
                     devMode={devMode}
                     setDevMode={(updated) => {
-                            const changedKey = Object.keys(updated).find(k => updated[k] !== devMode[k]);
-                            handleDevMode(changedKey, updated[changedKey]);
-                        }}
+                        const changedKey = Object.keys(updated).find(k => updated[k] !== devMode[k]);
+                        handleDevMode(changedKey, updated[changedKey]);
+                    }}
                     onClear={() => setDevMode(DEV_DEFAULT)}
                     options={DEV_OPTIONS}
                 />
             )}
 
-            <div className={styles.content}>
-                <h1 className={styles.pageTitle}>
-                    {activeTab === "scan" ? "Scan QR" : "Show QR"}
-                </h1>
+            {process.env.NODE_ENV === "development" && activeTab === "scan" && (
+                <DevModeToggle
+                    devMode={scanDevMode}
+                    setDevMode={(updated) => {
+                        const changedKey = Object.keys(updated).find(k => updated[k] !== scanDevMode[k]);
+                        setScanDevMode(prev => ({ ...prev, [changedKey]: updated[changedKey] }));
+                    }}
+                    onClear={() => setScanDevMode(SCAN_DEV_DEFAULT)}
+                    options={SCAN_DEV_OPTIONS}
+                />
+            )}
+
+            <div className={`${styles.content} ${activeTab === 'scan' ? styles['content--scan'] : ''}`}>
                 {activeTab === "scan" ? (
-                    <ScanQR />
-                ) : (
-                    <ShowQR
-                        currentProfile={devProfile}
-                        hasPhoto={devHasPhoto}
-                        qrData={qrData}
+                    <ScanQR
+                        key="scan"
+                        devMode={scanDevMode}
                         selectedEvent={selectedEvent}
-                        isMobile={isMobile}
-                        showEventDrawer={showEventDrawer}
                         onSetEditing={handleSetEditing}
+                        isMobile={isMobile}
                         onEventChange={handleEventChange}
-                        onDropdownToggle={onDropdownToggle}
                         onOpenDrawer={handleOpenDrawer}
+                        onDropdownToggle={onDropdownToggle}
+                        showEventDrawer={showEventDrawer}
                         onCloseDrawer={handleCloseDrawer}
-                        devMode={devMode}
+                        onCloseMismatch={() => setScanDevMode(prev => ({ ...prev, mismatch: false }))}
+                        onCloseScanSuccess={() => setScanDevMode(prev => ({ ...prev, scanSuccess: false }))}
+                        onCloseScanError={() => setScanDevMode(prev => ({ ...prev, scanError: false }))}
+                        onCloseAlreadyConnected={() => setScanDevMode(prev => ({ ...prev, alreadyConnected: false }))}
+                        onCloseWhatToDo={() => setScanDevMode(prev => ({ ...prev, whatToDo: false }))}
                     />
+                ) : (
+                    <>
+                        <h1 className={styles.pageTitle}>Show QR</h1>
+                        <div className={styles.centerWrapper}>
+                            <ShowQR
+                                currentProfile={devProfile}
+                                hasPhoto={devHasPhoto}
+                                qrData={qrData}
+                                selectedEvent={selectedEvent}
+                                isMobile={isMobile}
+                                showEventDrawer={showEventDrawer}
+                                onSetEditing={handleSetEditing}
+                                onEventChange={handleEventChange}
+                                onDropdownToggle={onDropdownToggle}
+                                onOpenDrawer={handleOpenDrawer}
+                                onCloseDrawer={handleCloseDrawer}
+                                devMode={devMode}
+                                onDismiss={() => handleDevMode("connectBack", false)}
+                            />
+                        </div>
+                    </>
                 )}
             </div>
         </div>
     );
 }
-
-// ── Sub-components ────────────────────────────────────────────
 
 const TabBar = ({ activeTab, onSelect, tabs }) => (
     <div className={styles.tabBar}>

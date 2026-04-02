@@ -1,0 +1,220 @@
+@import '../variables';
+
+.backdrop {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.drawer {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background-color: $cream;
+    border-top: 3px solid $black;
+    border-radius: 12px 12px 0 0;
+    z-index: 1000;
+    max-height: 60vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s ease-out;
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    z-index: 1000;
+    width: calc(100% - 2rem);
+    max-width: 400px;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
+    animation: modalIn 0.2s ease-out;
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: translate(-50%, -48%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.eventSelect {
+    width: 100%;
+    padding: 0.875rem;
+    padding-right: 3rem;
+    font-family: $font-mono;
+    font-size: 1rem;
+    font-weight: 600;
+    border: 1.5px solid $black;
+    border-radius: 2px;
+    background-color: $white;
+    color: $black;
+    box-shadow: 3.15px 3.15px 0px rgba(0, 0, 0, 0.1);
+    transition: all $transition-fast;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+
+    &:hover {
+        transform: translate(1px, 1px);
+        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
+        border-color: $orange;
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-lg $spacing-md;
+    border-bottom: 2px solid $black;
+    flex-shrink: 0;
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin: 0;
+    color: $black;
+}
+
+.closeButton {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 2px solid $black;
+    border-radius: 2px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+        border-color: $orange;
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+}
+
+.body {
+    overflow-y: auto;
+    padding: $spacing-md;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+}
+
+.description {
+    font-size: 0.9rem;
+    color: $dark-gray;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.subLabel {
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: $dark-gray;
+    margin: 0;
+}
+
+.eventList {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.eventItem {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-md;
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    font-family: $font-mono;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $black;
+    cursor: pointer;
+    transition: all $transition-fast;
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+        border-color: $orange;
+        transform: translate(-1px, -1px);
+        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
+    }
+
+    &.selected {
+        background-color: rgba(245, 114, 47, 0.1);
+        border-color: $orange;
+        font-weight: 900;
+    }
+}
+
+.eventName { flex: 1; text-align: left; }
+
+.checkmark {
+    font-size: 1.25rem;
+    color: $orange;
+    font-weight: 900;
+}
+
+.actions {
+    display: flex;
+    gap: $spacing-sm;
+    padding-bottom: $spacing-md;
+}
+
+.confirmBtn {
+    flex: 1;
+    padding: $spacing-md;
+    background: $orange;
+    color: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    font-family: $font-mono;
+    font-weight: 900;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+    transition: all $transition-fast;
+
+    &:hover { transform: translate(1px, 1px); box-shadow: 1px 1px 0px rgba(0,0,0,0.2); }
+}
+
+.cancelBtn {
+    @extend .confirmBtn;
+    background: $white;
+    color: $black;
+}
