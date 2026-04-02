@@ -101,8 +101,8 @@ function MyApp({ Component, pageProps }) {
     const showNav = !hideNav;
 
     // Show nothing while auth and storage are initializing
-    if (!mounted) return null
-    if (authLoading || !isReady) return <div style={{ minHeight: '100vh', background: '#fdf6e3' }} />
+    if (authLoading || !isReady) return null
+
 
     return (
         <>
