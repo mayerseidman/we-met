@@ -32,6 +32,7 @@ function MyApp({ Component, pageProps }) {
     const [showConnectDrawer, setShowConnectDrawer] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const [mounted, setMounted] = useState(false)
     const publicPages = ['/landing', '/auth', '/reset-password']
 
     // Detect mobile vs desktop
@@ -46,8 +47,7 @@ function MyApp({ Component, pageProps }) {
     // Wait until both auth and storage are ready before routing
     // Otherwise we might redirect before we know the true state
     useEffect(() => {
-        if (authLoading || !isReady) return <div style={{ minHeight: '100vh', background: '#fdf6e3' }} />
-
+        if (authLoading || !isReady || !router.isReady) return;
         const publicPages = ['/landing', '/auth'];
         if (publicPages.includes(router.pathname)) return;
 
@@ -79,6 +79,10 @@ function MyApp({ Component, pageProps }) {
         }
     }, [])
 
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
     // ── Connect drawer/popover handlers ───────────────────────
     const handleConnectClick = () => setShowConnectDrawer(true);
 
@@ -97,7 +101,8 @@ function MyApp({ Component, pageProps }) {
     const showNav = !hideNav;
 
     // Show nothing while auth and storage are initializing
-    if (authLoading || !isReady) return null;
+    if (!mounted) return null
+    if (authLoading || !isReady) return <div style={{ minHeight: '100vh', background: '#fdf6e3' }} />
 
     return (
         <>

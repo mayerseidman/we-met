@@ -39,7 +39,12 @@ export function useAuth() {
         supabase.auth.getSession().then(({ data: { session } }) => {
             setUser(session?.user ?? null)
             setLoading(false)
+        }).catch(() => {
+            setLoading(false)  // don't hang forever on error
         })
+
+        // Failsafe — never stay loading forever
+        const timeout = setTimeout(() => setLoading(false), 5000)
 
         // Listen for auth state changes in real time
         // This fires whenever someone logs in or logs out
@@ -78,7 +83,10 @@ export function useAuth() {
         )
 
         // Cleanup — stop listening when the component unmounts
-        return () => subscription.unsubscribe()
+        return () => {
+            subscription.unsubscribe()
+            clearTimeout(timeout)
+        }
     }, [])
 
     return { user, loading }
