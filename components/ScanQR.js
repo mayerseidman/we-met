@@ -83,10 +83,6 @@ export default function ScanQR({
     }, [isReady, devMode.noProfile]);
 
     const onScanSuccess = async (decodedText) => {
-        if (userRef.current) {
-            console.log('saving to supabase, user:', userRef.current.id)
-            saveMeet(userRef.current.id, newConnection)
-        }
         if (isProcessing || !isReady) return;
         setIsProcessing(true);
 

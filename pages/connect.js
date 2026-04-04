@@ -66,7 +66,7 @@ const SCAN_DEV_DEFAULT = {
     whatToDo: false,
 };
 
-export default function ConnectPage({ onDropdownToggle, user }) {
+export default function ConnectPage({ onDropdownToggle }) {
     const router = useRouter();
     const { profile, isReady } = useStorage();
     const [showEventDrawer, setShowEventDrawer] = useState(false);
@@ -75,6 +75,9 @@ export default function ConnectPage({ onDropdownToggle, user }) {
     const [devMode, setDevMode] = useState(DEV_DEFAULT);
     const [scanDevMode, setScanDevMode] = useState(SCAN_DEV_DEFAULT);
     const [mounted, setMounted] = useState(false);
+    const { user } = useAuth()
+
+    console.log('useAuth user:', user)
 
     const [activeTab, setActiveTab] = useState(() => {
         if (typeof window !== 'undefined') {
@@ -142,8 +145,7 @@ export default function ConnectPage({ onDropdownToggle, user }) {
              about: devProfile.about,
              // photo: devProfile.photo || null,
              event: selectedEvent,
-             v: 2,
-             userId: user?.id || null,  // ← add this
+             userId: user?.id || null, 
          })
        : "";
 
