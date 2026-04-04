@@ -65,7 +65,7 @@ export default function AuthPage() {
 
         showToast('Welcome back! 👋')
         setTimeout(() => {
-            router.push('/profile')
+            router.push('/')
         }, 1500)
     }
 

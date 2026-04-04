@@ -1,10 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
+import { useStorage } from "../hooks/useStorage";
+import { useAuth } from '../hooks/useAuth'
+
 import Header from "../components/Header";
 import ScanQR from "../components/ScanQR";
 import ShowQR from "../components/ShowQR";
 import DevModeToggle from "../components/profile/DevModeToggle";
-import { useStorage } from "../hooks/useStorage";
+
+
 import styles from "../styles/pages/Connect.module.scss";
 
 const TABS = [
@@ -62,7 +66,7 @@ const SCAN_DEV_DEFAULT = {
     whatToDo: false,
 };
 
-export default function ConnectPage({ onDropdownToggle }) {
+export default function ConnectPage({ onDropdownToggle, user }) {
     const router = useRouter();
     const { profile, isReady } = useStorage();
     const [showEventDrawer, setShowEventDrawer] = useState(false);
@@ -130,14 +134,21 @@ export default function ConnectPage({ onDropdownToggle }) {
         setShowEventDrawer(false);
     }, []);
 
-    const qrData = devProfile
-        ? JSON.stringify({
-              name: devProfile.name,
-              phone: devProfile.phone,
-              instagram: devProfile.instagram,
-              event: selectedEvent,
-          })
-        : "";
+   const qrData = devProfile
+       ? JSON.stringify({
+             name: devProfile.name,
+             phone: devProfile.phone,
+             instagram: devProfile.instagram,
+             about: devProfile.about,
+             // photo: devProfile.photo || null,
+             event: selectedEvent,
+             v: 2,
+             userId: user?.id || null,  // ← add this
+         })
+       : "";
+
+    console.log('qrData:', qrData)  // add this
+    console.log('user:', user, 'qrData:', qrData)
 
     if (!mounted || !isReady) {
         const isScan = typeof window !== 'undefined' && 

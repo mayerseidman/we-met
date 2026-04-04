@@ -4,6 +4,9 @@ import EmptyState from "./EmptyState";
 import EventDrawer from "./EventDrawer";
 import EventDropdown from "./EventDropdown";
 import { useStorage } from "../hooks/useStorage";
+import { useAuth } from '../hooks/useAuth'
+import { saveMeet } from '../lib/db'
+
 import styles from "../styles/components/ScanQR.module.scss";
 
 const DEV_PHOTO = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop";
@@ -29,6 +32,7 @@ export default function ScanQR({
     const [scannerMessage, setScannerMessage] = useState("");
     const [cameraError, setCameraError] = useState(false);
     const scannerRef = useRef(null);
+    const { user } = useAuth()
 
     useEffect(() => {
         if (devMode.noProfile) return;
@@ -74,6 +78,7 @@ export default function ScanQR({
     }, [isReady, devMode.noProfile]);
 
     const onScanSuccess = async (decodedText) => {
+        console.log('scan success called:', decodedText)
         if (isProcessing || !isReady) return;
         setIsProcessing(true);
 
@@ -98,30 +103,27 @@ export default function ScanQR({
                 }, 2000);
                 return;
             }
-
             const newConnection = {
                 name: connectionData.name,
-                whatsapp: connectionData.whatsapp,
-                instagram: connectionData.instagram,
-                email: connectionData.email,
-                festival: profile?.festival || selectedEvent || "Unknown",
+                phone: connectionData.phone || null,
+                instagram: connectionData.instagram || null,
+                about: connectionData.about || null,
+                photo: connectionData.photo || null,
+                connectedUserId: connectionData.userId || null,
+                festival: selectedEvent || 'Unknown',
                 scannedAt: new Date().toISOString(),
                 qrData: decodedText,
-            };
+            }
 
-            const success = await addConnection(newConnection);
+            const success = await addConnection(newConnection)
+            console.log('addConnection result:', success)
             if (success) {
-                // trigger success modal
-                onCloseScanSuccess && onCloseScanSuccess('show', connectionData);
-            } else {
-                setCameraError(false);
-                setScannerMessage("Failed to save. Try again.");
-                setTimeout(async () => {
-                    setIsProcessing(false);
-                    if (scannerRef.current) {
-                        try { await scannerRef.current.resume(); } catch (e) {}
-                    }
-                }, 2000);
+                if (user) {
+                    console.log('saving to supabase, user:', user.id)
+                    saveMeet(user.id, newConnection).catch(err => 
+                        console.error('Failed to sync meet to Supabase:', err)
+                    )
+                }
             }
         } catch (err) {
             console.error("Failed to process QR:", err);

@@ -110,6 +110,7 @@ function MyApp({ Component, pageProps }) {
             <Component
                 {...pageProps}
                 onDropdownToggle={setIsDropdownOpen}
+                user={user}
             />
             {showNav && (
                 <BottomNav

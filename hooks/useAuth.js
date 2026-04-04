@@ -44,7 +44,7 @@ export function useAuth() {
         })
 
         // Failsafe — never stay loading forever
-        const timeout = setTimeout(() => setLoading(false), 5000)
+        const timeout = setTimeout(() => setLoading(false), 1500)
 
         // Listen for auth state changes in real time
         // This fires whenever someone logs in or logs out
