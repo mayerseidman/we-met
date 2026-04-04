@@ -195,6 +195,7 @@ export default function ConnectPage({ onDropdownToggle, user }) {
                 {activeTab === "scan" ? (
                     <ScanQR
                         key="scan"
+                        user={user}
                         devMode={scanDevMode}
                         selectedEvent={selectedEvent}
                         onSetEditing={handleSetEditing}

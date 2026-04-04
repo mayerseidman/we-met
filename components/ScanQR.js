@@ -26,13 +26,18 @@ export default function ScanQR({
     onDropdownToggle,
     showEventDrawer,
     onCloseDrawer,
+    user,
 }) {
     const { connections, addConnection, profile, isReady } = useStorage();
     const [isProcessing, setIsProcessing] = useState(false);
     const [scannerMessage, setScannerMessage] = useState("");
     const [cameraError, setCameraError] = useState(false);
     const scannerRef = useRef(null);
-    const { user } = useAuth()
+    const userRef = useRef(user)
+
+    useEffect(() => {
+        userRef.current = user
+    }, [user])
 
     useEffect(() => {
         if (devMode.noProfile) return;
@@ -78,7 +83,10 @@ export default function ScanQR({
     }, [isReady, devMode.noProfile]);
 
     const onScanSuccess = async (decodedText) => {
-        console.log('scan success called:', decodedText)
+        if (userRef.current) {
+            console.log('saving to supabase, user:', userRef.current.id)
+            saveMeet(userRef.current.id, newConnection)
+        }
         if (isProcessing || !isReady) return;
         setIsProcessing(true);
 
@@ -116,11 +124,13 @@ export default function ScanQR({
             }
 
             const success = await addConnection(newConnection)
-            console.log('addConnection result:', success)
+            console.log('addConnection result:', success, 'user:', user)
             if (success) {
                 if (user) {
                     console.log('saving to supabase, user:', user.id)
-                    saveMeet(user.id, newConnection).catch(err => 
+                    saveMeet(user.id, newConnection).then(result => {
+                        console.log('saveMeet result:', result)
+                    }).catch(err => 
                         console.error('Failed to sync meet to Supabase:', err)
                     )
                 }
