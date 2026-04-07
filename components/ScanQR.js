@@ -4,14 +4,14 @@ import EmptyState from "./EmptyState";
 import EventDrawer from "./EventDrawer";
 import EventDropdown from "./EventDropdown";
 import { useStorage } from "../hooks/useStorage";
-import { useAuth } from '../hooks/useAuth'
-import { saveMeet } from '../lib/db'
+import { saveMeet, meetExists } from '../lib/db'
 
 import styles from "../styles/components/ScanQR.module.scss";
 
 const DEV_PHOTO = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop";
 
 export default function ScanQR({ 
+    user,
     devMode = {}, 
     selectedEvent,
     onSetEditing, 
@@ -26,7 +26,6 @@ export default function ScanQR({
     onDropdownToggle,
     showEventDrawer,
     onCloseDrawer,
-    user,
 }) {
     const { connections, addConnection, profile, isReady } = useStorage();
     const [isProcessing, setIsProcessing] = useState(false);
@@ -92,12 +91,14 @@ export default function ScanQR({
 
         try {
             const connectionData = JSON.parse(decodedText);
-            const isDuplicate = connections.some(
-                conn => conn.name === connectionData.name && conn.whatsapp === connectionData.whatsapp
-            );
+            const isDuplicate = connections.some(conn => {
+                if (connectionData.userId && conn.connectedUserId) {
+                    return conn.connectedUserId === connectionData.userId
+                }
+                return conn.name === connectionData.name && conn.phone === connectionData.phone
+            })
 
             if (isDuplicate) {
-                // trigger already connected modal
                 onCloseAlreadyConnected && onCloseAlreadyConnected('show', connectionData);
                 setTimeout(async () => {
                     setIsProcessing(false);
@@ -107,6 +108,7 @@ export default function ScanQR({
                 }, 2000);
                 return;
             }
+
             const newConnection = {
                 name: connectionData.name,
                 phone: connectionData.phone || null,
@@ -114,22 +116,30 @@ export default function ScanQR({
                 about: connectionData.about || null,
                 photo: connectionData.photo || null,
                 connectedUserId: connectionData.userId || null,
-                festival: selectedEvent || 'Unknown',
+                event: selectedEvent || 'Unknown',
                 scannedAt: new Date().toISOString(),
                 qrData: decodedText,
             }
 
             const success = await addConnection(newConnection)
-            console.log('addConnection result:', success, 'user:', user)
+            console.log('addConnection result:', success, 'user:', userRef.current)
             if (success) {
-                if (user) {
-                    console.log('saving to supabase, user:', user.id)
-                    saveMeet(user.id, newConnection).then(result => {
-                        console.log('saveMeet result:', result)
-                    }).catch(err => 
-                        console.error('Failed to sync meet to Supabase:', err)
+                if (userRef.current) {
+                    const exists = await meetExists(
+                        userRef.current.id,
+                        newConnection.connectedUserId,
+                        newConnection.name,
+                        newConnection.phone
                     )
+                    if (!exists) {
+                        saveMeet(userRef.current.id, newConnection).then(result => {
+                            console.log('saveMeet result:', result)
+                        }).catch(err => 
+                            console.error('Failed to sync meet to Supabase:', err)
+                        )
+                    }
                 }
+                setIsProcessing(false)
             }
         } catch (err) {
             console.error("Failed to process QR:", err);
