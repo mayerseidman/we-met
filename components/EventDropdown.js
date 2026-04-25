@@ -11,6 +11,20 @@ export default function EventDropdown({ selectedEvent, onEventChange, onOpenDraw
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+        if (isOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isOpen]);
+
     const toggleDropdown = () => {
         if (onOpenDrawer) {
             onOpenDrawer();
@@ -18,32 +32,21 @@ export default function EventDropdown({ selectedEvent, onEventChange, onOpenDraw
         }
         const newState = !isOpen;
         setIsOpen(newState);
-        onDropdownToggle?.(newState);
+        onDropdownToggle?.(newState);  // restore
     };
 
-    // Close dropdown when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsOpen(false);
-                onDropdownToggle?.(false);
-            }
-        };
-
-        if (isOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
+    const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setIsOpen(false);
+            onDropdownToggle?.(false);  // restore
         }
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [isOpen, onDropdownToggle]);
+    };
 
     const handleSelect = (event) => {
         const label = formatEvent(event);
         onEventChange(label);
         setIsOpen(false);
-        onDropdownToggle?.(false);
+        onDropdownToggle?.(false);  // restore
     };
 
     return (
@@ -70,13 +73,11 @@ export default function EventDropdown({ selectedEvent, onEventChange, onOpenDraw
                     />
                 </svg>
             </button>
-
             {isOpen && (
                 <div className={styles.menu}>
                     {EVENTS.map((event) => {
                         const label = formatEvent(event);
                         const isSelected = label === selectedEvent;
-
                         return (
                             <button
                                 key={event.name}

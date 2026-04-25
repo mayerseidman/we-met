@@ -29,10 +29,15 @@ function MyApp({ Component, pageProps }) {
     const router = useRouter();
     const { user, loading: authLoading } = useAuth();
     const { profile, isReady } = useStorage();
+    const [mounted, setMounted] = useState(false);
     const [showConnectDrawer, setShowConnectDrawer] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
-    const publicPages = ['/landing', '/auth', '/reset-password']
+
+    // Must be first effect — gates everything else
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     // Detect mobile vs desktop
     useEffect(() => {
@@ -43,8 +48,6 @@ function MyApp({ Component, pageProps }) {
     }, []);
 
     // ── Routing gatekeeper ────────────────────────────────────
-    // Wait until both auth and storage are ready before routing
-    // Otherwise we might redirect before we know the true state
     useEffect(() => {
         if (authLoading || !isReady || !router.isReady) return;
         const publicPages = ['/landing', '/auth'];
@@ -59,15 +62,14 @@ function MyApp({ Component, pageProps }) {
                 router.push('/landing');
             }
         }
-
-        // Handle cold landing on /profile with no session and no profile
         if (router.pathname === '/profile') {
-            if (!user && !profile) {
+            if (!user && !profile && router.query.from !== 'landing') {
                 router.push('/landing');
             }
         }
     }, [user, authLoading, isReady, profile, router]);
 
+    // ── Service worker ────────────────────────────────────────
     useEffect(() => {
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js').then(() => {
@@ -76,7 +78,7 @@ function MyApp({ Component, pageProps }) {
                 console.error('Service worker registration failed:', err)
             })
         }
-    }, [])
+    }, []);
 
     // ── Connect drawer/popover handlers ───────────────────────
     const handleConnectClick = () => setShowConnectDrawer(true);
@@ -92,14 +94,17 @@ function MyApp({ Component, pageProps }) {
     const handleDrawerClose = () => setShowConnectDrawer(false);
 
     // Don't show nav on landing, auth, or home redirect pages
-    const hideNav = ['/', '/landing', '/auth', '/reset-password'].includes(router.pathname)
+    const hideNav = ['/', '/landing', '/auth', '/reset-password'].includes(router.pathname);
     const showNav = !hideNav;
 
-    // Show nothing while auth and storage are initializing
-    if (authLoading || !isReady) return null
+    // Block render until client has mounted and storage is ready
+    // This prevents SSR/hydration mismatch
+    if (!mounted || !isReady) {
+        return <div style={{ minHeight: '100vh', background: '#FFEFD7' }} />;
+    }
 
     return (
-        <>
+        <div suppressHydrationWarning>
             <Head>
                 <link rel="manifest" href="/manifest.json" />
                 <meta name="theme-color" content="#F5722F" />
@@ -118,8 +123,6 @@ function MyApp({ Component, pageProps }) {
                     isHidden={isDropdownOpen}
                 />
             )}
-
-            {/* Show drawer on mobile, popover on desktop */}
             {showConnectDrawer && (
                 isMobile ? (
                     <ConnectDrawer
@@ -133,7 +136,7 @@ function MyApp({ Component, pageProps }) {
                     />
                 )
             )}
-        </>
+        </div>
     );
 }
 

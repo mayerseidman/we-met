@@ -1,9 +1,5 @@
 @import '../variables';
 
-// ══════════════════════════════════════════════════════════════
-// EventDrawer Component Styles (Mobile Drawer)
-// ══════════════════════════════════════════════════════════════
-
 .backdrop {
     position: fixed;
     top: 0;
@@ -15,13 +11,28 @@
     animation: fadeIn 0.2s ease-out;
 }
 
+.backdropClosing {
+    animation: fadeOut 0.28s ease-in forwards;
+}
+
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(0); }
+    to { transform: translateY(100%); }
 }
 
 .drawer {
@@ -33,23 +44,17 @@
     border-top: 3px solid $black;
     border-radius: 12px 12px 0 0;
     z-index: 1000;
-    max-height: 40vh;
+    max-height: 70vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     animation: slideUp 0.3s ease-out;
 }
 
-@keyframes slideUp {
-    from {
-        transform: translateY(100%);
-    }
-    to {
-        transform: translateY(0);
-    }
+.drawerClosing {
+    animation: slideDown 0.28s ease-in forwards;
 }
 
-// ── Header ────────────────────────────────────────────────────
 .header {
     display: flex;
     align-items: center;
@@ -78,21 +83,17 @@
     font-weight: 700;
     cursor: pointer;
     transition: all $transition-fast;
-    
+
     &:hover {
         background-color: rgba(0, 0, 0, 0.05);
         border-color: $orange;
     }
-    
-    &:active {
-        background-color: rgba(0, 0, 0, 0.1);
-    }
 }
 
-// ── Event List ────────────────────────────────────────────────
 .eventList {
     overflow-y: auto;
     padding: $spacing-sm;
+    padding-bottom: 80px;
 }
 
 .eventItem {
@@ -112,18 +113,13 @@
     cursor: pointer;
     transition: all $transition-fast;
     box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
-    
+
     &:hover {
         border-color: $orange;
         transform: translate(-1px, -1px);
         box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
     }
-    
-    &:active {
-        transform: translate(1px, 1px);
-        box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
-    }
-    
+
     &.selected {
         background-color: rgba(245, 114, 47, 0.1);
         border-color: $orange;

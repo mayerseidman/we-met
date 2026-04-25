@@ -16,18 +16,19 @@
 // - pages/profile.js (profile saved feedback) — coming soon
 // ══════════════════════════════════════════════════════════════
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import styles from '../styles/components/Toast.module.scss'
 
 export default function Toast({ message, visible, onHide }) {
+    const [closing, setClosing] = useState(false)
+
     useEffect(() => {
         if (visible) {
-            // Auto-dismiss after 3 seconds
+            setClosing(false)
             const timer = setTimeout(() => {
-                onHide()
+                setClosing(true)
+                setTimeout(onHide, 280)
             }, 3000)
-
-            // Cleanup timer if component unmounts early
             return () => clearTimeout(timer)
         }
     }, [visible, onHide])
@@ -35,7 +36,7 @@ export default function Toast({ message, visible, onHide }) {
     if (!visible) return null
 
     return (
-        <div className={styles.toast}>
+        <div className={`${styles.toast} ${closing ? styles.toastClosing : ''}`}>
             {message}
         </div>
     )

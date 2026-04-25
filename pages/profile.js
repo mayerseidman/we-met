@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from 'next/router';
 import { useAuth } from '../hooks/useAuth'
 
 import Toast from '../components/Toast';
 import { useToast } from '../hooks/useToast';
-
 
 import Header from "../components/Header";
 import ProfileView from "../components/ProfileView";
@@ -51,6 +50,7 @@ export default function ProfilePage() {
         isSaved: false,
     });
 
+    const isSavingRef = useRef(false)
     const { toastMessage, toastVisible, showToast, hideToast } = useToast()
     const [touched, setTouched] = useState({});
 
@@ -73,6 +73,8 @@ export default function ProfilePage() {
 
 
     useEffect(() => {
+        if (isSavingRef.current) return
+
         if (devMode.newUser) {
             const data = devMode.hasInfo
                 ? { ...SAMPLE_DATA, photo: devMode.hasPhoto ? PLACEHOLDER_HEADSHOT : null }
@@ -108,7 +110,6 @@ export default function ProfilePage() {
             setEditingProfile(profileData);
             setInitialProfile(profileData);
             setPhotoPreview(profile.photo || null);
-            setIsEditing(false);
             return;
         }
 
@@ -149,59 +150,66 @@ export default function ProfilePage() {
         setEditingProfile(prev => ({ ...prev, photo: null }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
+   const handleSubmit = async (e) => {
+       e.preventDefault()
+       if (!isFormValid) {
+           setShowErrors(true)
+           return
+       }
+       isSavingRef.current = true
+       setButtonState('saving')
+       const saveStart = Date.now()
 
-        if (!isFormValid) {
-            setShowErrors(true)
-            return
-        }
+       try {
+           const success = await saveProfile(editingProfile)
+           console.log('save result:', success)
+           
+           if (success) {
+               if (user) {
+                   let profileToSave = { ...editingProfile }
+                   console.log('photo value:', editingProfile.photo?.substring(0, 50))
+                   if (editingProfile.photo && editingProfile.photo.startsWith('data:')) {
+                       console.log('uploading photo...')
+                       const { url, error: uploadError } = await uploadAvatar(user.id, editingProfile.photo)
+                       console.log('upload result:', url, uploadError)
+                       if (url) {
+                           profileToSave.photo = url
+                       }
+                   } else {
+                       console.log('no base64 photo — skipping upload')
+                   }
+                   const { success: cloudSuccess, error } = await saveUserProfile(user.id, profileToSave)
+                   console.log('cloud save result:', cloudSuccess, error)
+               }
 
-        setButtonState('saving')
+               const wasNewProfile = !initialProfile
+               const elapsed = Date.now() - saveStart
+               const remaining = Math.max(0, 800 - elapsed)
 
-        try {
-            const success = await saveProfile(editingProfile)
-            
-            if (success) {
-                if (user) {
-                    let profileToSave = { ...editingProfile }
-                    console.log('photo value:', editingProfile.photo?.substring(0, 50))
+               setTimeout(() => {
+                   setButtonState('saved')
+                   setInitialProfile(editingProfile)
+                   setShowErrors(false)
+                   if (wasNewProfile) showToast('Profile created! 🎉')
 
-                    // If there's a base64 photo, upload it to Storage first
-                    if (editingProfile.photo && editingProfile.photo.startsWith('data:')) {
-                            console.log('uploading photo...')
-                            const { url, error: uploadError } = await uploadAvatar(user.id, editingProfile.photo)
-                            console.log('upload result:', url, uploadError)
-                            if (url) {
-                                profileToSave.photo = url
-                            }
-                        } else {
-                            console.log('no base64 photo — skipping upload')
-                        }
+                   setTimeout(() => {
+                       setButtonState('default')
+                       isSavingRef.current = false
+                   }, 4000)
+               }, remaining)
 
-                    const { success: cloudSuccess, error } = await saveUserProfile(user.id, profileToSave)
-                    console.log('cloud save result:', cloudSuccess, error)
-                }
-
-                setButtonState('saved')
-                setInitialProfile(editingProfile)
-                setShowErrors(false)
-                showToast(initialProfile ? 'Profile updated! ✅' : 'Profile created! 🎉')
-                
-                setTimeout(() => {
-                    setButtonState('default')
-                    setIsEditing(false)
-                }, 2000)
-            } else {
-                alert("Failed to save profile. Please try again.")
-                setButtonState('default')
-            }
-        } catch (error) {
-            console.error("Error saving profile:", error)
-            alert("Failed to save profile. Please try again.")
-            setButtonState('default')
-        }
-    }
+           } else {
+               alert("Failed to save profile. Please try again.")
+               setButtonState('default')
+               isSavingRef.current = false
+           }
+       } catch (error) {
+           console.error("Error saving profile:", error)
+           alert("Failed to save profile. Please try again.")
+           setButtonState('default')
+           isSavingRef.current = false
+       }
+   }
 
     const handleClear = () => {
         localStorage.clear();
@@ -210,6 +218,7 @@ export default function ProfilePage() {
         setPhotoPreview(null);
         setIsEditing(true);
         setButtonState('default');
+        isSavingRef.current = false
         setDevMode({ 
             newUser: false, 
             hasInfo: false, 

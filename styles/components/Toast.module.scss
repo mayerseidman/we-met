@@ -1,9 +1,29 @@
 @import '../variables';
 
-// ── Toast ─────────────────────────────────────────────────────
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-50%) translateY(12px);
+    }
+}
+
 .toast {
     position: fixed;
-    // Sits above the bottom nav (80px) with some breathing room
     bottom: 90px;
     left: 50%;
     transform: translateX(-50%);
@@ -21,13 +41,6 @@
     animation: slideUp 0.2s ease-out;
 }
 
-@keyframes slideUp {
-    from { 
-        opacity: 0; 
-        transform: translateX(-50%) translateY(8px); 
-    }
-    to { 
-        opacity: 1; 
-        transform: translateX(-50%) translateY(0); 
-    }
+.toastClosing {
+    animation: slideDown 0.28s ease-in forwards;
 }

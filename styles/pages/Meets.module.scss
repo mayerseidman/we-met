@@ -1,0 +1,381 @@
+@use '../variables' as *;
+
+// ── Page ──────────────────────────────────────────────────────
+.page {
+    background: $cream;
+    min-height: calc(100vh - 80px);
+    padding-bottom: 6rem;
+    font-family: $font-mono;
+}
+
+.loading {
+    min-height: 100vh;
+    background: $cream;
+}
+
+// ── Header ────────────────────────────────────────────────────
+.header {
+    padding: $spacing-xl $spacing-md $spacing-md;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: $black;
+    margin: 0 0 $spacing-sm;
+    letter-spacing: 1px;
+}
+
+.meta {
+    display: flex;
+    gap: $spacing-md;
+    align-items: center;
+}
+
+.metaItem {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: $brown;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    svg {
+        opacity: 0.7;
+    }
+}
+
+// ── Banners ───────────────────────────────────────────────────
+.banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem $spacing-md;
+    margin: 0 $spacing-md $spacing-md;
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+}
+
+.bannerText {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.bannerActions {
+    display: flex;
+    gap: $spacing-sm;
+    margin-left: $spacing-md;
+}
+
+.bannerBtn {
+    padding: 0.35rem 0.75rem;
+    background: $orange;
+    color: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    font-family: $font-mono;
+    font-weight: 900;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all $transition-fast;
+
+    &:hover {
+        transform: translate(1px, 1px);
+        box-shadow: none;
+    }
+}
+
+.bannerClose {
+    padding: 0.35rem 0.5rem;
+    background: transparent;
+    border: 2px solid $black;
+    border-radius: 2px;
+    font-family: $font-mono;
+    font-weight: 900;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+        background: rgba(0,0,0,0.05);
+    }
+}
+
+// ── Empty State ───────────────────────────────────────────────
+.empty {
+    text-align: center;
+    padding: $spacing-3xl $spacing-md;
+}
+
+.emptyIcon {
+    font-size: 3rem;
+    margin-bottom: $spacing-md;
+}
+
+.emptyTitle {
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin-bottom: $spacing-sm;
+}
+
+.emptyText {
+    font-size: 0.875rem;
+    color: $gray;
+}
+
+// ── List ──────────────────────────────────────────────────────
+.list {
+    padding: 0 $spacing-md;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+}
+
+.group {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+}
+
+.groupLabel {
+    font-size: 0.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: $brown;
+    padding: 0 0.25rem;
+}
+
+// ── Card ──────────────────────────────────────────────────────
+.card {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: 0.875rem $spacing-md;
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.12);
+    cursor: pointer;
+    font-family: $font-mono;
+    text-align: left;
+    transition: all $transition-fast;
+
+    &:hover {
+        transform: translate(-1px, -1px);
+        box-shadow: 4px 4px 0 rgba(0,0,0,0.15);
+        border-color: $orange;
+    }
+
+    &:active {
+        transform: translate(1px, 1px);
+        box-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+    }
+}
+
+.cardInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.cardName {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $black;
+    margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cardMeta {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    font-size: 0.7rem;
+    color: $gray;
+    font-weight: 600;
+
+    span {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    svg {
+        flex-shrink: 0;
+        opacity: 0.6;
+    }
+}
+
+.chevron {
+    color: $light-gray;
+    flex-shrink: 0;
+}
+
+// ── Detail View ───────────────────────────────────────────────
+.detail {
+    padding: $spacing-md;
+}
+
+.backBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: none;
+    border: none;
+    font-family: $font-mono;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: $orange;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: $spacing-xl;
+    transition: all $transition-fast;
+
+    &:hover {
+        gap: 0.6rem;
+    }
+}
+
+.detailTop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: $spacing-xl;
+}
+
+.detailName {
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: $black;
+    margin: $spacing-md 0 $spacing-sm;
+    letter-spacing: 0.5px;
+}
+
+.detailPill {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: 0.5rem $spacing-md;
+    background: $white;
+    border: 1.5px solid $black;
+    border-radius: 2px;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: $gray;
+
+    span {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    svg {
+        opacity: 0.6;
+    }
+}
+
+// ── Detail Sections ───────────────────────────────────────────
+.detailSection {
+    margin-bottom: $spacing-xl;
+}
+
+.detailSectionLabel {
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: $dark-gray;
+    margin-bottom: $spacing-sm;
+}
+
+.detailAbout {
+    font-family: $font-mono;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: $black;
+    padding: $spacing-md;
+    background: $white;
+    border: 1.5px solid $black;
+    border-radius: 2px;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+}
+
+// ── Contact Rows ──────────────────────────────────────────────
+.contactRow {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: 0.875rem $spacing-md;
+    background: $white;
+    border: 1.5px solid $black;
+    border-radius: 2px;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+    margin-bottom: $spacing-sm;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.contactIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: $cream;
+    border: 1.5px solid $black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.contactText {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 700;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.contactBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.875rem;
+    background: $orange;
+    color: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    font-family: $font-mono;
+    font-size: 0.7rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: all $transition-fast;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+
+    &:hover {
+        transform: translate(1px, 1px);
+        box-shadow: none;
+    }
+}
+
+.contactBtnCopied {
+    background: $green;
+}

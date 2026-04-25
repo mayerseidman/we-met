@@ -25,7 +25,7 @@ export default function LandingPage() {
 
     // New user — go set up your profile
     const handleGetStarted = () => {
-        router.push('/profile');
+        router.push('/profile?from=landing');
     };
 
     // Returning user with account — go sign in

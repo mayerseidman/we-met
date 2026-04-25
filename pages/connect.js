@@ -7,7 +7,8 @@ import Header from "../components/Header";
 import ScanQR from "../components/ScanQR";
 import ShowQR from "../components/ShowQR";
 import DevModeToggle from "../components/profile/DevModeToggle";
-
+import ScanSuccessModal from "../components/ScanSuccessModal";
+import AlreadyConnectedModal from "../components/AlreadyConnectedModal";
 
 import styles from "../styles/pages/Connect.module.scss";
 
@@ -77,7 +78,9 @@ export default function ConnectPage({ onDropdownToggle }) {
     const [mounted, setMounted] = useState(false);
     const { user } = useAuth()
 
-    console.log('useAuth user:', user)
+    // Real scan modal state (triggered by actual scans, not dev mode)
+    const [scanSuccessData, setScanSuccessData] = useState(null)
+    const [alreadyConnectedData, setAlreadyConnectedData] = useState(null)
 
     const [activeTab, setActiveTab] = useState(() => {
         if (typeof window !== 'undefined') {
@@ -137,20 +140,26 @@ export default function ConnectPage({ onDropdownToggle }) {
         setShowEventDrawer(false);
     }, []);
 
-   const qrData = devProfile
-       ? JSON.stringify({
-             name: devProfile.name,
-             phone: devProfile.phone,
-             instagram: devProfile.instagram,
-             about: devProfile.about,
-             // photo: devProfile.photo || null,
-             event: selectedEvent,
-             userId: user?.id || null, 
-         })
-       : "";
+    const qrData = devProfile
+        ? JSON.stringify({
+              name: devProfile.name,
+              phone: devProfile.phone,
+              instagram: devProfile.instagram,
+              about: devProfile.about,
+              event: selectedEvent,
+              userId: user?.id || null, 
+          })
+        : "";
 
-    console.log('qrData:', qrData)  // add this
-    console.log('user:', user, 'qrData:', qrData)
+    // Show success modal after a real scan
+    const handleScanSuccess = useCallback((connectionData) => {
+        setScanSuccessData(connectionData)
+    }, [])
+
+    // Show already connected modal after a duplicate scan
+    const handleShowAlreadyConnected = useCallback((connectionData) => {
+        setAlreadyConnectedData(connectionData)
+    }, [])
 
     if (!mounted || !isReady) {
         const isScan = typeof window !== 'undefined' && 
@@ -212,6 +221,8 @@ export default function ConnectPage({ onDropdownToggle }) {
                         onCloseScanError={() => setScanDevMode(prev => ({ ...prev, scanError: false }))}
                         onCloseAlreadyConnected={() => setScanDevMode(prev => ({ ...prev, alreadyConnected: false }))}
                         onCloseWhatToDo={() => setScanDevMode(prev => ({ ...prev, whatToDo: false }))}
+                        onScanSuccess={handleScanSuccess}
+                        onShowAlreadyConnected={handleShowAlreadyConnected}
                     />
                 ) : (
                     <>
@@ -236,6 +247,42 @@ export default function ConnectPage({ onDropdownToggle }) {
                     </>
                 )}
             </div>
+
+            {/* Dev mode modals */}
+            {scanDevMode.scanSuccess && (
+                <ScanSuccessModal
+                    name="Alejandro Vizio"
+                    photo={DEV_PHOTO}
+                    onDismiss={() => setScanDevMode(prev => ({ ...prev, scanSuccess: false }))}
+                    isMobile={isMobile}
+                />
+            )}
+            {scanDevMode.alreadyConnected && (
+                <AlreadyConnectedModal
+                    name="Big Maestro"
+                    daysAgo={3}
+                    onDismiss={() => setScanDevMode(prev => ({ ...prev, alreadyConnected: false }))}
+                    isMobile={isMobile}
+                />
+            )}
+
+            {/* Real scan modals */}
+            {scanSuccessData && (
+                <ScanSuccessModal
+                    name={scanSuccessData.name}
+                    photo={scanSuccessData.photo}
+                    onDismiss={() => setScanSuccessData(null)}
+                    isMobile={isMobile}
+                />
+            )}
+            {alreadyConnectedData && (
+                <AlreadyConnectedModal
+                    name={alreadyConnectedData.name}
+                    daysAgo={0}
+                    onDismiss={() => setAlreadyConnectedData(null)}
+                    isMobile={isMobile}
+                />
+            )}
         </div>
     );
 }

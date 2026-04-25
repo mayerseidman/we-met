@@ -4,6 +4,7 @@ import EmptyState from "./EmptyState";
 import EventDrawer from "./EventDrawer";
 import EventDropdown from "./EventDropdown";
 import { useStorage } from "../hooks/useStorage";
+import Avatar from './Avatar'
 import { saveMeet, meetExists } from '../lib/db'
 
 import styles from "../styles/components/ScanQR.module.scss";
@@ -26,6 +27,8 @@ export default function ScanQR({
     onDropdownToggle,
     showEventDrawer,
     onCloseDrawer,
+    onScanSuccess,
+    onShowAlreadyConnected,
 }) {
     const { connections, addConnection, profile, isReady } = useStorage();
     const [isProcessing, setIsProcessing] = useState(false);
@@ -33,6 +36,11 @@ export default function ScanQR({
     const [cameraError, setCameraError] = useState(false);
     const scannerRef = useRef(null);
     const userRef = useRef(user)
+    const connectionsRef = useRef(connections)
+
+    useEffect(() => {
+        connectionsRef.current = connections
+    }, [connections])
 
     useEffect(() => {
         userRef.current = user
@@ -62,7 +70,7 @@ export default function ScanQR({
                         aspectRatio: 1.0,
                         experimentalFeatures: { useBarCodeDetectorIfSupported: true },
                     },
-                    onScanSuccess,
+                    handleScanSuccess,
                     () => {},
                 );
             } catch (err) {
@@ -81,7 +89,7 @@ export default function ScanQR({
         }
     }, [isReady, devMode.noProfile]);
 
-    const onScanSuccess = async (decodedText) => {
+    const handleScanSuccess = async (decodedText) => {
         if (isProcessing || !isReady) return;
         setIsProcessing(true);
 
@@ -91,7 +99,7 @@ export default function ScanQR({
 
         try {
             const connectionData = JSON.parse(decodedText);
-            const isDuplicate = connections.some(conn => {
+            const isDuplicate = connectionsRef.current.some(conn => {
                 if (connectionData.userId && conn.connectedUserId) {
                     return conn.connectedUserId === connectionData.userId
                 }
@@ -99,7 +107,8 @@ export default function ScanQR({
             })
 
             if (isDuplicate) {
-                onCloseAlreadyConnected && onCloseAlreadyConnected('show', connectionData);
+                console.log('DUPLICATE DETECTED:', connectionData.name)
+                onShowAlreadyConnected && onShowAlreadyConnected(connectionData);
                 setTimeout(async () => {
                     setIsProcessing(false);
                     if (scannerRef.current) {
@@ -131,6 +140,7 @@ export default function ScanQR({
                         newConnection.name,
                         newConnection.phone
                     )
+                    console.log('meetExists result:', exists)
                     if (!exists) {
                         saveMeet(userRef.current.id, newConnection).then(result => {
                             console.log('saveMeet result:', result)
@@ -170,7 +180,7 @@ export default function ScanQR({
             </h1>
             <div className={styles.inner}>
                 <div className={styles.tagline}>
-                    <p className={styles.subtext}>Gotta Scan &apos;Em All! OR lose them forever :(</p>
+                    <p className={styles.subtext}>Gotta Scan &apos;Em All!</p>
                 </div>
                 <div className={styles.viewfinder}>
                     <span className={`${styles.corner} ${styles.cornerTL}`} />
@@ -181,6 +191,30 @@ export default function ScanQR({
                     {isProcessing && (
                         <div className={styles.processingOverlay}>
                             <div className={styles.spinner} />
+                        </div>
+                    )}
+                    {cameraError && (
+                        <div style={{
+                            position: 'absolute',
+                            top: 0, left: 0, right: 0, bottom: 0,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: 'rgba(0,0,0,0.85)',
+                            color: 'white',
+                            padding: '1.5rem',
+                            textAlign: 'center',
+                            gap: '0.75rem',
+                            borderRadius: '2px',
+                        }}>
+                            <div style={{ fontSize: '2.5rem' }}>📷</div>
+                            <div style={{ fontWeight: '700', fontSize: '1rem', fontFamily: 'monospace' }}>
+                                Camera access denied
+                            </div>
+                            <div style={{ fontSize: '0.8rem', opacity: 0.8, fontFamily: 'monospace', lineHeight: 1.4 }}>
+                                Please allow camera access in your browser settings and reload the page.
+                            </div>
                         </div>
                     )}
                 </div>
@@ -234,33 +268,125 @@ export default function ScanQR({
             )}
 
             {devMode.scanSuccess && (
-                <ScanSuccessModal name="Alejandro Vizio" photo={DEV_PHOTO} onDismiss={onCloseScanSuccess} />
+                <ScanSuccessModal name="Alejandro Vizio" photo={DEV_PHOTO} onDismiss={onCloseScanSuccess} isMobile={isMobile} />
             )}
             {devMode.scanError && (
-                <ScanErrorModal onDismiss={onCloseScanError} />
+                <ScanErrorModal onDismiss={onCloseScanError} isMobile={isMobile} />
             )}
             {devMode.alreadyConnected && (
-                <AlreadyConnectedModal name="Big Maestro" daysAgo={3} onDismiss={onCloseAlreadyConnected} />
+                <AlreadyConnectedModal name="Big Maestro" daysAgo={3} onDismiss={onCloseAlreadyConnected} isMobile={isMobile} />
             )}
             {devMode.whatToDo && (
-                <WhatToDoModal onDismiss={onCloseWhatToDo} />
+                <WhatToDoModal onDismiss={onCloseWhatToDo} isMobile={isMobile} />
             )}
         </div>
     );
 }
 
-const ScanSuccessModal = ({ name, photo, onDismiss }) => (
-    <div>🚀 SUCCESS SHELL — {name}</div>
+const ScanSuccessModal = ({ name, photo, onDismiss, isMobile }) => {
+    useEffect(() => {
+        const timer = setTimeout(onDismiss, 4000);
+        return () => clearTimeout(timer);
+    }, []);
+
+    return (
+        <div className={`${styles.successOverlay} ${isMobile ? styles.successMobile : styles.successDesktop}`} onClick={onDismiss}>
+            <div className={styles.successCard} onClick={e => e.stopPropagation()}>
+                <button className={styles.successClose} onClick={onDismiss}>×</button>
+                <Avatar src={photo} name={name} size={44} />
+                <div className={styles.successText}>
+                    <div className={styles.successTitle}>New Connection Added</div>
+                    <div className={styles.successName}>{name}</div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const AlreadyConnectedModal = ({ name, daysAgo, onDismiss, isMobile }) => {
+    useEffect(() => {
+        const timer = setTimeout(onDismiss, 4000);
+        return () => clearTimeout(timer);
+    }, []);
+
+    return (
+        <div className={`${styles.successOverlay} ${isMobile ? styles.successMobile : styles.successDesktop}`} onClick={onDismiss}>
+            <div className={styles.successCard} onClick={e => e.stopPropagation()}>
+                <button className={styles.successClose} onClick={onDismiss}>×</button>
+                <div className={styles.successEmoji}>🤝</div>
+                <div className={styles.successText}>
+                    <div className={styles.successTitle}>Already Connected</div>
+                    <div className={styles.successName}>{name} · {daysAgo === 0 ? 'today' : `${daysAgo}d ago`}</div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const ScanErrorModal = ({ onDismiss, isMobile }) => (
+    <div className={`${styles.successOverlay} ${isMobile ? styles.successMobile : styles.successDesktop}`} onClick={onDismiss}>
+        <div className={styles.successCard} onClick={e => e.stopPropagation()}>
+            <button className={styles.successClose} onClick={onDismiss}>×</button>
+            <div className={styles.successEmoji}>💩</div>
+            <div className={styles.successText}>
+                <div className={styles.successTitle}>Scan Failed</div>
+                <div className={styles.successName} style={{ fontWeight: 400, fontSize: '0.85rem', opacity: 0.8 }}>
+                    Check your lighting & camera position
+                </div>
+            </div>
+        </div>
+    </div>
 );
 
-const ScanErrorModal = ({ onDismiss }) => (
-    <div>💩 ERROR SHELL</div>
+const WhatToDoModal = ({ onDismiss, isMobile }) => {
+    if (isMobile) {
+        return (
+            <WhatToDoDrawer onDismiss={onDismiss} />
+        );
+    }
+    return (
+        <WhatToDoDesktopModal onDismiss={onDismiss} />
+    );
+};
+
+const WhatToDoDrawer = ({ onDismiss }) => (
+    <>
+        <div className={styles.whatToDoBackdrop} onClick={onDismiss} />
+        <div className={styles.whatToDoDrawer}>
+            <div className={styles.whatToDoHeader}>
+                <h3 className={styles.whatToDoTitle}>No We Met, No Problem!</h3>
+                <button className={styles.whatToDoClose} onClick={onDismiss}>✕</button>
+            </div>
+            <div className={styles.whatToDoBody}>
+                <WhatToDoSteps />
+            </div>
+        </div>
+    </>
 );
 
-const WhatToDoModal = ({ onDismiss }) => (
-    <div>📱 WHAT TO DO SHELL</div>
+const WhatToDoDesktopModal = ({ onDismiss }) => (
+    <div className={styles.whatToDoOverlay} onClick={onDismiss}>
+        <div className={styles.whatToDoModal} onClick={e => e.stopPropagation()}>
+            <button className={styles.whatToDoClose} onClick={onDismiss}>✕</button>
+            <h3 className={styles.whatToDoTitle}>No We Met, No Problem!</h3>
+            <WhatToDoSteps />
+        </div>
+    </div>
 );
 
-const AlreadyConnectedModal = ({ name, daysAgo, onDismiss }) => (
-    <div>🤝 ALREADY CONNECTED SHELL — {name} ({daysAgo} days ago)</div>
+const WhatToDoSteps = () => (
+    <div className={styles.whatToDoSteps}>
+        <div className={styles.whatToDoStep}>
+            <div className={styles.whatToDoEmoji}>📱</div>
+            <div className={styles.whatToDoStepText}>Show them YOUR QR code</div>
+        </div>
+        <div className={styles.whatToDoStep}>
+            <div className={styles.whatToDoEmoji}>📸</div>
+            <div className={styles.whatToDoStepText}>They take a photo of it</div>
+        </div>
+        <div className={styles.whatToDoStep}>
+            <div className={styles.whatToDoEmoji}>🤝</div>
+            <div className={styles.whatToDoStepText}>Later (with internet), they scan it and connect with you!</div>
+        </div>
+    </div>
 );

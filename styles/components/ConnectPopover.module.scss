@@ -11,16 +11,17 @@
 
 .popover {
     position: fixed;
-    bottom: 80px; // above the bottom nav
+    bottom: 90px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: $cream;
+    background-color: $white;
     border: 2px solid $black;
-    border-radius: 2px;
+    border-radius: 4px;
     z-index: 1000;
-    width: 320px;
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     animation: popIn 0.15s ease-out;
+    overflow: hidden;
 }
 
 @keyframes popIn {
@@ -31,50 +32,46 @@
 .actions {
     display: flex;
     flex-direction: column;
-    padding: $spacing-sm;
-    gap: $spacing-sm;
 }
 
 .actionCard {
     display: flex;
     align-items: center;
-    gap: $spacing-md;
-    padding: 1rem;
+    gap: $spacing-sm;
+    padding: $spacing-md;
     background: $white;
-    border: 1.5px solid $black;
-    border-radius: 2px;
+    border: none;
+    border-bottom: 1.5px solid rgba(0,0,0,0.08);
     cursor: pointer;
     transition: all $transition-fast;
-    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.1);
     width: 100%;
+    font-family: $font-mono;
+
+    &:last-child {
+        border-bottom: none;
+    }
 
     &:hover {
-        background: rgba(245, 114, 47, 0.07);
-        border-color: $orange;
-        transform: translate(-0.5px, -0.5px);
-        box-shadow: 4.5px 4.5px 0px rgba(0, 0, 0, 0.2);
+        background: rgba(245, 114, 47, 0.06);
     }
 
     &:active {
-        transform: translate(1px, 1px);
-        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+        background: rgba(245, 114, 47, 0.12);
     }
 }
 
 .actionIcon {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid $black;
-    border-radius: 2px;
     flex-shrink: 0;
+    color: $orange;
 
     svg {
         width: 20px;
         height: 20px;
-        color: $orange;
     }
 }
 
@@ -84,24 +81,19 @@
 }
 
 .actionLabel {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 900;
-    margin: 0 0 2px 0;
+    margin: 0 0 4px; 
     color: $black;
 }
 
 .actionDescription {
-    font-size: 0.8rem;
-    margin: 0;
+    font-size: 0.75rem;
+    margin: 1px 0 0;
     color: $medium-gray;
+    white-space: nowrap;
 }
 
 .actionArrow {
-    flex-shrink: 0;
-
-    svg {
-        width: 20px;
-        height: 20px;
-        color: $orange;
-    }
+    display: none;
 }

@@ -13,17 +13,20 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: $spacing-md;
-    gap: $spacing-md;
-    
-    @media (max-width: 480px) {
-        padding: $spacing-md $spacing-lg;
-    }
+    padding: 0 $spacing-md $spacing-md;
+    gap: 0;
 }
 
 .tagline {
     text-align: center;
+    padding: $spacing-sm 0 $spacing-md;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 16px;
+
+    @media (max-width: 480px) {
+        max-width: 100%;
+    }
 }
 
 .heading {
@@ -46,9 +49,12 @@
     aspect-ratio: 1;
 
     @media (max-width: 480px) {
-        max-width: 100%;
+        max-width: 95%;
     }
 
+    @media (min-width: 768px) {
+        max-width: 320px; // smaller on desktop
+    }
 }
 
 .corner {
@@ -105,11 +111,19 @@
 .bottom {
     padding: $spacing-md;
     background: #000;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .eventSection {
+    width: 100%;
+    max-width: 400px;
     margin-bottom: $spacing-md;
+
+    @media (max-width: 480px) {
+        max-width: 95%;
+    }
 }
 
 .eventLabel {
@@ -182,7 +196,6 @@
     overflow: hidden;
     border-radius: 2px;
 
-    // Override html5-qrcode default styles
     & > * {
         width: 100% !important;
         height: 100% !important;
@@ -224,3 +237,297 @@
     text-align: center;
     padding: 1rem;
 }
+
+// — Success / Already Connected Modal —
+.successOverlay {
+    position: fixed;
+    z-index: 100;
+}
+
+.successDesktop {
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.successCard {
+    background: $black;
+    border-top: 3px solid $orange;
+    border-radius: 12px 12px 0 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    padding: $spacing-md $spacing-lg;
+    font-family: $font-mono;
+    color: $white;
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    position: relative;
+
+    .successDesktop & {
+        border: 2px solid $black;
+        border-radius: 4px;
+        box-shadow: 4px 4px 0 $black;
+        flex-direction: column;
+        text-align: center;
+        padding: $spacing-xl $spacing-lg $spacing-lg;
+        max-width: 360px;
+        width: 100%;
+        background: $cream;
+        color: $black;
+        border-top: 2px solid $black;
+    }
+}
+
+.successText {
+    flex: 1;
+
+    .successDesktop & {
+        text-align: center;
+    }
+}
+
+.successTitle {
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: $orange;
+    margin-bottom: 4px;
+}
+
+.successName {
+    font-size: 1rem;
+    font-weight: 900;
+    color: $white;
+    white-space: normal;
+    line-height: 1.4;
+    padding-right: 2rem;
+
+    .successDesktop & {
+        color: $black;
+    }
+}
+
+.successEmoji {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.successClose {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: $spacing-md;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 2px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: rgba(255,255,255,0.6);
+    line-height: 1;
+    transition: all $transition-fast;
+
+    &:hover {
+        border-color: $white;
+        color: $white;
+    }
+
+    .successDesktop & {
+        top: $spacing-sm;
+        transform: none;
+        border-color: rgba(0,0,0,0.2);
+        color: rgba(0,0,0,0.4);
+
+        &:hover {
+            border-color: $black;
+            color: $black;
+        }
+    }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(100%); opacity: 0; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.successMobile {
+    bottom: 80px;
+    left: 0;
+    right: 0;
+    padding: 0;
+    transform: translateY(0);
+    opacity: 1;
+    transition: transform 0.28s ease-in, opacity 0.28s ease-in;
+    animation: slideUp 0.3s ease-out;
+}
+
+.successMobileClosing {
+    animation: none;  // kill the slide-in animation
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.28s ease-in, opacity 0.28s ease-in;
+}
+
+.successDesktopClosing {
+    opacity: 0;
+    transition: opacity 0.28s ease-in;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+// — What To Do —
+.whatToDoBackdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.whatToDoDrawer {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: $cream;
+    border-top: 3px solid $black;
+    border-radius: 12px 12px 0 0;
+    z-index: 1000;
+    max-height: 65vh;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s ease-out;
+}
+
+.whatToDoOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 0 $spacing-md;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.whatToDoModal {
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    padding: $spacing-xl $spacing-lg $spacing-lg;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 3.5px 3.5px 0 rgba(0,0,0,0.15);
+    position: relative;
+    animation: modalIn 0.2s ease-out;
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.whatToDoHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-lg $spacing-md;
+    border-bottom: 2px solid $black;
+    flex-shrink: 0;
+}
+
+.whatToDoTitle {
+    font-size: 1.1rem;
+    font-weight: 900;
+    margin: 0;
+    color: $black;
+    font-family: $font-mono;
+}
+
+.whatToDoClose {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 2px solid $black;
+    border-radius: 2px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all $transition-fast;
+    flex-shrink: 0;
+
+    &:hover {
+        border-color: $orange;
+    }
+
+    .whatToDoModal & {
+        position: absolute;
+        top: $spacing-sm;
+        right: $spacing-sm;
+        border: none;
+        color: $dark-gray;
+        width: auto;
+        height: auto;
+    }
+}
+
+.whatToDoBody {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: $spacing-md;
+    flex: 1;
+}
+
+.whatToDoSteps {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+    padding: $spacing-md 0;
+}
+
+.whatToDoStep {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: $spacing-sm;
+}
+
+.whatToDoEmoji {
+    font-size: 2rem;
+}
+
+.whatToDoStepText {
+    font-family: $font-mono;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $black;
+    line-height: 1.4;
+}
+

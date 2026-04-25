@@ -233,3 +233,8 @@
         color: $black;
     }
 }
+
+.profileAvatar {
+    border: 1.5px solid $black !important;
+    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15) !important;
+}

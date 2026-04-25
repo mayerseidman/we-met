@@ -1,0 +1,172 @@
+@import '../variables';
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(0); }
+    to { transform: translateY(100%); }
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modalOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(12px); }
+}
+
+// ── Backdrop ──────────────────────────────────────────────────
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 35vh; // stop before the drawer starts (100vh - 65vh)
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1099;
+    animation: fadeIn 0.25s ease-out;
+}
+
+.backdropClosing {
+    animation: fadeOut 0.28s ease-in forwards;
+}
+
+// ── Drawer ────────────────────────────────────────────────────
+.drawer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: $cream;
+    border-top: 3px solid $black;
+    border-radius: 12px 12px 0 0;
+    z-index: 1100;
+    max-height: 65vh;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s ease-out;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.drawerClosing {
+    animation: slideDown 0.28s ease-in forwards;
+}
+
+// ── Modal ─────────────────────────────────────────────────────
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 0 $spacing-md;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modalOverlayClosing {
+    animation: fadeOut 0.28s ease-in forwards;
+}
+
+.modal {
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    padding: $spacing-xl $spacing-lg $spacing-lg;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
+    position: relative;
+    animation: modalIn 0.2s ease-out;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modalClosing {
+    animation: modalOut 0.28s ease-in forwards;
+}
+
+// ── Header ────────────────────────────────────────────────────
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-lg $spacing-md;
+    border-bottom: 2px solid $black;
+    flex-shrink: 0;
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin: 0;
+    color: $black;
+    font-family: $font-mono;
+}
+
+.closeButton {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 2px solid $black;
+    border-radius: 2px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all $transition-fast;
+    flex-shrink: 0;
+    font-family: $font-mono;
+
+    &:hover {
+        border-color: $orange;
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    // Modal close button — simpler, top-right
+    .modal & {
+        position: absolute;
+        top: $spacing-sm;
+        right: $spacing-sm;
+        border: none;
+        color: $dark-gray;
+        width: auto;
+        height: auto;
+
+        &:hover {
+            background: none;
+            color: $black;
+            border: none;
+        }
+    }
+}
+
+// ── Body ──────────────────────────────────────────────────────
+.body {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: $spacing-md;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    flex: 1;
+}

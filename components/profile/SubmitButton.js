@@ -40,7 +40,7 @@ const SubmitButton = ({ buttonState, isFormValid }) => {
     return (
         <button
             type="submit"
-            disabled={buttonState !== 'default' || !isFormValid}
+            disabled={buttonState === 'default' && !isFormValid}
             className={getButtonClass()}
         >
             {getButtonContent()}

@@ -1,5 +1,7 @@
 import { signOut } from '../lib/auth'
 import { useRouter } from 'next/router'
+import Avatar from './Avatar'
+
 import Toast from './Toast'
 import { useToast } from '../hooks/useToast'
 
@@ -21,7 +23,7 @@ const ProfileView = ({ profile, onEdit, user, authLoading }) => {
             await signOut()
             localStorage.removeItem('we-met-auth')
             router.push('/landing')
-        }, 1500)
+        }, 500)
     }
     return (
         <div className={styles.profileView}>
@@ -45,18 +47,12 @@ const ProfileView = ({ profile, onEdit, user, authLoading }) => {
 
 const ProfilePhoto = ({ profile }) => (
     <div className={styles.photoSection}>
-        {profile.photo ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img 
-                src={profile.photo} 
-                alt={profile.name}
-                className={styles.photo}
-            />
-        ) : (
-            <div className={styles.photoPlaceholder}>
-                {getInitials(profile.name)}
-            </div>
-        )}
+        <Avatar 
+            src={profile.photo} 
+            name={profile.name}
+            size={145}
+            className={styles.profileAvatar}
+        />
     </div>
 );
 
