@@ -11,44 +11,30 @@
 
 // ── Trigger Button ────────────────────────────────────────────
 .trigger {
-    width: 100%;
-    padding: 0.875rem;
-    padding: 0.875rem;
-    font-family: $font-mono;
-    font-size: 1rem;
-    font-weight: 600;
-    border: 1.5px solid $black;
-    border-radius: 2px;
-    background-color: $white;
-    color: $black;
-    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.1);
-    transition: all $transition-fast;
+    @include input-styled;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
     text-align: left;
-    
+    gap: 12px;
+
     &:hover {
-        transform: translate(-1px, -1px);
-        box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
         border-color: $orange;
     }
-    
-    &:active {
-        transform: translate(1px, 1px);
-        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
-    }
-    
+
     &[aria-expanded="true"] {
         border-color: $orange;
+        box-shadow:
+            inset 2px 2px 0 rgba($black, 0.1),
+            0 0 0 3px rgba($orange, 0.25);
     }
 }
 
 .arrow {
-    font-size: 0.75rem;
-    transition: transform $transition-fast;
+    flex-shrink: 0;
     color: $black;
+    transition: transform $transition-fast;
 }
 
 .arrowUp {
@@ -61,18 +47,15 @@
     top: calc(100% + 0.5rem);
     left: 0;
     right: 0;
-    background: $cream;
-    border: 1.5px solid $black;
-    border-radius: 2px;
-    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.1);
+    background: $white;
+    border: $border-medium;
+    border-radius: 12px;
+    box-shadow: $shadow-medium;
     z-index: 100;
-    max-height: 300px;
+    max-height: 240px;
     overflow-y: auto;
+    overflow-x: hidden;
     animation: slideDown 0.25s ease-out;
-    max-height: 200px; 
-    overflow-y: auto;
-    padding-right: 0.005rem;
-    padding-left: 0.005rem;
 }
 
 @keyframes slideDown {
@@ -89,13 +72,13 @@
 // ── Option Buttons ────────────────────────────────────────────
 .option {
     width: 100%;
-    padding: 0.875rem;
+    padding: 12px 16px;
     font-family: $font-mono;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     background: $white;
     border: none;
-    border-bottom: 2px solid $black;
+    border-bottom: 2px solid rgba($black, 0.12);
     color: $black;
     text-align: left;
     cursor: pointer;
@@ -103,28 +86,26 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
+
     &:last-child {
         border-bottom: none;
     }
-    
+
     &:hover {
-        background: rgba(245, 114, 47, 0.1);
-        color: $black;
+        background: rgba($orange, 0.1);
     }
-    
+
     &:active {
-        background: rgba(245, 114, 47, 0.15);
+        background: rgba($orange, 0.18);
     }
 }
 
 .optionSelected {
-    background: rgba(245, 114, 47, 0.15);
-    font-weight: 900;
+    background: rgba($orange, 0.15);
 }
 
 .checkmark {
     color: $orange;
-    font-size: 1.25rem;
-    font-weight: 900;
+    font-size: 1.1rem;
+    font-weight: 600;
 }

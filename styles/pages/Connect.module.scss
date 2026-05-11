@@ -26,7 +26,7 @@
     padding: 2rem 0 1rem;
     text-align: center;
     font-size: 2rem;
-    font-weight: 900;
+    font-weight: 600;
     animation: fadeIn 0.4s ease-out;
 }
 
@@ -37,7 +37,7 @@
     padding: 2rem 0 1rem;
     text-align: center;
     font-size: 2rem;
-    font-weight: 900;
+    font-weight: 600;
 }
 
 @keyframes fadeIn {
@@ -288,25 +288,12 @@
 
 // ─── FORM BUTTONS ────────────────────────────────────────────
 .submitBtn {
+    @include cta-primary;
     width: 100%;
-    padding: $spacing-md;
-    background-color: $tan;
-    border: none;
-    font-family: $font-mono;
-    font-size: $spacing-md;
-    font-weight: bold;
-    cursor: pointer;
     margin-top: $spacing-xl;
-    transition: background-color $transition-fast;
 }
 
 .cancelBtn {
+    @include cta-ghost;
     width: 100%;
-    padding: $spacing-md;
-    background-color: $light-beige;
-    border: none;
-    font-family: $font-mono;
-    font-size: $spacing-md;
-    font-weight: bold;
-    cursor: pointer;
 }

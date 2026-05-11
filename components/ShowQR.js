@@ -121,8 +121,8 @@ const InfoNote = () => (
 const ConnectBackModal = ({ profile, onDismiss }) => (
     <div className={styles.modalOverlay}>
         <div className={styles.modal}>
-            <button className={styles.modalClose} onClick={onDismiss}>✕</button>
-            <div className={styles.modalEmoji}>👋</div>
+            <button className={styles.modalClose} onClick={onDismiss} aria-label="Close"><img src="/icons/pop/close.svg" alt="" width={20} height={20} /></button>
+            <div className={styles.modalEmoji}><img src="/icons/pop/waving-hand.svg" alt="" width={56} height={56} /></div>
             <h3 className={styles.modalTitle}>Connect Back?</h3>
             <p className={styles.modalText}>
                 <strong>{profile.name}</strong> scanned your QR code.

@@ -42,7 +42,7 @@
     align-items: center;
     justify-content: center;
     font-size: 3.5rem;
-    font-weight: 900;
+    font-weight: 600;
     background-color: rgba(245, 114, 47, 0.15);
     color: $dark-orange;
 }
@@ -50,7 +50,7 @@
 // ── Name ──────────────────────────────────────────────────────
 .name {
     font-size: 2.5rem;
-    font-weight: 900;
+    font-weight: 600;
     text-align: center;
     margin-top: 16px;
     margin-bottom: 24px;
@@ -68,7 +68,7 @@
 
 .sectionLabel {
     font-size: 0.75rem;
-    font-weight: 900;
+    font-weight: 600;
     color: $dark-gray;
     letter-spacing: 1.5px;
     text-transform: uppercase;
@@ -77,22 +77,21 @@
 
 // ── About Card ────────────────────────────────────────────────
 .aboutCard {
-/*    background: rgba(255, 255, 255, 0.6);
-*/    background: #fff;
-    border: 1.5px solid $black; // thinner
-    border-radius: 2px; // less rounded
-    padding: $spacing-md;
+    background: $white;
+    border: $border-thick;
+    border-radius: 14px;
+    padding: $spacing-lg;
+    box-shadow: $shadow-medium;
     transition: all $transition-fast;
-    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
 
     &:hover {
-        transform: translate(-0.5px, -0.5px);
-        box-shadow: 4.5px 4.5px 0px rgba(0, 0, 0, 0.2);
+        transform: translate(-1px, -1px);
+        box-shadow: $shadow-large;
     }
-    
+
     &:active {
-        transform: translate(1px, 1px);
-        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+        transform: translate(2px, 2px);
+        box-shadow: $shadow-small;
     }
 }
 
@@ -146,25 +145,25 @@
     align-items: center;
     gap: $spacing-md;
     padding: 1rem;
-    border: 1.5px solid $black; // thinner
-    border-radius: 2px; // less rounded
+    border: $border-thick;
+    border-radius: 14px;
     margin-bottom: $spacing-md;
     background: $white;
-    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
+    box-shadow: $shadow-medium;
     transition: all $transition-fast;
     text-decoration: none;
     color: $black;
 
     &:hover {
-        transform: translate(-0.5px, -0.5px);
-        box-shadow: 4.5px 4.5px 0px rgba(0, 0, 0, 0.2);
+        transform: translate(-1px, -1px);
+        box-shadow: $shadow-large;
     }
-    
+
     &:active {
-        transform: translate(1px, 1px);
-        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+        transform: translate(2px, 2px);
+        box-shadow: $shadow-small;
     }
-    
+
     &:last-child {
         margin-bottom: 0;
     }
@@ -185,32 +184,9 @@
 
 // ── Edit Button ───────────────────────────────────────────────
 .editButton {
+    @include cta-primary;
     width: 100%;
-    padding: $spacing-md;
-    background-color: $orange;
-    color: $white;
-    border: 2px solid $black;
-    border-radius: 2px; 
-    font-family: $font-mono;
-    font-size: 1rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
     margin-top: 8px;
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
-    transition: all $transition-fast;
-      
-    &:hover {
-        transform: translate(2px, 2px); // smaller movement
-        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
-    }
-
-    
-    &:active {
-        transform: translate(4px, 4px);
-        box-shadow: none;
-    }
 }
 
 .signOutBtn {
@@ -235,6 +211,6 @@
 }
 
 .profileAvatar {
-    border: 1.5px solid $black !important;
-    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15) !important;
+    border: $border-thick !important;
+    box-shadow: $shadow-medium !important;
 }

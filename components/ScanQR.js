@@ -9,6 +9,8 @@ import { saveMeet, meetExists } from '../lib/db'
 
 import styles from "../styles/components/ScanQR.module.scss";
 
+const POP = '/icons/pop';
+
 const DEV_PHOTO = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop";
 
 export default function ScanQR({ 
@@ -208,7 +210,7 @@ export default function ScanQR({
                             gap: '0.75rem',
                             borderRadius: '2px',
                         }}>
-                            <div style={{ fontSize: '2.5rem' }}>📷</div>
+                            <img src={`${POP}/camera.svg`} alt="" width={48} height={48} />
                             <div style={{ fontWeight: '700', fontSize: '1rem', fontFamily: 'monospace' }}>
                                 Camera access denied
                             </div>
@@ -313,7 +315,7 @@ const AlreadyConnectedModal = ({ name, daysAgo, onDismiss, isMobile }) => {
         <div className={`${styles.successOverlay} ${isMobile ? styles.successMobile : styles.successDesktop}`} onClick={onDismiss}>
             <div className={styles.successCard} onClick={e => e.stopPropagation()}>
                 <button className={styles.successClose} onClick={onDismiss}>×</button>
-                <div className={styles.successEmoji}>🤝</div>
+                <div className={styles.successEmoji}><img src={`${POP}/handshake.svg`} alt="" width={48} height={48} /></div>
                 <div className={styles.successText}>
                     <div className={styles.successTitle}>Already Connected</div>
                     <div className={styles.successName}>{name} · {daysAgo === 0 ? 'today' : `${daysAgo}d ago`}</div>
@@ -355,7 +357,7 @@ const WhatToDoDrawer = ({ onDismiss }) => (
         <div className={styles.whatToDoDrawer}>
             <div className={styles.whatToDoHeader}>
                 <h3 className={styles.whatToDoTitle}>No We Met, No Problem!</h3>
-                <button className={styles.whatToDoClose} onClick={onDismiss}>✕</button>
+                <button className={styles.whatToDoClose} onClick={onDismiss} aria-label="Close"><img src={`${POP}/close.svg`} alt="" width={20} height={20} /></button>
             </div>
             <div className={styles.whatToDoBody}>
                 <WhatToDoSteps />
@@ -367,7 +369,7 @@ const WhatToDoDrawer = ({ onDismiss }) => (
 const WhatToDoDesktopModal = ({ onDismiss }) => (
     <div className={styles.whatToDoOverlay} onClick={onDismiss}>
         <div className={styles.whatToDoModal} onClick={e => e.stopPropagation()}>
-            <button className={styles.whatToDoClose} onClick={onDismiss}>✕</button>
+            <button className={styles.whatToDoClose} onClick={onDismiss} aria-label="Close"><img src={`${POP}/close.svg`} alt="" width={20} height={20} /></button>
             <h3 className={styles.whatToDoTitle}>No We Met, No Problem!</h3>
             <WhatToDoSteps />
         </div>
@@ -377,15 +379,15 @@ const WhatToDoDesktopModal = ({ onDismiss }) => (
 const WhatToDoSteps = () => (
     <div className={styles.whatToDoSteps}>
         <div className={styles.whatToDoStep}>
-            <div className={styles.whatToDoEmoji}>📱</div>
+            <div className={styles.whatToDoEmoji}><img src={`${POP}/smartphone.svg`} alt="" width={36} height={36} /></div>
             <div className={styles.whatToDoStepText}>Show them YOUR QR code</div>
         </div>
         <div className={styles.whatToDoStep}>
-            <div className={styles.whatToDoEmoji}>📸</div>
+            <div className={styles.whatToDoEmoji}><img src={`${POP}/image.svg`} alt="" width={36} height={36} /></div>
             <div className={styles.whatToDoStepText}>They take a photo of it</div>
         </div>
         <div className={styles.whatToDoStep}>
-            <div className={styles.whatToDoEmoji}>🤝</div>
+            <div className={styles.whatToDoEmoji}><img src={`${POP}/handshake.svg`} alt="" width={36} height={36} /></div>
             <div className={styles.whatToDoStepText}>Later (with internet), they scan it and connect with you!</div>
         </div>
     </div>

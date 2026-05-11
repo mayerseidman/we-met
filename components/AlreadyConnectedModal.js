@@ -20,8 +20,8 @@ export default function AlreadyConnectedModal({ name, daysAgo, onDismiss, isMobi
             onClick={handleDismiss}
         >
             <div className={styles.successCard} onClick={e => e.stopPropagation()}>
-                <button className={styles.successClose} onClick={handleDismiss}>×</button>
-                <div className={styles.successEmoji}>🤝</div>
+                <button className={styles.successClose} onClick={handleDismiss} aria-label="Close"><img src="/icons/pop/close.svg" alt="" width={18} height={18} /></button>
+                <div className={styles.successEmoji}><img src="/icons/pop/handshake.svg" alt="" width={48} height={48} /></div>
                 <div className={styles.successText}>
                     <div className={styles.successTitle}>Already Connected</div>
                     <div className={styles.successName}>

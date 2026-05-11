@@ -20,7 +20,7 @@
 
 .title {
     font-size: 2rem;
-    font-weight: 900;
+    font-weight: 600;
     color: $black;
     margin: 0 0 $spacing-sm;
     letter-spacing: 1px;
@@ -55,9 +55,9 @@
     padding: 0.75rem $spacing-md;
     margin: 0 $spacing-md $spacing-md;
     background: $white;
-    border: 2px solid $black;
-    border-radius: 2px;
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+    border: $border-medium;
+    border-radius: 12px;
+    box-shadow: $shadow-small;
 }
 
 .bannerText {
@@ -72,61 +72,151 @@
 }
 
 .bannerBtn {
-    padding: 0.35rem 0.75rem;
+    padding: 0.5rem 0.85rem;
     background: $orange;
     color: $white;
-    border: 2px solid $black;
-    border-radius: 2px;
+    border: 3px solid $black;
+    border-radius: 10px;
     font-family: $font-mono;
-    font-weight: 900;
-    font-size: 0.7rem;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
     cursor: pointer;
     white-space: nowrap;
+    box-shadow: 4px 4px 0 rgba($black, 0.3);
     transition: all $transition-fast;
 
     &:hover {
-        transform: translate(1px, 1px);
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0 rgba($black, 0.3);
+    }
+
+    &:active {
+        transform: translate(4px, 4px);
         box-shadow: none;
     }
 }
 
 .bannerClose {
-    padding: 0.35rem 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
     background: transparent;
     border: 2px solid $black;
-    border-radius: 2px;
-    font-family: $font-mono;
-    font-weight: 900;
-    font-size: 0.7rem;
+    border-radius: 10px;
     cursor: pointer;
     transition: all $transition-fast;
 
     &:hover {
-        background: rgba(0,0,0,0.05);
+        background: rgba($black, 0.05);
     }
 }
 
 // ── Empty State ───────────────────────────────────────────────
 .empty {
     text-align: center;
-    padding: $spacing-3xl $spacing-md;
+    padding: $spacing-2xl $spacing-md;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 32rem;
+    margin: 0 auto;
 }
 
 .emptyIcon {
-    font-size: 3rem;
-    margin-bottom: $spacing-md;
+    margin-bottom: $spacing-lg;
+    display: inline-flex;
+
+    img {
+        display: block;
+        animation: emptyHandshake 3.6s ease-in-out infinite;
+        transform-origin: 50% 80%;
+    }
+}
+
+@keyframes emptyHandshake {
+    0%, 60%, 100% { transform: rotate(0deg); }
+    8%           { transform: rotate(-6deg); }
+    16%          { transform: rotate(6deg); }
+    24%          { transform: rotate(-4deg); }
+    32%          { transform: rotate(4deg); }
+    44%          { transform: rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .emptyIcon img { animation: none; }
 }
 
 .emptyTitle {
-    font-size: 1.25rem;
-    font-weight: 900;
-    margin-bottom: $spacing-sm;
+    font-family: $font-mono;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: $black;
+    margin: 0 0 $spacing-sm;
 }
 
 .emptyText {
-    font-size: 0.875rem;
-    color: $gray;
+    font-family: $font-sans;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.55;
+    color: $dark-gray;
+    max-width: 30ch;
+    margin: 0 auto $spacing-xl;
+
+    strong {
+        font-family: $font-mono;
+        font-weight: 600;
+        color: $black;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+}
+
+.emptySteps {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    width: 100%;
+    max-width: 18rem;
+}
+
+.emptyStep {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: 10px 14px;
+    background: $white;
+    border: $border-medium;
+    border-radius: 12px;
+    box-shadow: $shadow-small;
+    font-family: $font-mono;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $black;
+    text-align: left;
+}
+
+.emptyStepNum {
+    width: 26px;
+    height: 26px;
+    flex: 0 0 26px;
+    border-radius: 50%;
+    background: $yellow;
+    border: 2px solid $black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $font-mono;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: $black;
+    font-variant-numeric: tabular-nums;
 }
 
 // ── List ──────────────────────────────────────────────────────
@@ -145,7 +235,7 @@
 
 .groupLabel {
     font-size: 0.8rem;
-    font-weight: 900;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     color: $brown;
@@ -160,9 +250,9 @@
     gap: $spacing-md;
     padding: 0.875rem $spacing-md;
     background: $white;
-    border: 2px solid $black;
-    border-radius: 2px;
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.12);
+    border: $border-medium;
+    border-radius: 12px;
+    box-shadow: $shadow-small;
     cursor: pointer;
     font-family: $font-mono;
     text-align: left;
@@ -170,13 +260,13 @@
 
     &:hover {
         transform: translate(-1px, -1px);
-        box-shadow: 4px 4px 0 rgba(0,0,0,0.15);
+        box-shadow: $shadow-medium;
         border-color: $orange;
     }
 
     &:active {
-        transform: translate(1px, 1px);
-        box-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+        transform: translate(2px, 2px);
+        box-shadow: none;
     }
 }
 
@@ -255,7 +345,7 @@
 
 .detailName {
     font-size: 1.75rem;
-    font-weight: 900;
+    font-weight: 600;
     color: $black;
     margin: $spacing-md 0 $spacing-sm;
     letter-spacing: 0.5px;
@@ -292,7 +382,7 @@
 
 .detailSectionLabel {
     font-size: 0.75rem;
-    font-weight: 900;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     color: $dark-gray;
@@ -361,7 +451,7 @@
     border-radius: 2px;
     font-family: $font-mono;
     font-size: 0.7rem;
-    font-weight: 900;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     cursor: pointer;

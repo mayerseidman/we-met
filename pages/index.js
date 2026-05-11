@@ -1,39 +1,20 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useStorage } from '../hooks/useStorage';
+// ══════════════════════════════════════════════════════════════
+// pages/index.js
+// ══════════════════════════════════════════════════════════════
+// Public marketing page at `/`.
+// _app.js handles routing: users with a profile go to /meets,
+// users with a session (but no profile) go to /profile.
+// Anonymous visitors fall through and see this marketing page.
+// ══════════════════════════════════════════════════════════════
+
+import Header from '../components/Header';
+import MarketingLanding from '../components/MarketingLanding';
 
 export default function HomePage() {
-    const router = useRouter();
-    const { profile, isReady } = useStorage(); // isReady already exists!
-    
-    console.log("PROFILE:", profile, "isReady:", isReady);
-    
-    useEffect(() => {
-        // Don't redirect until storage is ready
-        if (!isReady) return;
-        
-        // Once ready, redirect based on profile
-        if (profile) {
-            router.push('/meets');
-        } else {
-            router.push('/landing');
-        }
-    }, [profile, isReady, router]);
-    
-    // Show loading screen while checking
-    if (!isReady) {
-        return (
-            <div style={{ 
-                height: '100vh', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                background: '#FFEFD7'
-            }}>
-                {/* Optional: add loading spinner or logo */}
-            </div>
-        );
-    }
-    
-    return null;
+    return (
+        <>
+            <Header />
+            <MarketingLanding />
+        </>
+    );
 }

@@ -58,9 +58,8 @@ function MyApp({ Component, pageProps }) {
                 router.push('/meets');
             } else if (user) {
                 router.push('/profile');
-            } else {
-                router.push('/landing');
             }
+            // No profile, no session → stay at '/' to render the marketing page.
         }
         if (router.pathname === '/profile') {
             if (!user && !profile && router.query.from !== 'landing') {
@@ -111,6 +110,9 @@ function MyApp({ Component, pageProps }) {
                 <meta name="mobile-web-app-capable" content="yes" />
                 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
                 <meta name="apple-mobile-web-app-title" content="We Met" />
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+                <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@500..700&display=swap" rel="stylesheet" />
             </Head>
             <Component
                 {...pageProps}

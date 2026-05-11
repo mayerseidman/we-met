@@ -57,20 +57,15 @@ export default function EventDropdown({ selectedEvent, onEventChange, onOpenDraw
                 aria-expanded={isOpen}
             >
                 <span>{selectedEvent}</span>
-                <svg 
+                <svg
                     className={`${styles.arrow} ${isOpen ? styles.arrowUp : ""}`}
-                    width="12" 
-                    height="8" 
-                    viewBox="0 0 12 8" 
-                    fill="none" 
+                    width="16"
+                    height="14"
+                    viewBox="0 0 16 14"
+                    fill="currentColor"
                     xmlns="http://www.w3.org/2000/svg"
                 >
-                    <path 
-                        d="M1 1L6 6L11 1" 
-                        stroke="currentColor" 
-                        strokeWidth="2" 
-                        strokeLinecap="round"
-                    />
+                    <path d="M2 2 L14 2 L8 12 Z" />
                 </svg>
             </button>
             {isOpen && (

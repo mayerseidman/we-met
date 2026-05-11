@@ -89,10 +89,10 @@
 .qrCard {
     width: 100%;
     background: $white;
-    border: 1.5px solid $black;
-    border-radius: 2px;
+    border: $border-medium;
+    border-radius: 14px;
     padding: 0rem 1rem 0rem;
-    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
+    box-shadow: $shadow-medium;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -102,13 +102,13 @@
     transition: all $transition-fast;
 
     &:hover {
-        transform: translate(-0.5px, -0.5px); 
-        box-shadow: 4.5px 4.5px 0px rgba(0, 0, 0, 0.2);
+        transform: translate(-1px, -1px);
+        box-shadow: $shadow-large;
     }
-    
+
     &:active {
-        transform: translate(1px, 1px);
-        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+        transform: translate(2px, 2px);
+        box-shadow: $shadow-small;
     }
 }
 
@@ -120,7 +120,7 @@
 // ── Name ──────────────────────────────────────────────────────
 .name {
     font-size: 1.5rem;
-    font-weight: 900;
+    font-weight: 600;
     text-align: center;
     margin: 0;
     color: $black;
@@ -163,14 +163,18 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: white;
-/*    border: 0.25px solid black;
-*/    border-radius: 50%;
-    padding: 2px;
-    img {
-        width: 60px;
-        height: 60px;
-        border: 1.5px solid #f5722f;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+    border: 0;
+
+    // Inner avatar (image or initials) — small rounded square, no shadow
+    img,
+    [class*=avatarPlaceholder] {
+        width: 40px;
+        height: 40px;
+        border: $border-medium;
+        border-radius: 10px;
         box-shadow: none;
     }
 }
@@ -182,7 +186,7 @@
 
 .eventLabel {
     display: block;
-    font-weight: 900;
+    font-weight: 600;
     margin-bottom: $spacing-sm;
     font-size: 0.75rem;
     color: $dark-gray;
@@ -192,39 +196,17 @@
 
 .eventSelect,
 .eventTrigger {
-    width: 100%;
-    padding: 0.875rem;
-    padding-right: 3rem; // More space for chevron
-    font-family: $font-mono;
-    font-size: 1rem;
-    font-weight: 600;
-    border: 1.5px solid $black;
-    border-radius: 2px;
-    background-color: $white;
-    color: $black;
-    box-shadow: 3.15px 3.15px 0px rgba(0, 0, 0, 0.1);
-    transition: all $transition-fast;
+    @include input-styled;
+    padding-right: 3rem;
     cursor: pointer;
-    appearance: none; // Remove default browser styling
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    
-    // Add custom arrow background for select
-    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+
+    // Custom chevron for select
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%230C098C' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 1rem center;
-    
-    &:focus {
-        outline: none;
-        border-color: $orange;
-        box-shadow: 0 0 0 3px rgba(245, 114, 47, 0.2);
-        transform: translate(1px, 1px);
-    }
-    &:hover {
-        transform: translate(1px, 1px);
-        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
-        border-color: $orange
-    }
 }
 
 .eventTrigger {
@@ -289,7 +271,7 @@
 
 .emptyHeading {
     font-size: 1.5rem;
-    font-weight: 900;
+    font-weight: 600;
     margin: 0 0 $spacing-sm 0;
     color: $black;
 }
@@ -304,31 +286,9 @@
 }
 
 .addProfileBtn {
+    @include cta-primary;
     width: 100%;
     max-width: 360px;
-    padding: $spacing-md;
-    background-color: $orange;
-    color: $white;
-    border: 2px solid $black;
-    border-radius: 2px;
-    font-family: $font-mono;
-    font-size: 1rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
-    transition: all $transition-fast;
-
-    &:hover {
-        transform: translate(2px, 2px);
-        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
-    }
-
-    &:active {
-        transform: translate(4px, 4px);
-        box-shadow: none;
-    }
 }
 
 // ── Modals ────────────────────────────────────────────────────
@@ -375,7 +335,7 @@
 
 .modalTitle {
     font-size: 1.25rem;
-    font-weight: 900;
+    font-weight: 600;
     margin: 0 0 0.75rem;
 }
 
@@ -423,26 +383,13 @@
 }
 
 .modalBtn {
+    @include cta-primary;
     flex: 1;
-    padding: $spacing-md;
-    background: $orange;
-    color: $white;
-    border: 2px solid $black;
-    border-radius: 2px;
-    font-family: $font-mono;
-    font-weight: 900;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    cursor: pointer;
-    box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
-
-    &:hover { transform: translate(1px, 1px); box-shadow: 1px 1px 0px rgba(0,0,0,0.2); }
 }
 
 .modalCancelBtn {
-    @extend .modalBtn;
-    background: $white;
-    color: $black;
+    @include cta-ghost;
+    flex: 1;
 }
 
 .modalOverlay {

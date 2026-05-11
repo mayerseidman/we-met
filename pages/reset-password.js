@@ -77,9 +77,16 @@ export default function ResetPasswordPage() {
         return (
             <div className={styles.page}>
                 <div className={styles.content}>
-                    <h1 className={styles.title}>Checking link...</h1>
+                    <img
+                        src="/icons/pop/key.svg"
+                        alt=""
+                        width={64}
+                        height={64}
+                        className={styles.bareIcon}
+                    />
+                    <h1 className={styles.title}>One sec...</h1>
                     <p className={styles.subtitle}>
-                        Hang tight while we verify your reset link.
+                        Dusting off your reset link. Won&apos;t take a minute.
                     </p>
                 </div>
             </div>
@@ -89,6 +96,9 @@ export default function ResetPasswordPage() {
     return (
         <div className={styles.page}>
             <div className={styles.content}>
+                <div className={styles.iconTile}>
+                    <img src="/icons/pop/key.svg" alt="" width={48} height={48} />
+                </div>
                 <h1 className={styles.title}>New Password</h1>
                 <p className={styles.subtitle}>
                     Choose a new password for your account.

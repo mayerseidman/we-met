@@ -11,8 +11,8 @@
     padding: $spacing-sm;
     height: 80px;
     background-color: $cream;
-    border-top: 2px solid $medium-gray;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    border-top: 4px solid $black;
+    box-shadow: 0 -3px 0 rgba($black, 0.08);
     transition: transform $transition-slow;
     z-index: 1000;
 
@@ -48,10 +48,9 @@
     &.inactive {
         color: $medium-gray;
         transition: all 0.2s ease;
-        
+
         &:hover {
             color: $orange;
-            opacity: 1;
             transform: translateY(-2px);
         }
     }
@@ -63,7 +62,7 @@
         outline: none;
     }
 
-    svg {
+    img, svg {
         width: 30px;
         height: 30px;
         display: block;
@@ -71,6 +70,7 @@
         pointer-events: none;
         @media (max-width: 480px) {
             width: 26px;
+            height: 26px;
             margin-bottom: 1px;
         }
     }
