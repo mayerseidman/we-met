@@ -150,6 +150,7 @@ export default function ScanQR({
                     }
                 }
                 setIsProcessing(false)
+                onScanSuccess && onScanSuccess(newConnection)
             }
         } catch (err) {
             console.error("Failed to process QR:", err);

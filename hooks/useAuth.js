@@ -11,9 +11,10 @@
 // they all use this hook — one consistent source of truth.
 //
 // HOW TO USE:
-// const { user, loading } = useAuth()
+// const { user, loading, profileSynced } = useAuth()
 // - user is null when logged out, object when logged in
 // - loading is true while we're checking auth state
+// - profileSynced is true once profile has been synced from Supabase
 //
 // USED IN:
 // - _app.js (top level, passed down as needed)
@@ -25,43 +26,42 @@ import { getUserProfile } from '../lib/db'
 import { storageManager } from '../lib/storage/StorageManager'
 
 export function useAuth() {
-    // user is null when logged out, or a user object when logged in
     const [user, setUser] = useState(null)
-
-    // loading is true while we're checking if someone is logged in
-    // prevents flashing "logged out" state before we know the truth
     const [loading, setLoading] = useState(true)
+    // True once profile sync is complete (or not needed)
+    const [profileSynced, setProfileSynced] = useState(false)
 
     useEffect(() => {
-        // Check if there's already an active session when the app loads
-        // This handles the case where someone was logged in previously
-        // and comes back to the app — they shouldn't have to log in again
+        // Check existing session on load
         supabase.auth.getSession().then(({ data: { session } }) => {
             setUser(session?.user ?? null)
             setLoading(false)
+            // If there's already a session, profile is already in local storage
+            // from a previous sync — no need to sync again
+            setProfileSynced(true)
         }).catch(() => {
-            setLoading(false)  // don't hang forever on error
+            setLoading(false)
+            setProfileSynced(true)
         })
 
         // Failsafe — never stay loading forever
-        const timeout = setTimeout(() => setLoading(false), 500)
+        const timeout = setTimeout(() => {
+            setLoading(false)
+            setProfileSynced(true)
+        }, 500)
 
-        // Listen for auth state changes in real time
-        // This fires whenever someone logs in or logs out
+        // Listen for auth state changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             async (_event, session) => {
                 const currentUser = session?.user ?? null
                 setUser(currentUser)
                 setLoading(false)
 
-                // When a user signs in, pull their profile from Supabase
-                // and save it to local storage so it's available offline
+                // When a user signs in fresh, pull profile from Supabase
                 if (_event === 'SIGNED_IN' && currentUser) {
                     try {
                         const cloudProfile = await getUserProfile(currentUser.id)
                         if (cloudProfile) {
-                            // Map Supabase field names to local storage field names
-                            // photo_url in Supabase → photo locally
                             const localProfile = {
                                 name: cloudProfile.name || '',
                                 phone: cloudProfile.phone || '',
@@ -76,18 +76,22 @@ export function useAuth() {
                         }
                     } catch (error) {
                         console.error('Failed to sync profile from Supabase:', error)
-                        // Don't block — app works offline anyway
+                    } finally {
+                        // Always mark as synced so routing can proceed
+                        setProfileSynced(true)
                     }
+                } else {
+                    // For any other event (SIGNED_OUT, TOKEN_REFRESHED etc)
+                    setProfileSynced(true)
                 }
             }
         )
 
-        // Cleanup — stop listening when the component unmounts
         return () => {
             subscription.unsubscribe()
             clearTimeout(timeout)
         }
     }, [])
 
-    return { user, loading }
+    return { user, loading, profileSynced }
 }

@@ -110,6 +110,7 @@ export default function ProfilePage() {
             setEditingProfile(profileData);
             setInitialProfile(profileData);
             setPhotoPreview(profile.photo || null);
+            if (!isSavingRef.current) setIsEditing(false);  // ← add this back but guarded
             return;
         }
 

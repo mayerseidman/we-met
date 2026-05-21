@@ -27,7 +27,7 @@ import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
     const router = useRouter();
-    const { user, loading: authLoading } = useAuth();
+    const { user, loading: authLoading, profileSynced } = useAuth();
     const { profile, isReady } = useStorage();
     const [mounted, setMounted] = useState(false);
     const [showConnectDrawer, setShowConnectDrawer] = useState(false);
@@ -50,6 +50,9 @@ function MyApp({ Component, pageProps }) {
     // ── Routing gatekeeper ────────────────────────────────────
     useEffect(() => {
         if (authLoading || !isReady || !router.isReady) return;
+        // If user is signed in, wait for profile sync before routing
+        if (user && !profileSynced) return;
+
         const publicPages = ['/landing', '/auth'];
         if (publicPages.includes(router.pathname)) return;
 
@@ -62,12 +65,13 @@ function MyApp({ Component, pageProps }) {
                 router.push('/landing');
             }
         }
+
         if (router.pathname === '/profile') {
             if (!user && !profile && router.query.from !== 'landing') {
                 router.push('/landing');
             }
         }
-    }, [user, authLoading, isReady, profile, router]);
+    }, [user, authLoading, isReady, profile, router, profileSynced]);
 
     // ── Service worker ────────────────────────────────────────
     useEffect(() => {
@@ -98,7 +102,6 @@ function MyApp({ Component, pageProps }) {
     const showNav = !hideNav;
 
     // Block render until client has mounted and storage is ready
-    // This prevents SSR/hydration mismatch
     if (!mounted || !isReady) {
         return <div style={{ minHeight: '100vh', background: '#FFEFD7' }} />;
     }
