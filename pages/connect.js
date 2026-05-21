@@ -153,6 +153,7 @@ export default function ConnectPage({ onDropdownToggle }) {
 
     // Show success modal after a real scan
     const handleScanSuccess = useCallback((connectionData) => {
+        console.log('handleScanSuccess called', connectionData)
         setScanSuccessData(connectionData)
     }, [])
 
@@ -172,13 +173,12 @@ export default function ConnectPage({ onDropdownToggle }) {
     }
 
     return (
-        <div
-            key={activeTab}
-            className={`${styles.page} ${activeTab === 'scan' ? styles['page--scan'] : ''}`}
-        >
+        <div className={`${styles.page} ${activeTab === 'scan' ? styles['page--scan'] : ''}`}>
             {activeTab !== 'scan' && <Header />}
 
-            {process.env.NODE_ENV === "development" && activeTab === "show" && (
+            {/* DEV MODE — remove process.env check before launch to hide in production */}
+            {/* {process.env.NODE_ENV === "development" && */}
+            {activeTab === "show" && (
                 <DevModeToggle
                     devMode={devMode}
                     setDevMode={(updated) => {
@@ -190,7 +190,9 @@ export default function ConnectPage({ onDropdownToggle }) {
                 />
             )}
 
-            {process.env.NODE_ENV === "development" && activeTab === "scan" && (
+            {/* DEV MODE — remove process.env check before launch to hide in production */}
+            {/* {process.env.NODE_ENV === "development" && */}
+            {activeTab === "scan" && (
                 <DevModeToggle
                     devMode={scanDevMode}
                     setDevMode={(updated) => {

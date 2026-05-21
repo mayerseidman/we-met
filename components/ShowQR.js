@@ -93,12 +93,15 @@ export default function ShowQR({
 
 const QRCard = ({ profile, hasPhoto, qrData, fgColor, bgColor }) => {
     const avatarSrc = hasPhoto ? profile.photo : null; 
+
+    console.log('QR data:', qrData)
+
     
     return (
         <div className={styles.qrCardContainer}>
             <div className={styles.qrCard}>
                 <div className={styles.qrWrapper}>
-                    <QRCode value={qrData} size={220} level="L" />
+                    <QRCode value={qrData} size={220} level="H" />
                     <div className={styles.qrAvatar}>
                         <Avatar src={avatarSrc} name={profile.name} size={60} />
                     </div>

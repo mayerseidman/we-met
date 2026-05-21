@@ -30,25 +30,33 @@ export default function ScanQR({
     onScanSuccess,
     onShowAlreadyConnected,
 }) {
-    const { connections, addConnection, profile, isReady } = useStorage();
+    const { connections, addConnection, isReady } = useStorage();
     const [isProcessing, setIsProcessing] = useState(false);
-    const [scannerMessage, setScannerMessage] = useState("");
     const [cameraError, setCameraError] = useState(false);
     const scannerRef = useRef(null);
-    const userRef = useRef(user)
-    const connectionsRef = useRef(connections)
+
+    // Keep all mutable values in refs so scanner callback always has latest values
+    const userRef = useRef(user);
+    const connectionsRef = useRef(connections);
+    const isProcessingRef = useRef(false);
+    const isReadyRef = useRef(isReady);
+    const selectedEventRef = useRef(selectedEvent);
+    const onScanSuccessRef = useRef(onScanSuccess);
+    const onShowAlreadyConnectedRef = useRef(onShowAlreadyConnected);
+    const addConnectionRef = useRef(addConnection);
+
+    useEffect(() => { userRef.current = user }, [user]);
+    useEffect(() => { connectionsRef.current = connections }, [connections]);
+    useEffect(() => { isReadyRef.current = isReady }, [isReady]);
+    useEffect(() => { selectedEventRef.current = selectedEvent }, [selectedEvent]);
+    useEffect(() => { onScanSuccessRef.current = onScanSuccess }, [onScanSuccess]);
+    useEffect(() => { onShowAlreadyConnectedRef.current = onShowAlreadyConnected }, [onShowAlreadyConnected]);
+    useEffect(() => { addConnectionRef.current = addConnection }, [addConnection]);
 
     useEffect(() => {
-        connectionsRef.current = connections
-    }, [connections])
-
-    useEffect(() => {
-        userRef.current = user
-    }, [user])
-
-    useEffect(() => {
+        console.log('Scanner useEffect firing', { isReady, noProfile: devMode.noProfile });
         if (devMode.noProfile) return;
-        if (typeof window === "undefined" || !isReady || isProcessing) return;
+        if (typeof window === "undefined" || !isReady) return;
 
         let Html5Qrcode;
 
@@ -57,8 +65,83 @@ export default function ScanQR({
             startScanner(Html5Qrcode);
         });
 
+        const onQRDetected = async (decodedText) => {
+            console.log('RAW SCAN DETECTED', decodedText);
+
+            if (isProcessingRef.current || !isReadyRef.current) return;
+            isProcessingRef.current = true;
+            setIsProcessing(true);
+
+            if (scannerRef.current) {
+                try { await scannerRef.current.pause(); } catch (e) {}
+            }
+
+            try {
+                const connectionData = JSON.parse(decodedText);
+                const isDuplicate = connectionsRef.current.some(conn => {
+                    if (connectionData.userId && conn.connectedUserId) {
+                        return conn.connectedUserId === connectionData.userId;
+                    }
+                    return conn.name === connectionData.name && conn.phone === connectionData.phone;
+                });
+
+                if (isDuplicate) {
+                    console.log('DUPLICATE DETECTED:', connectionData.name);
+                    onShowAlreadyConnectedRef.current && onShowAlreadyConnectedRef.current(connectionData);
+                    setTimeout(async () => {
+                        isProcessingRef.current = false;
+                        setIsProcessing(false);
+                        if (scannerRef.current) {
+                            try { await scannerRef.current.resume(); } catch (e) {}
+                        }
+                    }, 2000);
+                    return;
+                }
+
+                const newConnection = {
+                    name: connectionData.name,
+                    phone: connectionData.phone || null,
+                    instagram: connectionData.instagram || null,
+                    about: connectionData.about || null,
+                    photo: connectionData.photo || null,
+                    connectedUserId: connectionData.userId || null,
+                    event: selectedEventRef.current || 'Unknown',
+                    scannedAt: new Date().toISOString(),
+                    qrData: decodedText,
+                };
+
+                const success = await addConnectionRef.current(newConnection);
+                console.log('addConnection result:', success);
+
+                if (success) {
+                    if (userRef.current) {
+                        const exists = await meetExists(
+                            userRef.current.id,
+                            newConnection.connectedUserId,
+                            newConnection.name,
+                            newConnection.phone
+                        );
+                        if (!exists) {
+                            saveMeet(userRef.current.id, newConnection).catch(err =>
+                                console.error('Failed to sync meet to Supabase:', err)
+                            );
+                        }
+                    }
+                    isProcessingRef.current = false;
+                    setIsProcessing(false);
+                    onScanSuccessRef.current && onScanSuccessRef.current(newConnection);
+                }
+            } catch (err) {
+                console.error("Failed to process QR:", err);
+                isProcessingRef.current = false;
+                setIsProcessing(false);
+                if (scannerRef.current) {
+                    try { await scannerRef.current.resume(); } catch (e) {}
+                }
+            }
+        };
+
         const startScanner = async (Html5Qrcode) => {
-            if (!Html5Qrcode || isProcessing) return;
             try {
                 const scanner = new Html5Qrcode("qr-reader");
                 scannerRef.current = scanner;
@@ -66,100 +149,29 @@ export default function ScanQR({
                     { facingMode: "environment" },
                     {
                         fps: 10,
-                        qrbox: 250,
                         aspectRatio: 1.0,
                         experimentalFeatures: { useBarCodeDetectorIfSupported: true },
                     },
-                    handleScanSuccess,
+                    onQRDetected,
                     () => {},
                 );
+                console.log('Scanner started successfully');
             } catch (err) {
                 console.error("Error starting scanner:", err);
                 setCameraError(true);
             }
         };
+
         return () => {
             if (scannerRef.current) {
-                const scanner = scannerRef.current
-                scannerRef.current = null
+                const scanner = scannerRef.current;
+                scannerRef.current = null;
                 scanner.isScanning
                     ? scanner.stop().catch(() => {})
-                    : Promise.resolve()
+                    : Promise.resolve();
             }
-        }
+        };
     }, [isReady, devMode.noProfile]);
-
-    const handleScanSuccess = async (decodedText) => {
-        if (isProcessing || !isReady) return;
-        setIsProcessing(true);
-
-        if (scannerRef.current) {
-            try { await scannerRef.current.pause(); } catch (e) {}
-        }
-
-        try {
-            const connectionData = JSON.parse(decodedText);
-            const isDuplicate = connectionsRef.current.some(conn => {
-                if (connectionData.userId && conn.connectedUserId) {
-                    return conn.connectedUserId === connectionData.userId
-                }
-                return conn.name === connectionData.name && conn.phone === connectionData.phone
-            })
-
-            if (isDuplicate) {
-                console.log('DUPLICATE DETECTED:', connectionData.name)
-                onShowAlreadyConnected && onShowAlreadyConnected(connectionData);
-                setTimeout(async () => {
-                    setIsProcessing(false);
-                    if (scannerRef.current) {
-                        try { await scannerRef.current.resume(); } catch (e) {}
-                    }
-                }, 2000);
-                return;
-            }
-
-            const newConnection = {
-                name: connectionData.name,
-                phone: connectionData.phone || null,
-                instagram: connectionData.instagram || null,
-                about: connectionData.about || null,
-                photo: connectionData.photo || null,
-                connectedUserId: connectionData.userId || null,
-                event: selectedEvent || 'Unknown',
-                scannedAt: new Date().toISOString(),
-                qrData: decodedText,
-            }
-
-            const success = await addConnection(newConnection)
-            console.log('addConnection result:', success, 'user:', userRef.current)
-            if (success) {
-                if (userRef.current) {
-                    const exists = await meetExists(
-                        userRef.current.id,
-                        newConnection.connectedUserId,
-                        newConnection.name,
-                        newConnection.phone
-                    )
-                    console.log('meetExists result:', exists)
-                    if (!exists) {
-                        saveMeet(userRef.current.id, newConnection).then(result => {
-                            console.log('saveMeet result:', result)
-                        }).catch(err => 
-                            console.error('Failed to sync meet to Supabase:', err)
-                        )
-                    }
-                }
-                setIsProcessing(false)
-                onScanSuccess && onScanSuccess(newConnection)
-            }
-        } catch (err) {
-            console.error("Failed to process QR:", err);
-            setIsProcessing(false);
-            if (scannerRef.current) {
-                try { await scannerRef.current.resume(); } catch (e) {}
-            }
-        }
-    };
 
     if (devMode.noProfile) {
         return (
@@ -340,14 +352,8 @@ const ScanErrorModal = ({ onDismiss, isMobile }) => (
 );
 
 const WhatToDoModal = ({ onDismiss, isMobile }) => {
-    if (isMobile) {
-        return (
-            <WhatToDoDrawer onDismiss={onDismiss} />
-        );
-    }
-    return (
-        <WhatToDoDesktopModal onDismiss={onDismiss} />
-    );
+    if (isMobile) return <WhatToDoDrawer onDismiss={onDismiss} />;
+    return <WhatToDoDesktopModal onDismiss={onDismiss} />;
 };
 
 const WhatToDoDrawer = ({ onDismiss }) => (
