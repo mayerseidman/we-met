@@ -85,18 +85,18 @@ export default function ScanQR({
                     return conn.name === connectionData.name && conn.phone === connectionData.phone;
                 });
 
-                // if (isDuplicate) {
-                //     console.log('DUPLICATE DETECTED:', connectionData.name);
-                //     onShowAlreadyConnectedRef.current && onShowAlreadyConnectedRef.current(connectionData);
-                //     setTimeout(async () => {
-                //         isProcessingRef.current = false;
-                //         setIsProcessing(false);
-                //         if (scannerRef.current) {
-                //             try { await scannerRef.current.resume(); } catch (e) {}
-                //         }
-                //     }, 2000);
-                //     return;
-                // }
+                if (isDuplicate) {
+                    console.log('DUPLICATE DETECTED:', connectionData.name);
+                    onShowAlreadyConnectedRef.current && onShowAlreadyConnectedRef.current(connectionData);
+                    setTimeout(async () => {
+                        isProcessingRef.current = false;
+                        setIsProcessing(false);
+                        if (scannerRef.current) {
+                            try { await scannerRef.current.resume(); } catch (e) {}
+                        }
+                    }, 2000);
+                    return;
+                }
 
                 const newConnection = {
                     name: connectionData.name,
@@ -173,7 +173,7 @@ export default function ScanQR({
         };
     }, [isReady, devMode.noProfile]);
 
-    if (devMode.noProfile) {
+    if (devMode.noProfile || !profile) {
         return (
             <div style={{ background: '#FFEFD7', minHeight: '100vh', paddingBottom: '5rem' }}>
                 <h1 style={{ textAlign: 'center', padding: '2rem 0 1rem', margin: 0, fontSize: '2rem', fontWeight: 900, fontFamily: 'inherit' }}>
