@@ -61,6 +61,7 @@
     justify-content: space-between;
     padding: $spacing-lg $spacing-md;
     border-bottom: 2px solid $black;
+    flex-shrink: 0;
 }
 
 .title {
@@ -90,10 +91,62 @@
     }
 }
 
+.searchWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem $spacing-md;
+    border-bottom: 1.5px solid rgba(0,0,0,0.1);
+    background: $cream;
+    flex-shrink: 0;
+}
+
+.searchIcon {
+    color: $medium-gray;
+    flex-shrink: 0;
+}
+
+.searchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: $font-mono;
+    font-size: 0.9rem;
+    background: transparent;
+    color: $black;
+
+    &::placeholder {
+        color: $light-gray;
+    }
+}
+
+.searchClear {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $medium-gray;
+    font-size: 0.75rem;
+    padding: 0;
+    line-height: 1;
+
+    &:hover {
+        color: $black;
+    }
+}
+
 .eventList {
     overflow-y: auto;
     padding: $spacing-sm;
     padding-bottom: 80px;
+    flex: 1;
+}
+
+.noResults {
+    padding: $spacing-xl $spacing-md;
+    text-align: center;
+    font-size: 0.85rem;
+    color: $medium-gray;
+    font-family: $font-mono;
 }
 
 .eventItem {

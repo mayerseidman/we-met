@@ -38,6 +38,16 @@ const ProfileView = ({ profile, onEdit, user, authLoading }) => {
                     SIGN OUT
                 </button>
             )}
+            {user && !authLoading && (
+                <button className={styles.signOutBtn} onClick={handleSignOut}>
+                    SIGN OUT
+                </button>
+            )}
+            {!user && !authLoading && (
+                <button className={styles.signOutBtn} onClick={() => router.push('/auth')}>
+                    SIGN IN / CREATE ACCOUNT
+                </button>
+            )}
             <Toast message={toastMessage} visible={toastVisible} onHide={hideToast} />
         </div>
     );

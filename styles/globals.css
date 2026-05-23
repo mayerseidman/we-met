@@ -29,6 +29,21 @@ a {
     box-sizing: border-box;
 }
 
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pageTransition {
+    animation: fadeInUp 0.2s ease-out;
+}
+
 
 /*@media (prefers-color-scheme: dark) {
     html {

@@ -30,7 +30,7 @@ export default function ScanQR({
     onScanSuccess,
     onShowAlreadyConnected,
 }) {
-    const { connections, addConnection, isReady } = useStorage();
+    const { connections, addConnection, isReady, profile } = useStorage();
     const [isProcessing, setIsProcessing] = useState(false);
     const [cameraError, setCameraError] = useState(false);
     const scannerRef = useRef(null);

@@ -128,3 +128,112 @@
     font-size: 1.25rem;
     font-weight: 900;
 }
+
+/* Add to your existing EventDropdown.module.scss */
+
+.searchWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem $spacing-sm;
+    border-bottom: 1.5px solid rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    background: $white;
+}
+
+.searchIcon {
+    color: $medium-gray;
+    flex-shrink: 0;
+}
+
+.searchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: $font-mono;
+    font-size: 0.85rem;
+    background: transparent;
+    color: $black;
+
+    &::placeholder {
+        color: $light-gray;
+    }
+}
+
+.searchClear {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $medium-gray;
+    font-size: 0.75rem;
+    padding: 0;
+    line-height: 1;
+
+    &:hover {
+        color: $black;
+    }
+}
+
+.menuList {
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.noResults {
+    padding: $spacing-md;
+    text-align: center;
+    font-size: 0.85rem;
+    color: $medium-gray;
+    font-family: $font-mono;
+}
+/* Add these to the bottom of EventDrawer.module.scss */
+
+.searchWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1.5px solid rgba(0,0,0,0.08);
+    background: #fff;
+}
+
+.searchIcon {
+    color: #999;
+    flex-shrink: 0;
+}
+
+.searchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: transparent;
+    color: #000;
+
+    &::placeholder {
+        color: #bbb;
+    }
+}
+
+.searchClear {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #999;
+    font-size: 0.75rem;
+    padding: 0;
+    line-height: 1;
+
+    &:hover {
+        color: #000;
+    }
+}
+
+.noResults {
+    padding: 1.5rem 1rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #999;
+}

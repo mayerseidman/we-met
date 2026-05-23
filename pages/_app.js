@@ -65,9 +65,8 @@ function MyApp({ Component, pageProps }) {
                 router.push('/landing');
             }
         }
-
         if (router.pathname === '/profile') {
-            if (!user && !profile && router.query.from !== 'landing') {
+            if (isReady && !user && !profile && router.query.from !== 'landing') {
                 router.push('/landing');
             }
         }
@@ -115,11 +114,13 @@ function MyApp({ Component, pageProps }) {
                 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
                 <meta name="apple-mobile-web-app-title" content="We Met" />
             </Head>
-            <Component
-                {...pageProps}
-                onDropdownToggle={setIsDropdownOpen}
-                user={user}
-            />
+            <div key={router.pathname + (router.query.tab || '')} className="pageTransition">
+                <Component
+                    {...pageProps}
+                    onDropdownToggle={setIsDropdownOpen}
+                    user={user}
+                />
+            </div>
             {showNav && (
                 <BottomNav
                     onConnectClick={handleConnectClick}
