@@ -13,13 +13,14 @@ $light-beige: #E5D4C1;
 $beige: #EBD9C0;
 $orange: #F5722F;
 $dark-orange: #CC4A20;
-$gray: #6b7280;
-$dark-gray: #666;
-$medium-gray: #7e7e7e;
-$light-gray: #999;
 $white: #ffffff;
 $off-white: #FFFBF5;
-$black: #000000;
+$black: #0C098C;
+// Navy-tinted grays so all body/muted text stays in the dark-blue family.
+$gray: rgba($black, 0.6);
+$dark-gray: rgba($black, 0.75);
+$medium-gray: rgba($black, 0.55);
+$light-gray: rgba($black, 0.4);
 $green: #4CAF50;
 $error-red: #DC3545;
 $error-bg: #FDF2F2;
@@ -40,8 +41,26 @@ $color-text: $black;
 $color-text-muted: $gray;
 
 // ── Fonts ─────────────────────────────────────────────────────
-$font-mono: 'Chivo Mono', monospace;
-$font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+// Two-family system: Geist Mono for display + UI, Geist Sans for body.
+// Loaded weights: Geist 400-700, Geist Mono 500-700 (see _app.js).
+$font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+$font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+// ── Type scale (semantic) ─────────────────────────────────────
+// App UI uses these fixed sizes. Marketing display titles use clamp().
+$text-caption:  0.75rem;   // 12px  — kickers, metadata
+$text-sm:       0.875rem;  // 14px  — secondary copy, helper text
+$text-body:     1rem;      // 16px  — body text minimum
+$text-lg:       1.125rem;  // 18px  — taglines, callouts
+$text-h4:       1.25rem;   // 20px  — card titles
+$text-h3:       1.5rem;    // 24px  — section subheadings
+$text-h2:       2rem;      // 32px  — section headings (mobile)
+$text-h1:       3rem;      // 48px  — page headings (mobile)
+
+// ── Weight roles ──────────────────────────────────────────────
+$weight-body:    500;
+$weight-label:   600;  // kickers, buttons, small caps, UI labels
+$weight-title:   700;  // display + section titles
 
 // ── Spacing ───────────────────────────────────────────────────
 $spacing-xs: 0.25rem;
@@ -74,11 +93,11 @@ $border-thick: 4px solid $black;
 $border-extra-thick: 5px solid $black;
 
 // ── Shadows ───────────────────────────────────────────────────
-// Brutal/flat shadows (neobrutalism)
-$shadow-small: 3px 3px 0px rgba(0, 0, 0, 0.2);
-$shadow-medium: 4px 4px 0px rgba(0, 0, 0, 0.25);
-$shadow-large: 6px 6px 0px rgba(0, 0, 0, 0.3);
-$shadow-xl: 8px 8px 0px $black;
+// Brutal/flat shadows (neobrutalism) — colored to match stroke (#0C098C navy).
+$shadow-small: 5px 5px 0px rgba(12, 9, 140, 0.25);
+$shadow-medium: 7px 7px 0px rgba(12, 9, 140, 0.3);
+$shadow-large: 10px 10px 0px rgba(12, 9, 140, 0.35);
+$shadow-xl: 14px 14px 0px $black;
 
 // Soft shadows (for when you need them)
 $shadow-soft-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -89,6 +108,11 @@ $shadow-soft-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 $transition-fast: 0.2s ease;
 $transition-normal: 0.3s ease;
 $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+// ── Easing curves (recommended, never bounce/elastic) ─────────
+$ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+$ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+$ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
 
 // ── Breakpoints ───────────────────────────────────────────────
 $mobile: 768px;
@@ -102,3 +126,157 @@ $z-sticky: 200;
 $z-overlay: 300;
 $z-modal: 400;
 $z-toast: 500;
+
+// ══════════════════════════════════════════════════════════════
+// Shared component mixins (single source of truth across pages)
+// ══════════════════════════════════════════════════════════════
+
+@mixin cta-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: $orange;
+    color: $white;
+    border: $border-thick;
+    border-radius: 14px;
+    padding: 16px 28px;
+    min-height: 48px;
+    font-family: $font-mono;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: $shadow-large;
+    transition: all $transition-fast;
+
+    &:focus-visible {
+        outline: 3px solid rgba($orange, 0.5);
+        outline-offset: 3px;
+    }
+
+    &::after {
+        content: '→';
+        font-size: 1.2em;
+        line-height: 1;
+        transition: transform $transition-fast;
+    }
+
+    &:hover:not(:disabled) {
+        transform: translate(2px, 2px);
+        box-shadow: $shadow-medium;
+
+        &::after { transform: translateX(3px); }
+    }
+
+    &:active:not(:disabled) {
+        transform: translate(6px, 6px) scale(0.98);
+        box-shadow: none;
+        transition: transform 0.1s $ease-out-expo;
+    }
+
+    &:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+}
+
+@mixin cta-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $white;
+    color: $black;
+    border: $border-thick;
+    border-radius: 14px;
+    padding: 14px 22px;
+    min-height: 48px;
+    font-family: $font-mono;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:focus-visible {
+        outline: 3px solid rgba($orange, 0.5);
+        outline-offset: 3px;
+    }
+
+    &:hover:not(:disabled) {
+        box-shadow: $shadow-small;
+        transform: translate(-1px, -1px);
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.97);
+        transition: transform 0.1s $ease-out-expo;
+    }
+}
+
+@mixin app-icon-tile {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto $space-lg;
+    background: $orange;
+    color: $white;
+    border: $border-extra-thick;
+    border-radius: 24px;
+    box-shadow: $shadow-large;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-4deg);
+    transition: transform $transition-normal;
+
+    &:hover { transform: rotate(0deg) scale(1.04); }
+
+    img {
+        transform-origin: 50% 78%;
+        animation: appIconWave 3s ease-in-out infinite;
+    }
+}
+
+@keyframes appIconWave {
+    0%, 65%, 100% { transform: rotate(0deg); }
+    10%          { transform: rotate(-14deg); }
+    20%          { transform: rotate(12deg); }
+    30%          { transform: rotate(-10deg); }
+    40%          { transform: rotate(8deg); }
+    50%          { transform: rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .appIconTile img { animation: none; }
+}
+
+@mixin input-styled {
+    width: 100%;
+    background: $white;
+    border: $border-medium;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: $font-mono;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $black;
+    box-shadow: inset 2px 2px 0 rgba($black, 0.1);
+    transition: all $transition-fast;
+    box-sizing: border-box;
+
+    &:focus {
+        outline: none;
+        border-color: $orange;
+        box-shadow:
+            inset 2px 2px 0 rgba($black, 0.1),
+            0 0 0 3px rgba($orange, 0.25);
+        transform: translate(-1px, -1px);
+    }
+
+    &::placeholder {
+        color: $light-gray;
+        font-weight: 500;
+    }
+}

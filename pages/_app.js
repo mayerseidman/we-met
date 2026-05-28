@@ -61,9 +61,8 @@ function MyApp({ Component, pageProps }) {
                 router.push('/meets');
             } else if (user) {
                 router.push('/profile');
-            } else {
-                router.push('/landing');
             }
+            // No profile, no session → stay at '/' to render the marketing page.
         }
         if (router.pathname === '/profile') {
             if (isReady && !user && !profile && router.query.from !== 'landing') {
@@ -100,19 +99,53 @@ function MyApp({ Component, pageProps }) {
     const hideNav = ['/', '/landing', '/auth', '/reset-password'].includes(router.pathname);
     const showNav = !hideNav;
 
+    // Open Graph meta tags for the marketing page — rendered above the
+    // mount gate so SSR HTML includes them (crawlers don't run JS).
+    const isMarketing = router.pathname === '/';
+    const siteUrl =
+        process.env.NEXT_PUBLIC_SITE_URL ||
+        (typeof window !== 'undefined' ? window.location.origin : 'https://we-met-preview.vercel.app');
+    const ogHead = isMarketing && (
+        <Head>
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content={siteUrl} />
+            <meta property="og:title" content="We Met — never lose a festival connection" />
+            <meta property="og:description" content="Save everyone you meet at festivals and keep the magic alive." />
+            <meta property="og:image" content={`${siteUrl}/api/og`} />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+            <meta property="og:image:type" content="image/png" />
+            <meta property="og:image:alt" content="We Met — festival connection app" />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content="We Met — never lose a festival connection" />
+            <meta name="twitter:description" content="Save everyone you meet at festivals and keep the magic alive." />
+            <meta name="twitter:image" content={`${siteUrl}/api/og`} />
+            <meta name="twitter:image:alt" content="We Met — festival connection app" />
+        </Head>
+    );
+
     // Block render until client has mounted and storage is ready
     if (!mounted || !isReady) {
-        return <div style={{ minHeight: '100vh', background: '#FFEFD7' }} />;
+        return (
+            <>
+                {ogHead}
+                <div style={{ minHeight: '100vh', background: '#FFEFD7' }} />
+            </>
+        );
     }
 
     return (
         <div suppressHydrationWarning>
+            {ogHead}
             <Head>
                 <link rel="manifest" href="/manifest.json" />
                 <meta name="theme-color" content="#F5722F" />
                 <meta name="mobile-web-app-capable" content="yes" />
                 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
                 <meta name="apple-mobile-web-app-title" content="We Met" />
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+                <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@500..700&display=swap" rel="stylesheet" />
             </Head>
             <div key={router.pathname + (router.query.tab || '')} className="pageTransition">
                 <Component

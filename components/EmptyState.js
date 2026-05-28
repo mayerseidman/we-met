@@ -8,7 +8,7 @@ export default function EmptyState({ onSetEditing }) {
                     <img src="/qr.png" className={styles.qrImage} alt="QR placeholder" />
                 </div>*/}
                 <div className={styles.brandPlaceholder}>
-                        👋
+                    <img src="/icons/pop/waving-hand.svg" alt="" width={72} height={72} />
                 </div>
             </div>
             <p className={styles.emptyText}>

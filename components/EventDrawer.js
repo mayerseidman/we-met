@@ -39,7 +39,7 @@ export default function EventDrawer({ selectedEvent, onSelect, onClose }) {
                         onClick={handleClose}
                         aria-label="Close"
                     >
-                        ✕
+                        <img src="/icons/pop/close.svg" alt="" width={20} height={20} />
                     </button>
                 </div>
 

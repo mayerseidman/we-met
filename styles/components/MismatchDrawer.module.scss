@@ -66,7 +66,7 @@
 
 .title {
     font-size: 1.25rem;
-    font-weight: 900;
+    font-weight: 600;
     margin: 0;
     color: $black;
 }
@@ -123,7 +123,7 @@
 
 .subLabel {
     font-size: 0.75rem;
-    font-weight: 900;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: $dark-gray;
@@ -164,7 +164,7 @@
     &.selected {
         background-color: rgba(245, 114, 47, 0.1);
         border-color: $orange;
-        font-weight: 900;
+        font-weight: 600;
     }
 }
 
@@ -176,7 +176,7 @@
 .checkmark {
     font-size: 1.25rem;
     color: $orange;
-    font-weight: 900;
+    font-weight: 600;
     margin-left: $spacing-sm;
 }
 

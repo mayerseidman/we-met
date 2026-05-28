@@ -246,6 +246,9 @@ export default function ProfilePage() {
             <div className={styles.content}>
                 {isEditing ? (
                     <div key="edit" className={styles.editMode}>
+                        <div className={styles.appIcon} aria-label="We Met">
+                            <img src="/icons/pop/waving-hand-light.svg" alt="" width={56} height={56} />
+                        </div>
                         <h1 className={styles.headerTitle}>{initialProfile ? "Edit Profile" : "Add Profile"}</h1>
                         {!initialProfile && (
                             <p className={styles.headerSubtitle}>

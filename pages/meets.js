@@ -5,6 +5,8 @@ import { useStorage } from '../hooks/useStorage'
 import Avatar from '../components/Avatar'
 import styles from '../styles/pages/Meets.module.scss'
 
+const POP = '/icons/pop'
+
 export default function Meets() {
     const { user, loading } = useAuth()
     const { connections, isReady } = useStorage()
@@ -118,26 +120,51 @@ export default function Meets() {
 
             {!user && (
                 <div className={styles.banner}>
-                    <span className={styles.bannerText}>⚠️ Not synced — saved on this device only</span>
+                    <span className={styles.bannerText}>
+                        <img src={`${POP}/warning-triangle.svg`} alt="" width={20} height={20} style={{ verticalAlign: '-5px', marginRight: 6 }} />
+                        Not synced — saved on this device only
+                    </span>
                     <button className={styles.bannerBtn} onClick={() => router.push('/auth')}>Sync</button>
                 </div>
             )}
 
             {showInstallBanner && (
                 <div className={styles.banner}>
-                    <span className={styles.bannerText}>📲 Add We Met to your home screen</span>
+                    <span className={styles.bannerText}>
+                        <img src={`${POP}/smartphone.svg`} alt="" width={20} height={20} style={{ verticalAlign: '-5px', marginRight: 6 }} />
+                        Add We Met to your home screen
+                    </span>
                     <div className={styles.bannerActions}>
                         <button className={styles.bannerBtn} onClick={handleInstall}>Install</button>
-                        <button className={styles.bannerClose} onClick={() => setShowInstallBanner(false)}>✕</button>
+                        <button className={styles.bannerClose} onClick={() => setShowInstallBanner(false)} aria-label="Close"><img src={`${POP}/close.svg`} alt="" width={16} height={16} /></button>
                     </div>
                 </div>
             )}
 
             {connections.length === 0 ? (
                 <div className={styles.empty}>
-                    <div className={styles.emptyIcon}>🤝</div>
-                    <div className={styles.emptyTitle}>No meets yet</div>
-                    <div className={styles.emptyText}>Scan someone&apos;s QR to get started!</div>
+                    <div className={styles.emptyIcon}>
+                        <img src={`${POP}/handshake.svg`} alt="" width={96} height={96} />
+                    </div>
+                    <div className={styles.emptyTitle}>Ready when you are.</div>
+                    <p className={styles.emptyText}>
+                        Tap <strong>Connect</strong> below to show your QR — or scan theirs.
+                        Your first meet shows up right here.
+                    </p>
+                    <div className={styles.emptySteps}>
+                        <div className={styles.emptyStep}>
+                            <span className={styles.emptyStepNum}>1</span>
+                            <span>Show your QR</span>
+                        </div>
+                        <div className={styles.emptyStep}>
+                            <span className={styles.emptyStepNum}>2</span>
+                            <span>They scan it</span>
+                        </div>
+                        <div className={styles.emptyStep}>
+                            <span className={styles.emptyStepNum}>3</span>
+                            <span>Saved forever</span>
+                        </div>
+                    </div>
                 </div>
             ) : (
                 <div className={styles.list}>

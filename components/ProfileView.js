@@ -77,16 +77,16 @@ const AboutSection = ({ profile }) => (
         <div className={styles.aboutCard}>
             {profile.location && (
                 <>
-                    <AboutRow 
-                        icon="📍" 
+                    <AboutRow
+                        icon={<img src="/icons/pop/location-pin.svg" alt="" width={22} height={22} />}
                         content={profile.location}
                     />
                     <div className={styles.aboutDivider}></div>
                 </>
             )}
-            
-            <AboutRow 
-                icon="💬" 
+
+            <AboutRow
+                icon={<img src="/icons/pop/chat-bubble.svg" alt="" width={22} height={22} />}
                 content={profile.about || "Write something so people can remember you like your favorite color or your cat's name or whatever :)"}
                 isText
             />
@@ -117,11 +117,11 @@ const ContactSection = ({ profile }) => {
             <h2 className={styles.sectionLabel}>CONTACT</h2>
             
             {profile.phone && (
-                <ContactRow icon="📞" text={profile.phone} />
+                <ContactRow icon={<img src="/icons/pop/smartphone.svg" alt="" width={22} height={22} />} text={profile.phone} />
             )}
             
             {profile.instagram && (
-                <ContactRow icon="📸" text={`@${profile.instagram}`} />
+                <ContactRow icon={<img src="/icons/pop/image.svg" alt="" width={22} height={22} />} text={`@${profile.instagram}`} />
             )}
         </div>
     );

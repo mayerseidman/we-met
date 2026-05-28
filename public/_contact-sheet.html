@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>We Met — Contact Sheet</title>
+<style>
+  :root {
+    --cream: #FFEFD7;
+    --black: #000;
+    --orange: #F5722F;
+    --frame-w: 390px;
+    --frame-h: 760px;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--cream);
+    font-family: 'Chivo Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--black);
+  }
+  .header {
+    text-align: center;
+    padding: 48px 24px 8px;
+  }
+  .appIcon {
+    width: 84px;
+    height: 84px;
+    margin: 0 auto 18px;
+    background: var(--orange);
+    border: 5px solid #0C098C;
+    border-radius: 22px;
+    box-shadow: 8px 8px 0 rgba(12, 9, 140, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-4deg);
+  }
+  .appIcon img { display: block; }
+  .header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+    color: #0C098C;
+  }
+  .header .meta {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgba(12, 9, 140, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, var(--frame-w));
+    gap: 40px 28px;
+    justify-content: center;
+    padding: 32px 24px 64px;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .label {
+    background: var(--black);
+    color: #FFE066;
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    align-self: flex-start;
+  }
+  .frame {
+    width: var(--frame-w);
+    height: var(--frame-h);
+    background: #fff;
+    border: 4px solid var(--black);
+    border-radius: 24px;
+    box-shadow: 8px 8px 0 var(--black);
+    overflow: hidden;
+    position: relative;
+  }
+  .frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="appIcon" aria-label="We Met">
+      <img src="/icons/pop/waving-hand-light.svg" alt="" width="52" height="52" />
+    </div>
+    <h1>We Met</h1>
+    <div class="meta">App contact sheet · 7 screens · mobile (375×812)</div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <span class="label">/ — marketing</span>
+      <div class="frame"><iframe src="/" loading="eager"></iframe></div>
+    </div>
+    <div class="card">
+      <span class="label">/landing — onboarding</span>
+      <div class="frame"><iframe src="/landing" loading="eager"></iframe></div>
+    </div>
+    <div class="card">
+      <span class="label">/auth — sign in</span>
+      <div class="frame"><iframe src="/auth" loading="eager"></iframe></div>
+    </div>
+    <div class="card">
+      <span class="label">/profile — setup</span>
+      <div class="frame"><iframe src="/profile?from=landing" loading="eager"></iframe></div>
+    </div>
+    <div class="card">
+      <span class="label">/meets — home</span>
+      <div class="frame"><iframe src="/meets" loading="eager"></iframe></div>
+    </div>
+    <div class="card">
+      <span class="label">/connect — qr flow</span>
+      <div class="frame"><iframe src="/connect" loading="eager"></iframe></div>
+    </div>
+    <div class="card">
+      <span class="label">/reset-password</span>
+      <div class="frame"><iframe src="/reset-password" loading="eager"></iframe></div>
+    </div>
+  </div>
+</body>
+</html>

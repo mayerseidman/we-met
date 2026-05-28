@@ -17,6 +17,25 @@
     animation: fadeIn 0.4s ease-out;
 }
 
+.iconTile {
+    width: 88px;
+    height: 88px;
+    margin: 0 auto $spacing-lg;
+    background: $yellow;
+    border: $border-extra-thick;
+    border-radius: 22px;
+    box-shadow: $shadow-large;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-4deg);
+}
+
+.bareIcon {
+    display: block;
+    margin: 0 auto $spacing-lg;
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
@@ -25,7 +44,7 @@
 // ── Header ────────────────────────────────────────────────────
 .title {
     font-size: 2rem;
-    font-weight: 900;
+    font-weight: 600;
     margin: 0 0 $spacing-sm;
     color: $black;
     text-align: center;
@@ -53,36 +72,14 @@
 
 .label {
     font-size: 0.75rem;
-    font-weight: 900;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: $dark-gray;
 }
 
 .input {
-    width: 100%;
-    padding: 0.875rem;
-    font-family: $font-mono;
-    font-size: 1rem;
-    font-weight: 600;
-    border: 1.5px solid $black;
-    border-radius: 2px;
-    background-color: $white;
-    color: $black;
-    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
-    transition: all $transition-fast;
-    box-sizing: border-box;
-
-    &:focus {
-        outline: none;
-        border-color: $orange;
-        box-shadow: 0 0 0 3px rgba(245, 114, 47, 0.2);
-    }
-
-    &::placeholder {
-        color: $light-gray;
-        font-weight: 500;
-    }
+    @include input-styled;
 }
 
 // ── Error ─────────────────────────────────────────────────────
@@ -99,30 +96,8 @@
 
 // ── Submit Button ─────────────────────────────────────────────
 .submitBtn {
+    @include cta-primary;
     width: 100%;
-    padding: $spacing-md;
-    background-color: $orange;
-    color: $white;
-    border: 2px solid $black;
-    border-radius: 2px;
-    font-family: $font-mono;
-    font-size: 1rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
-    transition: all $transition-fast;
-
-    &:hover:not(:disabled) {
-        transform: translate(2px, 2px);
-        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
-    }
-
-    &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
 }
 
 // ── Toggle ────────────────────────────────────────────────────
@@ -138,7 +113,7 @@
     border: none;
     font-family: $font-mono;
     font-size: 0.875rem;
-    font-weight: 900;
+    font-weight: 600;
     color: $orange;
     cursor: pointer;
     text-decoration: underline;
@@ -157,26 +132,7 @@
 }
 
 .providerBtn {
-    display: block;
+    @include cta-ghost;
     width: 100%;
-    padding: $spacing-md;
-    background-color: $white;
-    color: $black;
-    border: 2px solid $black;
-    border-radius: 2px;
-    font-family: $font-mono;
-    font-size: 0.875rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-align: center;
     text-decoration: none;
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
-    transition: all $transition-fast;
-    box-sizing: border-box;
-
-    &:hover {
-        transform: translate(2px, 2px);
-        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
-    }
 }

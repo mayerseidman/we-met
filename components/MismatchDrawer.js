@@ -31,7 +31,7 @@ export default function MismatchDrawer({
         return (
             <div className={styles.modalOverlay} onClick={handleClose}>
                 <div className={styles.modal} onClick={e => e.stopPropagation()}>
-                    <button className={styles.closeButton} onClick={handleClose}>✕</button>
+                    <button className={styles.closeButton} onClick={handleClose} aria-label="Close"><img src="/icons/pop/close.svg" alt="" width={20} height={20} /></button>
                     <p className={styles.description}>
                         You scanned <strong>{scannerName}</strong> at{" "}
                         <strong>{scannedEvent}</strong>, but your current event is set to{" "}
@@ -64,7 +64,7 @@ export default function MismatchDrawer({
             <div className={`${styles.drawer} ${closing ? styles.drawerClosing : ''}`}>
                 <div className={styles.header}>
                     <h3 className={styles.title}>Choose Event</h3>
-                    <button className={styles.closeButton} onClick={handleClose}>✕</button>
+                    <button className={styles.closeButton} onClick={handleClose} aria-label="Close"><img src="/icons/pop/close.svg" alt="" width={20} height={20} /></button>
                 </div>
                 <div className={styles.body}>
                     <p className={styles.description}>
