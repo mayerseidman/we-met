@@ -31,11 +31,12 @@
 }
 
 // ── Hero ──────────────────────────────────────────────────────
+// FIX #3: Reduced max-height so there's less gap before next section
 .hero {
     position: relative;
-    min-height: 640px;
-    height: 100vh;
-    max-height: 880px;
+    min-height: 580px;
+    height: 90vh;
+    max-height: 720px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -48,8 +49,6 @@
     inset: 0;
     pointer-events: none;
     z-index: 1;
-    // Bubbles + floating icons drift with both scroll (depth) and mouse (alive).
-    // --mx and --my range -0.5 to 0.5, set via JS on the hero element.
     transform: translate3d(
         calc(var(--mx, 0) * 18px),
         calc(var(--scroll-y, 0) * -0.25px + var(--my, 0) * 14px),
@@ -78,8 +77,6 @@
         bubbleFadeIn 0.6s $ease-out-expo 0.3s both,
         floatGentle 4.5s ease-in-out 0.9s infinite;
 
-    // Tail = double-triangle: outer = stroke color, inner = bubble bg.
-    // 4px difference on each visible side matches the bubble's 4px main border.
     &::before,
     &::after {
         content: '';
@@ -105,190 +102,45 @@
     }
 }
 
-.bubble1 {
-    top: 10%;
-    left: 14%;
-    animation-delay: 0s;
-    transform: rotate(-6deg);
-}
+.bubble1  { top: 10%; left: 14%; animation-delay: 0s; transform: rotate(-6deg); }
+.bubble2  { top: 14%; right: 16%; animation-delay: 1.5s; transform: rotate(4deg); background: $yellow; &::after { border-top-color: $yellow; } }
+.bubble3  { top: 34%; left: 12%; animation-delay: 2.4s; transform: rotate(-3deg); background: $neon-green; color: $black; &::after { border-top-color: $neon-green; } display: none; @media (min-width: $mobile) { display: inline-flex; } }
+.bubble4  { top: 30%; right: 14%; animation-delay: 0.9s; transform: rotate(5deg); background: $pink; color: $white; &::after { border-top-color: $pink; } display: none; @media (min-width: $mobile) { display: inline-flex; } }
+.bubble5  { top: 54%; left: 16%; animation-delay: 3.1s; transform: rotate(-4deg); background: $orange-light; color: $white; &::after { border-top-color: $orange-light; } display: none; @media (min-width: $mobile) { display: inline-flex; } }
+.bubble6  { top: 60%; right: 14%; animation-delay: 1.8s; transform: rotate(3deg); background: $white; &::after { border-top-color: $white; } display: none; @media (min-width: $mobile) { display: inline-flex; } }
+.bubble7  { bottom: 16%; left: 18%; animation-delay: 2.6s; transform: rotate(-5deg); background: $yellow; &::after { border-top-color: $yellow; } display: none; @media (min-width: $mobile) { display: inline-flex; } }
+.bubble8  { bottom: 20%; right: 18%; animation-delay: 3.4s; transform: rotate(4deg); background: $purple; color: $white; &::after { border-top-color: $purple; } display: none; @media (min-width: $mobile) { display: inline-flex; } }
+.bubble9  { top: 38%; right: 18%; animation-delay: 1.1s; transform: rotate(6deg); background: $orange-light; color: $white; font-size: 0.85rem; padding: 8px 12px; &::after { border-top-color: $orange-light; } display: none; @media (min-width: $mobile) { display: inline-flex; } }
+.bubble10 { top: 64%; left: 14%; animation-delay: 2.2s; transform: rotate(-7deg); background: $neon-green; color: $black; font-size: 0.85rem; padding: 8px 12px; &::after { border-top-color: $neon-green; } display: none; @media (min-width: $mobile) { display: inline-flex; } }
 
-.bubble2 {
-    top: 14%;
-    right: 16%;
-    animation-delay: 1.5s;
-    transform: rotate(4deg);
-    background: $yellow;
-    &::after { border-top-color: $yellow; }
-}
-
-.bubble3 {
-    top: 34%;
-    left: 12%;
-    animation-delay: 2.4s;
-    transform: rotate(-3deg);
-    background: $neon-green;
-    color: $black;
-    &::after { border-top-color: $neon-green; }
-
-    // Hidden on small mobile to keep things breathing.
-    display: none;
-    @media (min-width: $mobile) {
-        display: inline-flex;
-    }
-}
-
-.bubble4 {
-    top: 30%;
-    right: 14%;
-    animation-delay: 0.9s;
-    transform: rotate(5deg);
-    background: $pink;
-    color: $white;
-    &::after { border-top-color: $pink; }
-
-    display: none;
-    @media (min-width: $mobile) {
-        display: inline-flex;
-    }
-}
-
-.bubble5 {
-    top: 54%;
-    left: 16%;
-    animation-delay: 3.1s;
-    transform: rotate(-4deg);
-    background: $orange-light;
-    color: $white;
-    &::after { border-top-color: $orange-light; }
-
-    display: none;
-    @media (min-width: $mobile) {
-        display: inline-flex;
-    }
-}
-
-.bubble6 {
-    top: 60%;
-    right: 14%;
-    animation-delay: 1.8s;
-    transform: rotate(3deg);
-    background: $white;
-    &::after { border-top-color: $white; }
-
-    display: none;
-    @media (min-width: $mobile) {
-        display: inline-flex;
-    }
-}
-
-.bubble7 {
-    bottom: 16%;
-    left: 18%;
-    animation-delay: 2.6s;
-    transform: rotate(-5deg);
-    background: $yellow;
-    &::after { border-top-color: $yellow; }
-
-    display: none;
-    @media (min-width: $mobile) {
-        display: inline-flex;
-    }
-}
-
-.bubble8 {
-    bottom: 20%;
-    right: 18%;
-    animation-delay: 3.4s;
-    transform: rotate(4deg);
-    background: $purple;
-    color: $white;
-    &::after { border-top-color: $purple; }
-
-    display: none;
-    @media (min-width: $mobile) {
-        display: inline-flex;
-    }
-}
-
-// Closer-to-content bubbles (visible on all sizes)
-.bubble9 {
-    top: 38%;
-    right: 18%;
-    animation-delay: 1.1s;
-    transform: rotate(6deg);
-    background: $orange-light;
-    color: $white;
-    font-size: 0.85rem;
-    padding: 8px 12px;
-    &::after { border-top-color: $orange-light; }
-
-    display: none;
-    @media (min-width: $mobile) {
-        display: inline-flex;
-    }
-}
-
-.bubble10 {
-    top: 64%;
-    left: 14%;
-    animation-delay: 2.2s;
-    transform: rotate(-7deg);
-    background: $neon-green;
-    color: $black;
-    font-size: 0.85rem;
-    padding: 8px 12px;
-    &::after { border-top-color: $neon-green; }
-
-    display: none;
-    @media (min-width: $mobile) {
-        display: inline-flex;
-    }
-}
-
-// ── Floating pop-icon decorations (used across sections) ──────
+// ── Floating icons ────────────────────────────────────────────
 .floatIcon {
     position: absolute;
     pointer-events: none;
     animation: floatGentle 6s ease-in-out infinite;
 }
 
-// Icons live in the gaps between bubble columns — never overlap a bubble.
-// Bubbles occupy left 6-18% and right 6-18%; icons sit at extreme edges
-// (left/right < 6%) or in the center column (44-56%).
-.heart3 {
-    bottom: 6%;
-    left: 48%;
-    animation-delay: 1.4s;
-    transform: rotate(-12deg);
+.heart3       { bottom: 6%; left: 48%; animation-delay: 1.4s; transform: rotate(-12deg); @media (max-width: 480px) { display: none; } }
+.cropTopRight { top: 8px; right: 8px; animation-delay: 0.4s; transform: rotate(18deg); }
+.cropBottomLeft { bottom: 8px; left: 6px; animation-delay: 1.8s; transform: rotate(-22deg); }
+.starMid      { top: 48%; left: 2%; animation-delay: 2.5s; transform: rotate(8deg); @media (max-width: 480px) { display: none; } }
 
-    @media (max-width: 480px) { display: none; }
+.floatHeart {
+    position: absolute;
+    animation: floatGentle 5s ease-in-out infinite;
+    display: block;
 }
 
-.cropTopRight {
-    top: 8px;
-    right: 8px;
-    animation-delay: 0.4s;
-    transform: rotate(18deg);
+.heart1 { top: 4%; left: 48%; animation-delay: 0.7s; transform: rotate(12deg); }
+.heart2 { top: 48%; right: 2%; animation-delay: 2s; transform: rotate(-8deg); @media (max-width: 480px) { display: none; } }
+
+@keyframes floatGentle {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    33%      { transform: translateY(-12px) translateX(4px); }
+    66%      { transform: translateY(-6px) translateX(-4px); }
 }
 
-.cropBottomLeft {
-    bottom: 8px;
-    left: 6px;
-    animation-delay: 1.8s;
-    transform: rotate(-22deg);
-}
-
-.starMid {
-    top: 48%;
-    left: 2%;
-    animation-delay: 2.5s;
-    transform: rotate(8deg);
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// ── Per-section scattered decoration overlay ──────────────────
-// In front of cards but pinned to section margins so they never overlap content.
+// ── Section decorations (symbol-only, no text bubbles) ────────
 .sectionDecor {
     position: absolute;
     inset: 0;
@@ -301,176 +153,20 @@
     overflow: hidden;
 }
 
-.sectionHead, .steps, .features, .phones, .demoFrames {
+.sectionHead, .steps, .features, .phones, .demoFrames, .howItWorksLayout {
     position: relative;
     z-index: 1;
 }
 
-// Scatter bubbles per section — pinned to section margins (top/bottom/sides)
-// so they never sit over a card's content area.
-.scatterBubbleA {
-    top: 12px;
-    right: 8px;
-    background: $pink;
-    color: $white;
-    transform: rotate(8deg);
-    animation-delay: 0.6s;
-    &::after { border-top-color: $pink; }
-}
+// FIX #4: Scatter icons — more varied positions, not just corners
+.scatterHeartA { top: 8%; left: 3%; transform: rotate(-14deg); animation-delay: 1.3s; }
+.scatterStarA  { bottom: 12%; right: 4%; transform: rotate(20deg); animation-delay: 2.8s; }
+.cropLeftMid   { top: 42%; left: 2%; transform: rotate(-25deg); animation-delay: 1.5s; }
 
-.scatterBubbleB {
-    top: 16px;
-    left: 8px;
-    background: $yellow;
-    color: $black;
-    transform: rotate(-8deg);
-    animation-delay: 1.2s;
-    &::after { border-top-color: $yellow; }
-}
-
-.scatterBubbleC {
-    bottom: 24px;
-    right: 8px;
-    background: $purple;
-    color: $white;
-    transform: rotate(6deg);
-    animation-delay: 2.4s;
-    &::after { border-top-color: $purple; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-.scatterBubbleD {
-    top: 16px;
-    left: 8px;
-    background: $orange-light;
-    color: $white;
-    transform: rotate(-5deg);
-    animation-delay: 0.9s;
-    &::after { border-top-color: $orange-light; }
-}
-
-// Replaces the floating icons in "Why we built it" — all bubbles now.
-// All four sit in the section's top/bottom padding zones, never over a card.
-.scatterBubbleE {
-    bottom: 16px;
-    right: 8px;
-    background: $pink;
-    color: $white;
-    transform: rotate(10deg);
-    animation-delay: 1.7s;
-    &::after { border-top-color: $pink; }
-}
-
-.scatterBubbleF {
-    top: 12px;
-    right: 8px;
-    background: $yellow;
-    color: $black;
-    transform: rotate(8deg);
-    animation-delay: 0.4s;
-    &::after { border-top-color: $yellow; }
-}
-
-.scatterBubbleG {
-    bottom: 16px;
-    left: 8px;
-    background: $neon-green;
-    color: $black;
-    transform: rotate(-12deg);
-    animation-delay: 2.4s;
-    &::after { border-top-color: $neon-green; }
-}
-
-// Scatter pop icons — pinned to corners/edges
-.scatterHeartA {
-    bottom: 16px;
-    right: 8px;
-    transform: rotate(14deg);
-    animation-delay: 1.3s;
-}
-
-.scatterHeartB {
-    top: 50%;
-    left: 6px;
-    transform: rotate(-12deg);
-    animation-delay: 2.1s;
-
-    @media (max-width: 480px) { display: none; }
-}
-
-.scatterHeartC {
-    bottom: 50%;
-    right: 6px;
-    transform: rotate(10deg);
-    animation-delay: 0.8s;
-}
-
-.scatterStarA {
-    bottom: 16px;
-    left: 8px;
-    transform: rotate(-15deg);
-    animation-delay: 2.8s;
-}
-
-.scatterFlashA {
-    top: 50%;
-    left: 6px;
-    transform: rotate(20deg);
-    animation-delay: 1.6s;
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Edge-pinned floaters
-.cropLeftMid {
-    top: 50%;
-    left: 6px;
-    transform: rotate(-25deg);
-    animation-delay: 1.5s;
-}
-
-.cropRightTop {
-    top: 12px;
-    right: 8px;
-    transform: rotate(28deg);
-    animation-delay: 0.7s;
-}
-
-.cropTopLeft {
-    top: 12px;
-    right: 8px;
-    transform: rotate(-18deg);
-    animation-delay: 1.2s;
-}
-
-.floatHeart {
-    position: absolute;
-    animation: floatGentle 5s ease-in-out infinite;
-    display: block;
-}
-
-.heart1 {
-    top: 4%;
-    left: 48%;
-    animation-delay: 0.7s;
-    transform: rotate(12deg);
-}
-
-.heart2 {
-    top: 48%;
-    right: 2%;
-    animation-delay: 2s;
-    transform: rotate(-8deg);
-
-    @media (max-width: 480px) { display: none; }
-}
-
-@keyframes floatGentle {
-    0%, 100% { transform: translateY(0) translateX(0); }
-    33%      { transform: translateY(-12px) translateX(4px); }
-    66%      { transform: translateY(-6px) translateX(-4px); }
-}
+.scatterHeartB { top: 6%; right: 3%; transform: rotate(16deg); animation-delay: 2.1s; }
+.scatterStarB  { bottom: 8%; left: 4%; transform: rotate(-18deg); animation-delay: 0.8s; }
+.scatterFlashB { top: 45%; right: 2%; transform: rotate(22deg); animation-delay: 2.1s; }
+.scatterHeartC { bottom: 6%; right: 3%; transform: rotate(-12deg); animation-delay: 1.5s; }
 
 // ── Hero content ──────────────────────────────────────────────
 .heroContent {
@@ -484,7 +180,6 @@
 .appIcon {
     @include app-icon-tile;
     animation: appIconReveal 0.7s $ease-out-expo 0.1s both;
-    // Override `<button>` defaults so the icon still feels like a tile.
     padding: 0;
     cursor: pointer;
 
@@ -494,7 +189,6 @@
     }
 }
 
-// Click-to-wave: replays a bigger, more enthusiastic wave.
 @keyframes appIconWaveEager {
     0%, 100% { transform: rotate(0deg); }
     8%       { transform: rotate(-24deg); }
@@ -506,11 +200,8 @@
     85%      { transform: rotate(-3deg); }
 }
 
-.appIconEager img {
-    animation: appIconWaveEager 1.1s $ease-out-quart !important;
-}
+.appIconEager img { animation: appIconWaveEager 1.1s $ease-out-quart !important; }
 
-// Subtle bounce on the card icons when the card is hovered.
 @keyframes cardIconBounce {
     0%, 100% { transform: translateY(0); }
     45%      { transform: translateY(-8px) scale(1.06); }
@@ -589,42 +280,27 @@
     cursor: pointer;
     box-shadow: $shadow-large;
     transition: all $transition-fast;
+    white-space: nowrap;
 
-    &::after {
-        content: '→';
-        font-size: 1.2em;
-        line-height: 1;
-        transition: transform $transition-fast;
-    }
-
-    &:hover {
-        transform: translate(2px, 2px);
-        box-shadow: $shadow-medium;
-
-        &::after {
-            transform: translateX(3px);
-        }
-    }
-
-    &:active {
-        transform: translate(6px, 6px);
-        box-shadow: none;
-    }
+    &::after { content: '→'; font-size: 1.2em; line-height: 1; transition: transform $transition-fast; }
+    &:hover { transform: translate(2px, 2px); box-shadow: $shadow-medium; &::after { transform: translateX(3px); } }
+    &:active { transform: translate(6px, 6px); box-shadow: none; }
 }
 
+// FIX #1: Ghost button — add shadow + nowrap so heights match
 .ctaGhost {
     @include cta-ghost;
     background: transparent;
+    box-shadow: $shadow-small;
+    white-space: nowrap;
 
-    &:hover {
-        background: $white;
-    }
+    &:hover { background: $white; }
 }
 
 // ── Generic Section ───────────────────────────────────────────
 .section {
-    padding: clamp(72px, 9vw, 128px) $space-lg;
-    padding-top: clamp(160px, 18vw, 240px);
+    padding: clamp(48px, 6vw, 80px) $space-lg;
+    padding-top: clamp(80px, 10vw, 120px);
     max-width: 1080px;
     margin: 0 auto;
 }
@@ -632,13 +308,6 @@
 .sectionHead {
     text-align: center;
     margin-bottom: clamp($space-2xl, 5vw, $space-3xl);
-}
-
-// Left-aligned variant — used to break the centered-monotony rhythm.
-.sectionHeadLeft {
-    text-align: left;
-    margin-bottom: clamp($space-2xl, 5vw, $space-3xl);
-    max-width: 28ch;
 }
 
 .sectionLabel {
@@ -664,41 +333,39 @@
     margin: 0;
 }
 
-// ── Steps ─────────────────────────────────────────────────────
+// ── Steps — always stacked vertically ────────────────────────
 .steps {
     list-style: none;
     padding: 0;
     margin: 0;
-    display: grid;
-    gap: $space-xl;
-    grid-template-columns: 1fr;
-
-    @media (min-width: $mobile) {
-        grid-template-columns: repeat(3, 1fr);
-        gap: $space-lg;
-    }
+    display: flex;
+    flex-direction: column;
+    gap: $space-lg;
 }
 
+// FIX #2: Horizontal step layout — icon+number left, text right
 .step {
     position: relative;
     background: $white;
     border: $border-thick;
     border-radius: 18px;
-    padding: $space-xl $space-lg $space-lg;
+    padding: $space-lg;
     box-shadow: $shadow-large;
     transition: transform $transition-fast, box-shadow $transition-fast;
+    display: flex;
+    align-items: center;
+    gap: $space-lg;
 
     &:hover {
         transform: translate(-2px, -2px);
         box-shadow: 8px 8px 0 rgba($black, 0.3);
     }
-
 }
 
 .stepNumber {
     position: absolute;
-    top: -16px;
-    right: 20px;
+    top: -14px;
+    right: 16px;
     background: $black;
     color: $yellow;
     font-family: $font-mono;
@@ -706,40 +373,42 @@
     font-size: 0.85rem;
     letter-spacing: 0.08em;
     font-variant-numeric: tabular-nums;
-    padding: 6px 12px;
+    padding: 4px 10px;
     border-radius: 8px;
     border: 2px solid $black;
 }
 
 .stepIcon {
-    margin-bottom: $space-md;
-    display: inline-flex;
+    flex-shrink: 0;
+    display: flex;
     align-items: center;
     justify-content: center;
-
     img { display: block; }
+}
+
+.stepText {
+    flex: 1;
+    min-width: 0;
 }
 
 .stepTitle {
     font-family: $font-mono;
     font-weight: 600;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     letter-spacing: -0.005em;
-    margin: 0 0 $space-sm;
+    margin: 0 0 $space-xs;
 }
 
 .stepBody {
     font-family: $font-sans;
     font-size: $text-body;
     font-weight: $weight-body;
-    line-height: 1.55;
+    line-height: 1.5;
     color: $dark-gray;
-    max-width: 32ch;
     margin: 0;
 }
 
 // ── Features ──────────────────────────────────────────────────
-// 2×2 grid on desktop — distinct rhythm from the 3-col steps and phones.
 .features {
     display: grid;
     gap: $space-xl;
@@ -769,7 +438,6 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
     img { display: block; }
 }
 
@@ -790,23 +458,7 @@
     margin: 0;
 }
 
-// ── See it in action — Phone mockup stepper ───────────────────
-.demo { padding-top: $space-2xl; }
-
-.phones {
-    display: grid;
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: $space-3xl;
-    margin-top: $space-xl;
-
-    @media (min-width: $mobile) {
-        grid-template-columns: repeat(3, 1fr);
-        gap: clamp($space-2xl, 6vw, 80px);
-        align-items: center;
-    }
-}
-
+// ── Phone mockup ──────────────────────────────────────────────
 .phone {
     --tilt: 0deg;
     position: relative;
@@ -816,10 +468,6 @@
     animation: phoneFloat 5.5s ease-in-out infinite;
 }
 
-.phone1 { --tilt: -3deg; animation-delay: 0s; }
-.phone2 { --tilt: 2deg;  animation-delay: 1.4s; }
-.phone3 { --tilt: -2deg; animation-delay: 2.8s; }
-
 @keyframes phoneFloat {
     0%, 100% { transform: rotate(var(--tilt)) translateY(0); }
     50%      { transform: rotate(var(--tilt)) translateY(-10px); }
@@ -827,24 +475,6 @@
 
 @media (prefers-reduced-motion: reduce) {
     .phone { animation: none; }
-}
-
-.phoneStepBadge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 3;
-    background: $black;
-    color: $yellow;
-    font-family: $font-mono;
-    font-weight: 600;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    font-variant-numeric: tabular-nums;
-    padding: 5px 10px;
-    border-radius: 8px;
-    border: 2px solid $black;
-    transform: rotate(calc(var(--tilt) * -1));
 }
 
 .phoneFrame {
@@ -858,7 +488,6 @@
     overflow: hidden;
     position: relative;
 
-    // Notch — sits flush with the top of the frame, wider
     &::before {
         content: '';
         position: absolute;
@@ -887,153 +516,36 @@
     position: relative;
 }
 
-// ── Phone 1 — Show QR (mirrors /show-qr) ──────────────────────
-.screenShow {
-    background: $cream;
-    padding-top: 36px;
-}
+// ── Phone screens ─────────────────────────────────────────────
+.screenShow { background: $cream; padding-top: 36px; }
 
-.screenH {
-    font-family: $font-mono;
-    font-weight: 700;
-    font-size: 1rem;
-    color: $black;
-    align-self: flex-start;
-    margin: 0 0 14px 4px;
-}
+.screenH { font-family: $font-mono; font-weight: 700; font-size: 1rem; color: $black; align-self: flex-start; margin: 0 0 14px 4px; }
 
-.qrCard {
-    width: 100%;
-    background: $white;
-    border: 2px solid $black;
-    border-radius: 10px;
-    padding: 14px;
-    box-shadow: 3px 3px 0 rgba($black, 0.25);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 12px;
-}
+.qrCard { width: 100%; background: $white; border: 2px solid $black; border-radius: 10px; padding: 14px; box-shadow: 3px 3px 0 rgba($black, 0.25); display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
 
-// QR with avatar overlay in the dead center — mirrors the real /show-qr
-.qrCardImg {
-    position: relative;
-    width: 140px;
-    height: 140px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.qrCardImg { position: relative; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; img { width: 100%; height: 100%; object-fit: contain; opacity: 0.9; } }
 
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        opacity: 0.9;
-    }
-}
+.qrCardAvatarOverlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 32px; height: 32px; border-radius: 8px; background: $yellow; border: 2px solid $black; display: flex; align-items: center; justify-content: center; font-family: $font-mono; font-weight: 700; font-size: 0.85rem; color: $black; }
 
-.qrCardAvatarOverlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: $yellow;
-    border: 2px solid $black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: $font-mono;
-    font-weight: 700;
-    font-size: 0.85rem;
-    color: $black;
-}
+.screenLabel { font-family: $font-mono; font-weight: 600; font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: $dark-gray; align-self: flex-start; margin: 4px 0 4px 2px; }
 
-.screenLabel {
-    font-family: $font-mono;
-    font-weight: 600;
-    font-size: 0.55rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: $dark-gray;
-    align-self: flex-start;
-    margin: 4px 0 4px 2px;
-}
+.eventSelect { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 8px 10px; background: $white; border: 2px solid $black; border-radius: 8px; font-family: $font-mono; font-weight: 600; font-size: 0.7rem; color: $black; box-shadow: 2px 2px 0 rgba($black, 0.2); margin-bottom: 8px; }
 
-.eventSelect {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 8px 10px;
-    background: $white;
-    border: 2px solid $black;
-    border-radius: 8px;
-    font-family: $font-mono;
-    font-weight: 600;
-    font-size: 0.7rem;
-    color: $black;
-    box-shadow: 2px 2px 0 rgba($black, 0.2);
-    margin-bottom: 8px;
-}
+.eventChevron { flex-shrink: 0; color: $black; }
 
-.eventChevron {
-    flex-shrink: 0;
-    color: $black;
-}
+.screenHint { font-family: $font-mono; font-weight: 600; font-size: 0.55rem; color: $dark-gray; margin: 2px 0 0; align-self: center; text-align: center; u { color: $black; } }
 
-.screenHint {
-    font-family: $font-mono;
-    font-weight: 600;
-    font-size: 0.55rem;
-    color: $dark-gray;
-    margin: 2px 0 0;
-    align-self: center;
-    text-align: center;
-    u { color: $black; }
-}
+.screenScan { background: #0F0E2E; color: $white; padding: 28px 0 0; }
 
-// ── Phone 2 — Scan ────────────────────────────────────────────
-.screenScan {
-    background: #0F0E2E;
-    color: $white;
-    padding: 28px 0 0;
-}
+.viewfinder { position: relative; width: 100%; flex: 1; margin-top: 6px; }
 
-.viewfinder {
-    position: relative;
-    width: 100%;
-    flex: 1;
-    margin-top: 6px;
-}
+.corner { position: absolute; width: 22px; height: 22px; border: 3px solid $neon-green; border-radius: 4px; }
+.cornerTl { top: 14%; left: 14%; border-right: 0; border-bottom: 0; border-radius: 5px 0 0 0; }
+.cornerTr { top: 14%; right: 14%; border-left: 0; border-bottom: 0; border-radius: 0 5px 0 0; }
+.cornerBl { bottom: 18%; left: 14%; border-right: 0; border-top: 0; border-radius: 0 0 0 5px; }
+.cornerBr { bottom: 18%; right: 14%; border-left: 0; border-top: 0; border-radius: 0 0 5px 0; }
 
-.corner {
-    position: absolute;
-    width: 22px;
-    height: 22px;
-    border: 3px solid $neon-green;
-    border-radius: 4px;
-}
-.cornerTl { top: 14%;    left: 14%;  border-right: 0;  border-bottom: 0; border-radius: 5px 0 0 0; }
-.cornerTr { top: 14%;    right: 14%; border-left: 0;   border-bottom: 0; border-radius: 0 5px 0 0; }
-.cornerBl { bottom: 18%; left: 14%;  border-right: 0;  border-top: 0;    border-radius: 0 0 0 5px; }
-.cornerBr { bottom: 18%; right: 14%; border-left: 0;   border-top: 0;    border-radius: 0 0 5px 0; }
-
-.scanLine {
-    position: absolute;
-    left: 16%;
-    right: 16%;
-    height: 4px;
-    border-radius: 4px;
-    background: $neon-green;
-    box-shadow:
-        0 0 14px $neon-green,
-        0 0 28px rgba(0, 255, 157, 0.7),
-        0 0 48px rgba(0, 255, 157, 0.4);
-    animation: scanSweep 2.4s ease-in-out infinite;
-}
+.scanLine { position: absolute; left: 16%; right: 16%; height: 4px; border-radius: 4px; background: $neon-green; box-shadow: 0 0 14px $neon-green, 0 0 28px rgba(0, 255, 157, 0.7), 0 0 48px rgba(0, 255, 157, 0.4); animation: scanSweep 2.4s ease-in-out infinite; }
 
 @keyframes scanSweep {
     0%, 100% { top: 18%; opacity: 0; }
@@ -1042,768 +554,98 @@
     92%      { opacity: 1; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .scanLine { animation: none; top: 50%; }
-}
+@media (prefers-reduced-motion: reduce) { .scanLine { animation: none; top: 50%; } }
 
-.scanBottom {
-    width: 100%;
-    padding: 6px 10px;
-    text-align: center;
-}
+.scanBottom { width: 100%; padding: 6px 10px; text-align: center; }
+.scanEvent { display: inline-block; background: rgba($white, 0.08); color: $white; border: 1px solid rgba($white, 0.2); border-radius: 5px; padding: 4px 8px; font-family: $font-mono; font-weight: 600; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.scanHint { display: block; margin-top: 6px; font-family: $font-mono; font-size: 0.6rem; color: rgba($white, 0.6); text-decoration: underline; }
 
-.scanEvent {
-    display: inline-block;
-    background: rgba($white, 0.08);
-    color: $white;
-    border: 1px solid rgba($white, 0.2);
-    border-radius: 5px;
-    padding: 4px 8px;
-    font-family: $font-mono;
-    font-weight: 600;
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.scanHint {
-    display: block;
-    margin-top: 6px;
-    font-family: $font-mono;
-    font-size: 0.6rem;
-    color: rgba($white, 0.6);
-    text-decoration: underline;
-}
-
-// ── Phone 3 — Meets list (mirrors /meets) ─────────────────────
-.screenDone {
-    background: $cream;
-    padding: 28px 10px 0;
-    align-items: stretch;
-    text-align: left;
-}
-
-.meetsHeader {
-    font-family: $font-mono;
-    font-weight: 600;
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: $black;
-    padding: 0 4px 8px;
-}
-
-.meetsList {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex: 1;
-}
-
-.meetEntry {
-    width: 100%;
-    background: $white;
-    border: 2px solid $black;
-    border-radius: 10px;
-    padding: 8px 10px;
-    box-shadow: 3px 3px 0 rgba($black, 0.25);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    position: relative;
-}
-
-.meetEntryNew {
-    background: lighten($yellow, 10%);
-}
-
-.meetAvatar {
-    width: 28px;
-    height: 28px;
-    flex: 0 0 28px;
-    border-radius: 50%;
-    background: $purple;
-    color: $white;
-    border: 2px solid $black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: $font-mono;
-    font-weight: 600;
-    font-size: 0.8rem;
-}
-
+.screenDone { background: $cream; padding: 28px 10px 0; align-items: stretch; text-align: left; }
+.meetsHeader { font-family: $font-mono; font-weight: 600; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; color: $black; padding: 0 4px 8px; }
+.meetsList { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.meetEntry { width: 100%; background: $white; border: 2px solid $black; border-radius: 10px; padding: 8px 10px; box-shadow: 3px 3px 0 rgba($black, 0.25); display: flex; align-items: center; gap: 10px; position: relative; }
+.meetEntryNew { background: lighten($yellow, 10%); }
+.meetAvatar { width: 28px; height: 28px; flex: 0 0 28px; border-radius: 50%; background: $purple; color: $white; border: 2px solid $black; display: flex; align-items: center; justify-content: center; font-family: $font-mono; font-weight: 600; font-size: 0.8rem; }
 .meetAvatarOrange { background: $orange; }
 .meetAvatarPurple { background: $purple; }
 .meetAvatarPink   { background: $pink; }
+.meetMeta { display: flex; flex-direction: column; line-height: 1.2; flex: 1; min-width: 0; strong { font-family: $font-mono; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: $black; } span { font-family: $font-mono; font-weight: 500; font-size: 0.6rem; color: $dark-gray; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } }
+.newDot { width: 8px; height: 8px; border-radius: 50%; background: $neon-green; border: 1.5px solid $black; flex-shrink: 0; }
 
-.meetMeta {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-    flex: 1;
-    min-width: 0;
+// ── Mini BottomNav ────────────────────────────────────────────
+.miniNav { margin-top: auto; width: calc(100% + 24px); margin-left: -12px; margin-right: -12px; padding: 8px 12px; background: $cream; border-top: 2px solid $black; display: flex; align-items: center; justify-content: space-around; }
+.miniNavDark { background: #0F0E2E; border-top-color: rgba($white, 0.15); }
+.miniNavItem { display: inline-flex; align-items: center; justify-content: center; padding: 4px 6px; border-radius: 6px; opacity: 0.85; }
+.miniNavActive { background: rgba($orange, 0.18); opacity: 1; }
 
-    strong {
-        font-family: $font-mono;
-        font-weight: 600;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: $black;
-    }
-
-    span {
-        font-family: $font-mono;
-        font-weight: 500;
-        font-size: 0.6rem;
-        color: $dark-gray;
-        margin-top: 2px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-}
-
-.newDot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: $neon-green;
-    border: 1.5px solid $black;
-    flex-shrink: 0;
-}
-
-// ── Mini BottomNav (used inside phone mockups) ────────────────
-.miniNav {
-    margin-top: auto;
-    width: calc(100% + 24px);
-    margin-left: -12px;
-    margin-right: -12px;
-    padding: 8px 12px;
-    background: $cream;
-    border-top: 2px solid $black;
-    display: flex;
+// ── How It Works layout ───────────────────────────────────────
+.howItWorksLayout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $space-3xl;
     align-items: center;
-    justify-content: space-around;
-}
-
-.miniNavDark {
-    background: #0F0E2E;
-    border-top-color: rgba($white, 0.15);
-}
-
-.miniNavItem {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px 6px;
-    border-radius: 6px;
-    opacity: 0.85;
-}
-
-.miniNavActive {
-    background: rgba($orange, 0.18);
-    opacity: 1;
-}
-
-.phoneCaption {
-    display: block;
-    text-align: center;
-    margin-top: $space-md;
-    font-family: $font-mono;
-    font-weight: 600;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: $black;
-    transform: rotate(calc(var(--tilt) * -1));
-}
-
-// ── Final CTA ─────────────────────────────────────────────────
-.finalCta {
-    position: relative;
-    text-align: center;
-    padding: clamp($space-3xl, 8vw, 96px) $space-lg;
-    padding-top: clamp(80px, 12vw, 128px);
-    margin: $space-2xl $space-md $space-3xl;
-    background: $orange;
-    color: $white;
-    border: $border-thick;
-    border-radius: 28px;
-    box-shadow: $shadow-xl;
-    max-width: 1040px;
-    overflow: hidden;
-
-    // Soft dotted overlay so it doesn't read as one solid block
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background-image: radial-gradient(rgba($black, 0.18) 1.5px, transparent 1.5px);
-        background-size: 28px 28px;
-        opacity: 0.55;
-        z-index: 0;
-    }
 
     @media (min-width: $mobile) {
-        margin: $space-3xl auto;
-    }
-
-    .ctaPrimary {
-        background: $black;
-        color: $white;
-
-        &:hover { box-shadow: 4px 4px 0 rgba($black, 0.4); }
+        grid-template-columns: 1fr 1fr;
+        gap: $space-2xl;
     }
 }
 
-// Lift content above the dotted overlay
-.finalCta .finalKicker,
-.finalCta .finalTitle,
-.finalCta .finalTagline,
-.finalCta .ctaPrimary {
-    position: relative;
-    z-index: 1;
+// ── Animated Phone Wrapper ────────────────────────────────────
+.animatedPhoneWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.finalKicker {
-    display: inline-block;
-    background: $black;
-    color: $yellow;
-    font-family: $font-mono;
-    font-weight: $weight-label;
-    font-size: $text-caption;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    padding: 6px 14px;
-    border-radius: 6px;
-    margin-bottom: $space-md;
+.animatedPhoneWrapper .phone {
+    --tilt: -2deg;
+    width: min(100%, 260px);
+    margin: 0 auto;
+    transform: rotate(var(--tilt));
+    animation: phoneFloat 5.5s ease-in-out infinite;
 }
 
-.finalTitle {
-    font-family: $font-mono;
-    font-weight: $weight-title;
-    font-size: clamp(2rem, 6vw, 3.25rem);
-    line-height: 1.05;
-    letter-spacing: -0.025em;
-    margin: 0 0 $space-md;
+.animatedPhoneWrapper .phoneScreen {
+    animation: screenFadeIn 0.4s ease-out;
 }
 
-.finalTagline {
-    font-family: $font-sans;
-    font-size: $text-lg;
-    font-weight: $weight-body;
-    line-height: 1.5;
-    margin: 0 auto $space-xl;
-    max-width: 36ch;
-    opacity: 0.95;
+@keyframes screenFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
-// ── Final CTA decorations ─────────────────────────────────────
-.finalDecor {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-}
-
-// ── Final CTA — flood of cropped greeting bubbles ─────────────
-// Each bubble peeks in from an edge. `.finalCta` has overflow:hidden so
-// they clip naturally at the rounded border.
-.finalBubble1,
-.finalBubble2,
-.finalBubble3,
-.finalBubble4,
-.finalBubble5,
-.finalBubble6,
-.finalBubble7,
-.finalBubble8,
-.finalBubble9,
-.finalBubble10,
-.finalBubble11,
-.finalBubble12,
-.finalBubble13,
-.finalBubble14,
-.finalBubble15,
-.finalBubble16,
-.finalBubble17,
-.finalBubble18,
-.finalBubble19,
-.finalBubble20,
-.finalBubble21,
-.finalBubble22,
-.finalBubble23,
-.finalBubble24,
-.finalBubble25,
-.finalBubble26,
-.finalBubble27,
-.finalBubble28,
-.finalBubble29,
-.finalBubble30 {
-    position: absolute;
-    z-index: 0;
-}
-
-// Top-left (cropped at top)
-.finalBubble1 {
-    top: -18px;
-    left: 8%;
-    background: $yellow;
-    color: $black;
-    transform: rotate(-8deg);
-    animation-delay: 0.2s;
-    &::after { border-top-color: $yellow; }
-}
-
-// Top edge, right of center (cropped at top)
-.finalBubble2 {
-    top: -20px;
-    right: 16%;
-    background: $pink;
-    color: $white;
-    transform: rotate(6deg);
-    animation-delay: 1.6s;
-    &::after { border-top-color: $pink; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Left edge (cropped on left)
-.finalBubble3 {
-    top: 28%;
-    left: -28px;
-    background: $neon-green;
-    color: $black;
-    transform: rotate(-12deg);
-    animation-delay: 2.4s;
-    &::after { border-top-color: $neon-green; }
-}
-
-// Right edge upper
-.finalBubble4 {
-    top: 22%;
-    right: -30px;
-    background: $white;
-    color: $black;
-    transform: rotate(8deg);
-    animation-delay: 0.9s;
-    &::after { border-top-color: $white; }
-}
-
-// Right edge lower
-.finalBubble5 {
-    bottom: 26%;
-    right: -32px;
-    background: $orange-light;
-    color: $white;
-    transform: rotate(-6deg);
-    animation-delay: 3.1s;
-    &::after { border-top-color: $orange-light; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Left edge lower
-.finalBubble6 {
-    bottom: 24%;
-    left: -26px;
-    background: $purple;
-    color: $white;
-    transform: rotate(6deg);
-    animation-delay: 1.2s;
-    &::after { border-top-color: $purple; }
-}
-
-// Bottom edge, left of center
-.finalBubble7 {
-    bottom: -18px;
-    left: 14%;
-    background: $pink;
-    color: $white;
-    transform: rotate(-6deg);
-    animation-delay: 2.6s;
-    &::after { border-top-color: $pink; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Bottom edge, right of center
-.finalBubble8 {
-    bottom: -16px;
-    right: 10%;
-    background: $yellow;
-    color: $black;
-    transform: rotate(10deg);
-    animation-delay: 0.5s;
-    &::after { border-top-color: $yellow; }
-}
-
-// Centerpiece "Let's go!" — fully visible, sits inside near top-right
-.finalBubble9 {
-    top: 4%;
-    right: 6%;
-    background: $purple;
-    color: $white;
-    transform: rotate(8deg);
-    animation:
-        bubbleFadeIn 0.6s $ease-out-expo 0.4s both,
-        floatGentle 4.5s ease-in-out 1s infinite;
-    &::after { border-top-color: $purple; }
-
-    @media (max-width: 480px) {
-        top: -6px;
-        right: 4%;
+@media (max-width: #{$mobile - 1px}) {
+    .howItWorksLayout {
+        .steps { grid-row: 1; }
+        .animatedPhoneWrapper { grid-row: 2; }
     }
-}
-
-// Top edge, far-right (cropped at top)
-.finalBubble10 {
-    top: -16px;
-    right: 4%;
-    background: $neon-green;
-    color: $black;
-    transform: rotate(-4deg);
-    animation-delay: 1.9s;
-    &::after { border-top-color: $neon-green; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Left edge middle
-.finalBubble11 {
-    top: 50%;
-    left: -30px;
-    background: $yellow;
-    color: $black;
-    transform: rotate(4deg);
-    animation-delay: 0.7s;
-    &::after { border-top-color: $yellow; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Right edge middle
-.finalBubble12 {
-    top: 48%;
-    right: -34px;
-    background: $pink;
-    color: $white;
-    transform: rotate(-8deg);
-    animation-delay: 2.8s;
-    &::after { border-top-color: $pink; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Bottom edge, far left (cropped at bottom)
-.finalBubble13 {
-    bottom: -20px;
-    left: 4%;
-    background: $white;
-    color: $black;
-    transform: rotate(-10deg);
-    animation-delay: 1.4s;
-    &::after { border-top-color: $white; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Bottom edge, far right (cropped at bottom)
-.finalBubble14 {
-    bottom: -18px;
-    right: 38%;
-    background: $orange-light;
-    color: $white;
-    transform: rotate(6deg);
-    animation-delay: 3.4s;
-    &::after { border-top-color: $orange-light; }
-}
-
-// Inside bubbles — sit in the side gutters next to the centered content.
-// Desktop only (hidden on mobile where there's no horizontal room).
-.finalBubble15 {
-    top: 28%;
-    left: 8%;
-    background: $neon-green;
-    color: $black;
-    transform: rotate(-10deg);
-    animation-delay: 1.1s;
-    &::after { border-top-color: $neon-green; }
-
-    @media (max-width: 720px) { display: none; }
-}
-
-.finalBubble16 {
-    top: 30%;
-    right: 12%;
-    background: $yellow;
-    color: $black;
-    transform: rotate(8deg);
-    animation-delay: 2.2s;
-    &::after { border-top-color: $yellow; }
-
-    @media (max-width: 720px) { display: none; }
-}
-
-.finalBubble17 {
-    bottom: 28%;
-    left: 10%;
-    background: $pink;
-    color: $white;
-    transform: rotate(6deg);
-    animation-delay: 0.6s;
-    &::after { border-top-color: $pink; }
-
-    @media (max-width: 720px) { display: none; }
-}
-
-.finalBubble18 {
-    bottom: 30%;
-    right: 8%;
-    background: $purple;
-    color: $white;
-    transform: rotate(-8deg);
-    animation-delay: 3.0s;
-    &::after { border-top-color: $purple; }
-
-    @media (max-width: 720px) { display: none; }
-}
-
-// Top edge, center (cropped at top)
-.finalBubble19 {
-    top: -20px;
-    left: 38%;
-    background: $purple;
-    color: $white;
-    transform: rotate(-4deg);
-    animation-delay: 0.4s;
-    &::after { border-top-color: $purple; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Bottom edge, right of center (cropped at bottom)
-.finalBubble20 {
-    bottom: -18px;
-    right: 28%;
-    background: $neon-green;
-    color: $black;
-    transform: rotate(-8deg);
-    animation-delay: 2.1s;
-    &::after { border-top-color: $neon-green; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Left edge, very top
-.finalBubble21 {
-    top: 10%;
-    left: -32px;
-    background: $white;
-    color: $black;
-    transform: rotate(10deg);
-    animation-delay: 1.7s;
-    &::after { border-top-color: $white; }
-}
-
-// Right edge, very bottom
-.finalBubble22 {
-    bottom: 10%;
-    right: -28px;
-    background: $yellow;
-    color: $black;
-    transform: rotate(-6deg);
-    animation-delay: 0.3s;
-    &::after { border-top-color: $yellow; }
-}
-
-// Right edge, mid-upper
-.finalBubble23 {
-    top: 38%;
-    right: -38px;
-    background: $orange-light;
-    color: $white;
-    transform: rotate(8deg);
-    animation-delay: 2.9s;
-    &::after { border-top-color: $orange-light; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Left edge, mid-lower
-.finalBubble24 {
-    bottom: 38%;
-    left: -34px;
-    background: $pink;
-    color: $white;
-    transform: rotate(-12deg);
-    animation-delay: 1.0s;
-    &::after { border-top-color: $pink; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Gutter, lower-left (inside the card)
-.finalBubble25 {
-    top: 62%;
-    left: 6%;
-    background: $orange-light;
-    color: $white;
-    transform: rotate(-6deg);
-    animation-delay: 0.8s;
-    &::after { border-top-color: $orange-light; }
-
-    @media (max-width: 720px) { display: none; }
-}
-
-// Gutter, mid-right (inside the card)
-.finalBubble26 {
-    top: 42%;
-    right: 6%;
-    background: $white;
-    color: $black;
-    transform: rotate(8deg);
-    animation-delay: 2.5s;
-    &::after { border-top-color: $white; }
-
-    @media (max-width: 720px) { display: none; }
-}
-
-// Top edge, right-center (cropped at top)
-.finalBubble27 {
-    top: -18px;
-    right: 32%;
-    background: $orange-light;
-    color: $white;
-    transform: rotate(6deg);
-    animation-delay: 1.3s;
-    &::after { border-top-color: $orange-light; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Bottom edge, left-center (cropped at bottom)
-.finalBubble28 {
-    bottom: -16px;
-    left: 28%;
-    background: $purple;
-    color: $white;
-    transform: rotate(-8deg);
-    animation-delay: 2.7s;
-    &::after { border-top-color: $purple; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Right edge, very upper (cropped on right)
-.finalBubble29 {
-    top: 14%;
-    right: -32px;
-    background: $neon-green;
-    color: $black;
-    transform: rotate(-6deg);
-    animation-delay: 0.5s;
-    &::after { border-top-color: $neon-green; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-// Left edge, lower (cropped on left)
-.finalBubble30 {
-    bottom: 14%;
-    left: -30px;
-    background: $yellow;
-    color: $black;
-    transform: rotate(10deg);
-    animation-delay: 3.2s;
-    &::after { border-top-color: $yellow; }
-
-    @media (max-width: 480px) { display: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .finalBubble1,
-    .finalBubble2,
-    .finalBubble3,
-    .finalBubble4,
-    .finalBubble5,
-    .finalBubble6,
-    .finalBubble7,
-    .finalBubble8,
-    .finalBubble9,
-    .finalBubble10,
-    .finalBubble11,
-    .finalBubble12,
-    .finalBubble13,
-    .finalBubble14,
-    .finalBubble15,
-    .finalBubble16,
-    .finalBubble17,
-    .finalBubble18,
-    .finalBubble19,
-    .finalBubble20,
-    .finalBubble21,
-    .finalBubble22,
-    .finalBubble23,
-    .finalBubble24,
-    .finalBubble25,
-    .finalBubble26,
-    .finalBubble27,
-    .finalBubble28,
-    .finalBubble29,
-    .finalBubble30 { animation: none !important; }
-}
-
-// ── Footer ────────────────────────────────────────────────────
-.footer {
-    text-align: center;
-    padding: $space-xl $space-lg $space-2xl;
-    font-family: $font-mono;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    color: $medium-gray;
-    text-transform: uppercase;
 }
 
 // ══════════════════════════════════════════════════════════════
-// Scroll-reveal: sections fade their children up sequentially
-// once ~12% of the section enters the viewport.
+// Scroll-reveal
 // ══════════════════════════════════════════════════════════════
 
 .section {
     .sectionHead,
-    .sectionHeadLeft,
     .steps > .step,
     .features > .feature {
         opacity: 0;
         transform: translateY(28px);
-        transition:
-            opacity 0.7s $ease-out-expo,
-            transform 0.7s $ease-out-expo;
-    }
-
-    // Phones keep their tilt+float — entrance is opacity-only.
-    .phones > .phone {
-        opacity: 0;
-        transition: opacity 0.7s $ease-out-expo;
+        transition: opacity 0.7s $ease-out-expo, transform 0.7s $ease-out-expo;
     }
 }
 
+.section .animatedPhoneWrapper {
+    opacity: 0;
+    transition: opacity 0.7s $ease-out-expo 0.3s;
+}
+
 .isVisible {
-    .sectionHead,
-    .sectionHeadLeft {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    .sectionHead { opacity: 1; transform: translateY(0); }
 
     .steps > .step,
-    .features > .feature {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    .features > .feature { opacity: 1; transform: translateY(0); }
 
     .steps > .step:nth-child(1),
     .features > .feature:nth-child(1) { transition-delay: 0.15s; }
@@ -1812,42 +654,20 @@
     .steps > .step:nth-child(3),
     .features > .feature:nth-child(3) { transition-delay: 0.39s; }
     .features > .feature:nth-child(4)  { transition-delay: 0.51s; }
-
-    .phones > .phone { opacity: 1; }
-    .phones > .phone:nth-child(1) { transition-delay: 0.15s; }
-    .phones > .phone:nth-child(2) { transition-delay: 0.32s; }
-    .phones > .phone:nth-child(3) { transition-delay: 0.49s; }
 }
 
-// Final CTA also reveals when it scrolls into view
-.finalCta {
-    opacity: 0;
-    transform: translateY(20px);
-    transition:
-        opacity 0.7s $ease-out-expo,
-        transform 0.7s $ease-out-expo;
-}
+.isVisible .animatedPhoneWrapper { opacity: 1; }
 
-.finalCta.isVisible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-// Reduced-motion: skip all the choreography
 @media (prefers-reduced-motion: reduce) {
-    .appIcon,
-    .kicker,
-    .title,
-    .tagline,
-    .ctaRow,
-    .bubble { animation: none !important; }
+    .animatedPhoneWrapper .phone { animation: none; }
+    .animatedPhoneWrapper .phoneScreen { animation: none; }
+    .section .animatedPhoneWrapper { opacity: 1 !important; transition: none !important; }
+
+    .appIcon, .kicker, .title, .tagline, .ctaRow, .bubble { animation: none !important; }
 
     .section .sectionHead,
-    .section .sectionHeadLeft,
     .section .steps > .step,
-    .section .features > .feature,
-    .section .phones > .phone,
-    .finalCta {
+    .section .features > .feature {
         opacity: 1 !important;
         transform: none !important;
         transition: none !important;

@@ -15,7 +15,7 @@ $orange: #F5722F;
 $dark-orange: #CC4A20;
 $white: #ffffff;
 $off-white: #FFFBF5;
-$black: #0C098C;
+$black: #080666;
 // Navy-tinted grays so all body/muted text stays in the dark-blue family.
 $gray: rgba($black, 0.6);
 $dark-gray: rgba($black, 0.75);
@@ -81,28 +81,22 @@ $space-2xl: 48px;
 $space-3xl: 64px;
 
 // ── Border Radius ─────────────────────────────────────────────
-$radius-sm: 0.5rem;
-$radius-md: 0.75rem;
-$radius-lg: 1rem;
+$radius-sm: 4px;
+$radius-md: 6px;
+$radius-lg: 8px;
 $radius-full: 50%;
 
 // ── Borders (Neobrutalism) ────────────────────────────────────
-$border-thin: 2px solid $black;
-$border-medium: 3px solid $black;
-$border-thick: 4px solid $black;
-$border-extra-thick: 5px solid $black;
+$border-thin: 1.5px solid $black;
+$border-medium: 2px solid $black;
+$border-thick: 3px solid $black;
+$border-extra-thick: 4px solid $black;
 
 // ── Shadows ───────────────────────────────────────────────────
-// Brutal/flat shadows (neobrutalism) — colored to match stroke (#0C098C navy).
-$shadow-small: 5px 5px 0px rgba(12, 9, 140, 0.25);
-$shadow-medium: 7px 7px 0px rgba(12, 9, 140, 0.3);
-$shadow-large: 10px 10px 0px rgba(12, 9, 140, 0.35);
-$shadow-xl: 14px 14px 0px $black;
-
-// Soft shadows (for when you need them)
-$shadow-soft-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-$shadow-soft-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-$shadow-soft-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+$shadow-small: 5px 5px 0px rgba(12, 9, 140, 0.2);
+$shadow-medium: 6px 6px 0px rgba(12, 9, 140, 0.25);
+$shadow-large: 8px 8px 0px rgba(12, 9, 140, 0.28);
+$shadow-xl: 12px 12px 0px rgba(12, 9, 140, 0.3);
 
 // ── Transitions ───────────────────────────────────────────────
 $transition-fast: 0.2s ease;
@@ -256,22 +250,20 @@ $z-toast: 500;
     width: 100%;
     background: $white;
     border: $border-medium;
-    border-radius: 10px;
+    border-radius: 6px;
     padding: 14px 16px;
     font-family: $font-mono;
     font-size: 1rem;
     font-weight: 600;
     color: $black;
-    box-shadow: inset 2px 2px 0 rgba($black, 0.1);
+    box-shadow: $shadow-small;  // ← change from inset to offset shadow
     transition: all $transition-fast;
     box-sizing: border-box;
 
     &:focus {
         outline: none;
         border-color: $orange;
-        box-shadow:
-            inset 2px 2px 0 rgba($black, 0.1),
-            0 0 0 3px rgba($orange, 0.25);
+        box-shadow: $shadow-medium;  // ← bigger on focus
         transform: translate(-1px, -1px);
     }
 

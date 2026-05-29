@@ -26,8 +26,8 @@
 }
 
 @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
+    from { transform: translateY(100%); opacity: 0.6; }
+    to   { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes slideDown {
@@ -48,11 +48,11 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    animation: slideUp 0.3s ease-out;
+    animation: slideUp 0.35s ease-out;
 }
 
 .drawerClosing {
-    animation: slideDown 0.28s ease-in forwards;
+    animation: slideDown 0.22s ease-in forwards;
 }
 
 .header {

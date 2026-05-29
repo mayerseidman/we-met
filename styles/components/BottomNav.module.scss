@@ -7,46 +7,43 @@
     right: 0;
     display: flex;
     align-items: center;
-    justify-content: space-around; // Changed: distribute items evenly without forcing 33% width
+    justify-content: space-around;
     padding: $spacing-sm;
     height: 80px;
     background-color: $cream;
-    border-top: 4px solid $black;
-    box-shadow: 0 -3px 0 rgba($black, 0.08);
+    border-top: 2px solid rgba($black, 0.15);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
     transition: transform $transition-slow;
     z-index: 1000;
 
     &.hidden {
         transform: translateY(100%);
     }
-
     &.visible {
         transform: translateY(0);
     }
     &.slideOut {
-        transform: translateY(100%); // Slide down out of view
+        transform: translateY(100%);
     }
 }
 
 .navItem {
-    // Removed: width: 33.333%; flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-decoration: none;
-    color: $black;
     gap: 0.125rem;
     font-family: $font-mono;
     font-weight: bold;
     cursor: pointer;
-    padding: $spacing-xs $spacing-md; // Added: padding around content for better hit area
+    padding: $spacing-xs $spacing-md;
 
     &.active {
-        color: var(--active-color, $orange);
+        color: $orange;
     }
 
     &.inactive {
-        color: $medium-gray;
+        color: rgba($black, 0.55);
         transition: all 0.2s ease;
 
         &:hover {
@@ -55,19 +52,19 @@
         }
     }
 
-    // Prevent any hover/active browser states
     &:hover,
     &:active,
     &:focus {
         outline: none;
     }
 
-    img, svg {
-        width: 30px;
-        height: 30px;
+    svg {
+        width: 28px;
+        height: 28px;
         display: block;
         flex-shrink: 0;
         pointer-events: none;
+
         @media (max-width: 480px) {
             width: 26px;
             height: 26px;
@@ -76,13 +73,15 @@
     }
 
     .label {
-        font-size: 16px;
+        font-size: 11px;
         text-align: center;
         white-space: nowrap;
         pointer-events: none;
         user-select: none;
+        letter-spacing: 0.5px;
+
         @media (max-width: 480px) {
-            font-size: 14px;
+            font-size: 10px;
         }
     }
 }

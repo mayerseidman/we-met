@@ -37,16 +37,12 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    animation: slideUp 0.3s ease-out;
+    animation: slideUp 0.35s ease-out;
 }
 
 @keyframes slideUp {
-    from {
-        transform: translateY(100%);
-    }
-    to {
-        transform: translateY(0);
-    }
+    from { transform: translateY(100%); opacity: 0.6; }
+    to   { transform: translateY(0); opacity: 1; }
 }
 
 // ── Header ────────────────────────────────────────────────────
@@ -175,4 +171,22 @@
         height: 24px;
         color: $orange;
     }
+}
+
+.backdropClosing {
+    animation: fadeOut 0.28s ease-in forwards;
+}
+
+.drawerClosing {
+    animation: slideDown 0.28s ease-in forwards;
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(0); }
+    to   { transform: translateY(100%); }
 }

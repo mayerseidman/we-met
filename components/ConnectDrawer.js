@@ -1,9 +1,5 @@
+import { useState } from "react";
 import styles from "../styles/components/ConnectDrawer.module.scss";
-
-// ══════════════════════════════════════════════════════════════
-// ConnectDrawer Component
-// ══════════════════════════════════════════════════════════════
-// Modal drawer overlay with Show QR and Scan QR action choices
 
 const ACTIONS = [
     {
@@ -21,30 +17,34 @@ const ACTIONS = [
 ];
 
 export default function ConnectDrawer({ onSelectAction, onClose }) {
+    const [closing, setClosing] = useState(false);
+
+    const handleClose = () => {
+        setClosing(true);
+        setTimeout(onClose, 280);
+    };
+
+    const handleSelect = (id) => {
+        setClosing(true);
+        setTimeout(() => onSelectAction(id), 280);
+    };
+
     return (
         <>
-            {/* Backdrop */}
-            <div className={styles.backdrop} onClick={onClose} />
-            
-            {/* Drawer */}
-            <div className={styles.drawer}>
+            <div className={`${styles.backdrop} ${closing ? styles.backdropClosing : ''}`} onClick={handleClose} />
+            <div className={`${styles.drawer} ${closing ? styles.drawerClosing : ''}`}>
                 <div className={styles.header}>
                     <h2 className={styles.title}>Connect</h2>
-                    <button
-                        className={styles.closeButton}
-                        onClick={onClose}
-                        aria-label="Close"
-                    >
+                    <button className={styles.closeButton} onClick={handleClose} aria-label="Close">
                         <img src="/icons/pop/close.svg" alt="" width={20} height={20} />
                     </button>
                 </div>
-
                 <div className={styles.actions}>
                     {ACTIONS.map((action) => (
                         <ActionCard
                             key={action.id}
                             action={action}
-                            onClick={() => onSelectAction(action.id)}
+                            onClick={() => handleSelect(action.id)}
                         />
                     ))}
                 </div>
@@ -52,8 +52,6 @@ export default function ConnectDrawer({ onSelectAction, onClose }) {
         </>
     );
 }
-
-// ── Sub-components ────────────────────────────────────────────
 
 const ActionCard = ({ action, onClick }) => (
     <button className={styles.actionCard} onClick={onClick}>

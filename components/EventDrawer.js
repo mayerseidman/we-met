@@ -17,7 +17,7 @@ export default function EventDrawer({ selectedEvent, onSelect, onClose }) {
 
     const handleClose = () => {
         setClosing(true);
-        setTimeout(onClose, 280);
+        setTimeout(onClose, 220);
     };
 
     const handleSelect = (label) => {
@@ -25,7 +25,7 @@ export default function EventDrawer({ selectedEvent, onSelect, onClose }) {
         setTimeout(() => {
             onSelect(label);
             onClose();
-        }, 280);
+        }, 220);
     };
 
     return (
