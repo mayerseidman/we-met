@@ -4,7 +4,7 @@
 // Service worker — caches static assets for offline use.
 // Keeps the app working at festivals with no signal.
 
-const CACHE_NAME = 'we-met-v1'
+const CACHE_NAME = 'we-met-v5'
 
 const STATIC_ASSETS = [
     '/',
@@ -17,13 +17,22 @@ const STATIC_ASSETS = [
 ]
 
 // Install — cache static assets
-self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(STATIC_ASSETS)
-        })
+self.addEventListener('fetch', (event) => {
+    if (event.request.method !== 'GET') return
+    if (!event.request.url.startsWith(self.location.origin)) return
+    if (event.request.url.includes('supabase.co')) return
+
+    // Skip scan page — needs live camera
+    if (event.request.url.includes('connect?tab=scan')) return
+    if (event.request.url.includes('hot-update')) return
+
+    const isHTML = event.request.headers.get('accept')?.includes('text/html')
+
+    event.respondWith(
+        isHTML
+            ? fetch(event.request).catch(() => caches.match(event.request))  // network-first for pages
+            : caches.match(event.request).then(cached => cached || fetch(event.request))  // cache-first for assets
     )
-    self.skipWaiting()
 })
 
 // Activate — clean up old caches
