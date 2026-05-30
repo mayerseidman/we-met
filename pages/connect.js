@@ -176,9 +176,8 @@ export default function ConnectPage({ onDropdownToggle }) {
         <div className={`${styles.page} ${activeTab === 'scan' ? styles['page--scan'] : ''}`}>
             {activeTab !== 'scan' && <Header />}
 
-            {/* DEV MODE — remove process.env check before launch to hide in production */}
-            {/* {process.env.NODE_ENV === "development" && */}
-            {activeTab === "show" && (
+            {/* DEV MODE ONLY — hidden in production */}
+            {process.env.NODE_ENV === "development" && activeTab === "show" && (
                 <DevModeToggle
                     devMode={devMode}
                     setDevMode={(updated) => {
@@ -190,9 +189,8 @@ export default function ConnectPage({ onDropdownToggle }) {
                 />
             )}
 
-            {/* DEV MODE — remove process.env check before launch to hide in production */}
-            {/* {process.env.NODE_ENV === "development" && */}
-            {activeTab === "scan" && (
+            {/* DEV MODE ONLY — hidden in production */}
+            {process.env.NODE_ENV === "development" && activeTab === "scan" && (
                 <DevModeToggle
                     devMode={scanDevMode}
                     setDevMode={(updated) => {
@@ -250,8 +248,8 @@ export default function ConnectPage({ onDropdownToggle }) {
                 )}
             </div>
 
-            {/* Dev mode modals */}
-            {scanDevMode.scanSuccess && (
+            {/* Dev mode modals — development only */}
+            {process.env.NODE_ENV === "development" && scanDevMode.scanSuccess && (
                 <ScanSuccessModal
                     name="Alejandro Vizio"
                     photo={DEV_PHOTO}
@@ -259,7 +257,7 @@ export default function ConnectPage({ onDropdownToggle }) {
                     isMobile={isMobile}
                 />
             )}
-            {scanDevMode.alreadyConnected && (
+            {process.env.NODE_ENV === "development" && scanDevMode.alreadyConnected && (
                 <AlreadyConnectedModal
                     name="Big Maestro"
                     daysAgo={3}
