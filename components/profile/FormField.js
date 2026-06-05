@@ -1,10 +1,11 @@
+import { useRef } from 'react';
 import { isValidPhone } from '../../constants/constants';
 import styles from '../../styles/pages/Profile.module.scss';
 
 const FormField = ({ field, value, onChange, showError, onBlur }) => {
     const { name, label, type, placeholder, required, errorMessage, invalidMessage, icon } = field;
+    const textareaRef = useRef(null);
     
-    // Enhanced validation logic
     let hasError = false;
     let displayMessage = errorMessage;
     
@@ -24,6 +25,11 @@ const FormField = ({ field, value, onChange, showError, onBlur }) => {
     
     const inputClassName = hasError ? styles.error : '';
 
+    const handleTextareaInput = (e) => {
+        e.target.style.height = 'auto';
+        e.target.style.height = e.target.scrollHeight + 'px';
+    };
+
     if (type === 'textarea') {
         return (
             <div className={styles.formGroup}>
@@ -32,18 +38,17 @@ const FormField = ({ field, value, onChange, showError, onBlur }) => {
                     {required && <span className={styles.required}>*</span>}
                 </label>
                 <textarea
+                    ref={textareaRef}
                     name={name}
                     value={value}
                     onChange={onChange}
+                    onInput={handleTextareaInput}
                     required={required}
                     placeholder={placeholder}
                     className={inputClassName}
                 />
                 {hasError && displayMessage && (
-                    <div className={styles.errorMessage}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path>
-                        </svg>
+                    <div className={styles.errorMessage}>                            
                         {displayMessage}
                     </div>
                 )}
@@ -88,9 +93,6 @@ const FormField = ({ field, value, onChange, showError, onBlur }) => {
             />
             {hasError && displayMessage && (
                 <div className={styles.errorMessage}>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path>
-                    </svg>
                     {displayMessage}
                 </div>
             )}

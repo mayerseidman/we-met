@@ -31,7 +31,6 @@
 }
 
 // ── Hero ──────────────────────────────────────────────────────
-// FIX #3: Reduced max-height so there's less gap before next section
 .hero {
     position: relative;
     min-height: 580px;
@@ -40,8 +39,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: $space-2xl $space-lg $space-3xl;
+    padding: $space-2xl $space-lg $space-xl;
     overflow: hidden;
+
+    @media (max-width: 480px) {
+        height: 100dvh;
+        min-height: 100dvh;
+        max-height: unset;
+        padding-bottom: $space-md;
+    }
 }
 
 .heroDecor {
@@ -102,8 +108,8 @@
     }
 }
 
-.bubble1  { top: 10%; left: 14%; animation-delay: 0s; transform: rotate(-6deg); }
-.bubble2  { top: 14%; right: 16%; animation-delay: 1.5s; transform: rotate(4deg); background: $yellow; &::after { border-top-color: $yellow; } }
+.bubble1  { top: 10%; left: 14%; animation-delay: 0s; transform: rotate(-6deg); @media (max-width: 350px) { display: none; } @media (min-width: 351px) and (max-width: 480px) { top: 12%; left: 6%; } }
+.bubble2  { top: 14%; right: 16%; animation-delay: 1.5s; transform: rotate(4deg); background: $yellow; &::after { border-top-color: $yellow; } @media (max-width: 350px) { display: none; } @media (min-width: 351px) and (max-width: 480px) { top: 14%; right: 12%; } }
 .bubble3  { top: 34%; left: 12%; animation-delay: 2.4s; transform: rotate(-3deg); background: $neon-green; color: $black; &::after { border-top-color: $neon-green; } display: none; @media (min-width: $mobile) { display: inline-flex; } }
 .bubble4  { top: 30%; right: 14%; animation-delay: 0.9s; transform: rotate(5deg); background: $pink; color: $white; &::after { border-top-color: $pink; } display: none; @media (min-width: $mobile) { display: inline-flex; } }
 .bubble5  { top: 54%; left: 16%; animation-delay: 3.1s; transform: rotate(-4deg); background: $orange-light; color: $white; &::after { border-top-color: $orange-light; } display: none; @media (min-width: $mobile) { display: inline-flex; } }
@@ -120,18 +126,33 @@
     animation: floatGentle 6s ease-in-out infinite;
 }
 
-.heart3       { bottom: 6%; left: 48%; animation-delay: 1.4s; transform: rotate(-12deg); @media (max-width: 480px) { display: none; } }
-.cropTopRight { top: 8px; right: 8px; animation-delay: 0.4s; transform: rotate(18deg); }
-.cropBottomLeft { bottom: 8px; left: 6px; animation-delay: 1.8s; transform: rotate(-22deg); }
+.heart3       { bottom: 9%; left: 80%; animation-delay: 1.4s; transform: rotate(-12deg); @media (max-width: 350px) { display: none; } }
+
+.cropTopRight { 
+    top: 24px; 
+    right: 40px; 
+    animation-delay: 0.4s; 
+    transform: rotate(18deg);
+    @media (max-width: 350px) { display: none; }
+}
+.cropBottomLeft { 
+    bottom: 60px; 
+    left: 60px; 
+    animation-delay: 1.8s; 
+    transform: rotate(-22deg);
+    @media (max-width: 350px) { display: none; }
+}
+
 .starMid      { top: 48%; left: 2%; animation-delay: 2.5s; transform: rotate(8deg); @media (max-width: 480px) { display: none; } }
 
 .floatHeart {
     position: absolute;
     animation: floatGentle 5s ease-in-out infinite;
     display: block;
+    @media (max-width: 350px) { display: none; };
 }
 
-.heart1 { top: 4%; left: 48%; animation-delay: 0.7s; transform: rotate(12deg); }
+.heart1 { top: 6%; left: 48%; animation-delay: 0.7s; transform: rotate(12deg); @media (max-width: 350px) { display: none; } }
 .heart2 { top: 48%; right: 2%; animation-delay: 2s; transform: rotate(-8deg); @media (max-width: 480px) { display: none; } }
 
 @keyframes floatGentle {
@@ -140,12 +161,19 @@
     66%      { transform: translateY(-6px) translateX(-4px); }
 }
 
+// ── Mobile section divider — shown only on mobile ─────────────
+// Replaces the cropTopRight/cropBottomLeft icons that overlap buttons at small sizes
+
+
 // ── Section decorations (symbol-only, no text bubbles) ────────
 .sectionDecor {
     position: absolute;
     inset: 0;
     pointer-events: none;
     z-index: 3;
+    @media (max-width: 480px) {
+        display: none;
+    }
 }
 
 .section {
@@ -153,18 +181,28 @@
     overflow: hidden;
 }
 
+.sectionFirst {
+    @media (max-width: 480px) {
+        margin-top: -48px !important;
+        padding-top: 0px !important;
+    }
+}
+
 .sectionHead, .steps, .features, .phones, .demoFrames, .howItWorksLayout {
     position: relative;
     z-index: 1;
 }
 
-// FIX #4: Scatter icons — more varied positions, not just corners
-.scatterHeartA { top: 8%; left: 3%; transform: rotate(-14deg); animation-delay: 1.3s; }
-.scatterStarA  { bottom: 12%; right: 4%; transform: rotate(20deg); animation-delay: 2.8s; }
-.cropLeftMid   { top: 42%; left: 2%; transform: rotate(-25deg); animation-delay: 1.5s; }
+.scatterHeartA { 
+    top: 8%; left: 3%; transform: rotate(-14deg); animation-delay: 1.3s; 
+}
+.scatterStarA  { bottom: 35%; right: 1%; transform: rotate(20deg); animation-delay: 2.8s; }
+
+
+.cropLeftMid   { top: 25%; left: 1%; transform: rotate(-25deg); animation-delay: 1.5s; }
 
 .scatterHeartB { top: 6%; right: 3%; transform: rotate(16deg); animation-delay: 2.1s; }
-.scatterStarB  { bottom: 8%; left: 4%; transform: rotate(-18deg); animation-delay: 0.8s; }
+.scatterStarB  { top: 12%; left: 3%; transform: rotate(-18deg); animation-delay: 0.8s; }
 .scatterFlashB { top: 45%; right: 2%; transform: rotate(22deg); animation-delay: 2.1s; }
 .scatterHeartC { bottom: 6%; right: 3%; transform: rotate(-12deg); animation-delay: 1.5s; }
 
@@ -212,16 +250,46 @@
     animation: cardIconBounce 0.55s $ease-out-expo;
 }
 
+.featureIcon img {
+    animation: floatSubtle 4s ease-in-out infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+.feature:nth-child(1) .featureIcon img { animation-delay: 0s; }
+.feature:nth-child(2) .featureIcon img { animation-delay: 0.6s; }
+.feature:nth-child(3) .featureIcon img { animation-delay: 1.2s; }
+.feature:nth-child(4) .featureIcon img { animation-delay: 1.8s; }
+
 @media (prefers-reduced-motion: reduce) {
     .appIconEager img,
     .step:hover .stepIcon img,
     .feature:hover .featureIcon img { animation: none !important; }
 }
 
+.stepIcon img {
+    animation: floatSubtle 4s ease-in-out infinite;
+    
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+.step:nth-child(1) .stepIcon img { animation-delay: 0s; }
+.step:nth-child(2) .stepIcon img { animation-delay: 0.8s; }
+.step:nth-child(3) .stepIcon img { animation-delay: 1.6s; }
+
+@keyframes floatSubtle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
 .kicker {
     display: inline-block;
     background: $black;
-    color: $yellow;
+    color: $neon-green;
     font-family: $font-mono;
     font-weight: $weight-label;
     font-size: $text-caption;
@@ -249,9 +317,12 @@
     font-weight: $weight-body;
     line-height: 1.55;
     color: $dark-gray;
-    margin: 0 auto $space-xl;
+    margin: 0 auto 40px;
     max-width: 38ch;
     animation: heroFadeUp 0.55s $ease-out-expo 0.6s both;
+    @media (max-width: 480px) {
+        max-width: 25ch;
+    }
 }
 
 .ctaRow {
@@ -261,6 +332,12 @@
     align-items: center;
     gap: $space-md;
     animation: heroFadeUp 0.55s $ease-out-expo 0.75s both;
+
+    @media (max-width: 480px) {
+        flex-direction: column;
+        width: 100%;
+        padding: 0 $space-md;
+    }
 }
 
 .ctaPrimary {
@@ -278,36 +355,70 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
-    box-shadow: $shadow-large;
+    box-shadow: $shadow-medium;
     transition: all $transition-fast;
     white-space: nowrap;
 
     &::after { content: '→'; font-size: 1.2em; line-height: 1; transition: transform $transition-fast; }
     &:hover { transform: translate(2px, 2px); box-shadow: $shadow-medium; &::after { transform: translateX(3px); } }
     &:active { transform: translate(6px, 6px); box-shadow: none; }
+
+    @media (max-width: 480px) {
+        width: 100%;
+        justify-content: center;
+        padding: 18px 28px;
+        text-transform: none;
+        letter-spacing: 0.5px;
+    }
 }
 
-// FIX #1: Ghost button — add shadow + nowrap so heights match
 .ctaGhost {
     @include cta-ghost;
     background: transparent;
-    box-shadow: $shadow-small;
+    box-shadow: $shadow-medium;
     white-space: nowrap;
+    padding: 16px 28px;
+     font-size: 1rem;
 
     &:hover { background: $white; }
+
+    @media (max-width: 480px) {
+        width: 100%;
+        justify-content: center;
+        padding: 18px 28px;
+        text-transform: none;
+        letter-spacing: 0.5px;
+    }
 }
 
 // ── Generic Section ───────────────────────────────────────────
 .section {
     padding: clamp(48px, 6vw, 80px) $space-lg;
-    padding-top: clamp(80px, 10vw, 120px);
+    padding-top: clamp(80px, 10vw, 64px);
     max-width: 1080px;
     margin: 0 auto;
+
+    @media (max-width: 480px) {
+        padding: $space-lg $space-md;
+        padding-top: $space-2xl;
+    }
 }
 
 .sectionHead {
     text-align: center;
     margin-bottom: clamp($space-2xl, 5vw, $space-3xl);
+}
+
+.sectionLabelRow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: $space-md;
+
+    img {
+        opacity: 0.85;
+        flex-shrink: 0;
+    }
 }
 
 .sectionLabel {
@@ -321,7 +432,10 @@
     text-transform: uppercase;
     padding: 6px 14px;
     border-radius: 6px;
-    margin-bottom: $space-md;
+}
+
+.sectionLabelFeatures {
+    margin-bottom: 16px;
 }
 
 .sectionTitle {
@@ -333,7 +447,7 @@
     margin: 0;
 }
 
-// ── Steps — always stacked vertically ────────────────────────
+// ── Steps ─────────────────────────────────────────────────────
 .steps {
     list-style: none;
     padding: 0;
@@ -343,13 +457,12 @@
     gap: $space-lg;
 }
 
-// FIX #2: Horizontal step layout — icon+number left, text right
 .step {
     position: relative;
     background: $white;
     border: $border-thick;
     border-radius: 18px;
-    padding: $space-lg;
+    padding: 20px;
     box-shadow: $shadow-large;
     transition: transform $transition-fast, box-shadow $transition-fast;
     display: flex;
@@ -401,11 +514,14 @@
 
 .stepBody {
     font-family: $font-sans;
-    font-size: $text-body;
+    font-size: 1rem;
     font-weight: $weight-body;
     line-height: 1.5;
     color: $dark-gray;
     margin: 0;
+    @media (max-width: 480px) {
+        font-size: 1.1rem;
+    }
 }
 
 // ── Features ──────────────────────────────────────────────────
@@ -426,15 +542,17 @@
     border-radius: 16px;
     padding: $space-lg;
     box-shadow: $shadow-large;
+    display: flex;
+    align-items: flex-start;
+    gap: $space-lg;
 
-    &:nth-child(1) { background: lighten($yellow, 10%); }
-    &:nth-child(2) { background: lighten($neon-green, 30%); }
-    &:nth-child(3) { background: lighten($purple, 18%); }
-    &:nth-child(4) { background: lighten($pink, 16%); }
+    &:nth-child(1) { background: lighten($yellow, 18%); }
+    &:nth-child(2) { background: lighten($neon-green, 38%); }
+    &:nth-child(3) { background: lighten($purple, 26%); }
+    &:nth-child(4) { background: lighten($pink, 24%); }
 }
 
 .featureIcon {
-    margin-bottom: $space-md;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -449,12 +567,17 @@
     margin: 0 0 $space-sm;
 }
 
+.featureText {
+    flex: 1;
+    min-width: 0;
+}
+
 .featureBody {
     font-family: $font-sans;
     font-size: $text-body;
     font-weight: $weight-body;
     line-height: 1.55;
-    max-width: 30ch;
+    /*max-width: 30ch;*/
     margin: 0;
 }
 
@@ -599,8 +722,8 @@
 }
 
 .animatedPhoneWrapper .phone {
-    --tilt: -2deg;
-    width: min(100%, 260px);
+    --tilt: -6deg;
+    width: min(100%, 220px);
     margin: 0 auto;
     transform: rotate(var(--tilt));
     animation: phoneFloat 5.5s ease-in-out infinite;

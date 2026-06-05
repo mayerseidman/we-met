@@ -64,11 +64,6 @@ function MyApp({ Component, pageProps }) {
             }
             // No profile, no session → stay at '/' to render the marketing page.
         }
-        if (router.pathname === '/profile') {
-            if (isReady && !user && !profile && router.query.from !== 'landing') {
-                router.push('/landing');
-            }
-        }
     }, [user, authLoading, isReady, profile, router, profileSynced]);
 
     // ── Service worker ────────────────────────────────────────

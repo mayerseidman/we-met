@@ -22,7 +22,7 @@ const ProfileView = ({ profile, onEdit, user, authLoading }) => {
         setTimeout(async () => {
             await signOut()
             localStorage.removeItem('we-met-auth')
-            router.push('/landing')
+            router.push('/')
         }, 500)
     }
     return (

@@ -96,9 +96,12 @@ const useScrollVisibility = () => {
 
 // ── Sub-Components ────────────────────────────────────────────
 
-const NavItem = React.memo(({ item, isActive, onConnectClick }) => {
+const NavItem = React.memo(({ item, isActive, isNavHovered, onConnectClick }) => {
     const router = useRouter();
-    const itemClass = `${styles.navItem} ${isActive ? styles.active : styles.inactive}`;
+
+    // When nav is hovered, active item looks inactive — all items use inactive style
+    // When nav is not hovered, active item shows as active
+    const itemClass = `${styles.navItem} ${isActive && !isNavHovered ? styles.active : styles.inactive}`;
 
     const handleClick = (e) => {
         e.preventDefault();
@@ -130,14 +133,20 @@ NavItem.displayName = 'NavItem';
 export default function BottomNav({ onConnectClick, isHidden }) {
     const router = useRouter();
     const isVisible = useScrollVisibility();
+    const [isNavHovered, setIsNavHovered] = useState(false);
 
     return (
-        <nav className={`${styles.nav} ${isVisible ? styles.visible : styles.hidden} ${isHidden ? styles.slideOut : ''}`}>
+        <nav
+            className={`${styles.nav} ${isVisible ? styles.visible : styles.hidden} ${isHidden ? styles.slideOut : ''}`}
+            onMouseEnter={() => setIsNavHovered(true)}
+            onMouseLeave={() => setIsNavHovered(false)}
+        >
             {NAV_ITEMS.map((item) => (
                 <NavItem
                     key={item.id || item.href}
                     item={item}
                     isActive={isRouteActive(router.pathname, item.activeRoutes)}
+                    isNavHovered={isNavHovered}
                     onConnectClick={onConnectClick}
                 />
             ))}

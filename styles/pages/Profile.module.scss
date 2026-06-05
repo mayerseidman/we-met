@@ -85,8 +85,9 @@
 
     &Subtitle {
         font-size: 1rem;
+        text-align: center;
         line-height: 1.5;
-        color: $black;
+        color: $dark-gray-two;
         margin-bottom: $spacing-xl;
     }
 }
@@ -108,9 +109,9 @@
         font-weight: 600;
         margin-bottom: $spacing-sm;
         font-size: 0.75rem;
-        color: $dark-gray;
         text-transform: uppercase;
         letter-spacing: 1px;
+        color: #080666;
     }
 
     .required {
@@ -179,7 +180,7 @@
 .photoUpload {
     border: 3px dashed $black;
     border-radius: 12px;
-    padding: $spacing-lg $spacing-md; // Shorthand: top/bottom left/right
+    padding: $spacing-md; // Shorthand: top/bottom left/right
     text-align: center;
     background-color: $white;
     cursor: pointer;
@@ -253,9 +254,10 @@
 
     .photoPlaceholder {
         color: $medium-gray;
-        margin-bottom: $spacing-md;
-        padding-top: 0px;
-        margin-top: 0px;
+        width: 75%;
+        padding: 4px;
+        margin: auto;
+        margin-bottom: 12px;
     }
 
     .addPhotoBtn {
@@ -266,7 +268,6 @@
         color: $black;
         font-size: 0.875rem;
         font-weight: 700;
-        text-decoration: underline;
         background: none;
         border: none;
         cursor: pointer;
@@ -279,9 +280,7 @@
     .addPhotoWrapper {
         display: flex;
         flex-direction: row;
-        align-items: center;
-        gap: $spacing-sm;
-        text-decoration: underline;
+        gap: 4px;
     }
 
     .addIcon {
@@ -305,7 +304,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
-    margin-top: 0.45rem;
+    margin-top: 0.5rem;
     
     .errorMessage {
         margin-top: 0; // Override the margin for items inside photoErrors
@@ -316,7 +315,6 @@
     color: $black;
     font-size: 0.875rem;
     font-weight: 700;
-    text-decoration: underline;
     font-family: $font-mono;
     background: none;
     border: none;

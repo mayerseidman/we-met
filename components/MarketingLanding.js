@@ -20,7 +20,7 @@ const POP = '/icons/pop';
 
 const BUBBLE_TEXTS = [
     'Hi!', 'Howdy!', 'Ciao!', 'Hola!', 'Salut!', 'Aloha!', 'Namaste!', 'Hey!', 'Yo!', 'Wow!',
-    'Sup!', 'Hej!', 'Olá!', 'Privet!', 'Hallo!', 'Yo yo!', 'Cheers!', 'Konnichiwa', 'Kia ora', 'Salam!',
+    'Wassup!', 'Hej!', 'Olá!', 'Privet!', 'Hallo!', 'Yo yo!', 'Cheers!', 'Konnichiwa', 'Kia ora', 'Salam!',
 ];
 
 const FLOAT_ICONS = ['heart', 'star', 'flash', 'heart', 'star'];
@@ -31,41 +31,41 @@ const SECTION_ICONS = ['heart', 'star', 'flash', 'star', 'heart'];
 const STEPS = [
     {
         icon: 'users',
-        title: 'Meet someone',
-        body: 'You hit it off with a stranger at a festival. Magic moment.',
+        title: 'Meet Someone',
+        body: 'You connect with someone. Magic moment.',
     },
     {
         icon: 'qr-code',
-        title: 'Scan their QR',
-        body: 'Tap, scan, done. No phone numbers, no awkward typing.',
+        title: 'Scan Their QR',
+        body: 'Tap, scan, done. No screenshots, no notes.',
     },
     {
         icon: 'heart',
-        title: 'Stay connected',
-        body: 'Find them again next year. Or next weekend. Up to you.',
+        title: 'Stay Connected',
+        body: 'Find them again next year. Or next weekend.',
     },
 ];
 
 const FEATURES = [
     {
         icon: 'chat-bubble',
-        title: 'Built for festivals',
-        body: 'Designed for the chaos of campsites, dance floors, and dust storms.',
+        title: 'Built For Festivals',
+        body: 'Designed for the chaos of dance floors, campsites, and dust storms. No signal needed, ever.',
     },
     {
         icon: 'shield-check',
-        title: 'No spam, no creeps',
-        body: 'Only people you actually meet. No follower counts, no DMs from strangers.',
+        title: 'No Spam, No Creeps',
+        body: 'Only people you actually meet face to face. No follower counts, no cold DMs, no algorithm.',
     },
     {
         icon: 'browser-check',
-        title: 'No app to install',
-        body: 'It works in your browser. Save it to your home screen and go.',
+        title: 'No App To Install',
+        body: "Works in any browser, on any phone. Save it to your home screen and it's there forever.",
     },
     {
         icon: 'handshake',
-        title: 'Find them next year',
-        body: 'Every meet stays saved. Reconnect at the next burn, the next campfire, the next anywhere.',
+        title: 'Find Them Again',
+        body: 'Every connection is saved locally on your device. Find them at the next burn, the next campfire, the next anything.',
     },
 ];
 
@@ -140,7 +140,7 @@ const PhoneShowQR = () => (
         </div>
         <div className={styles.screenLabel}>Event</div>
         <div className={styles.eventSelect}>
-            <span>Afrikaburn 2025</span>
+            <span>Burning Man 2026</span>
             <svg className={styles.eventChevron} width="12" height="10" viewBox="0 0 16 14" fill="currentColor" aria-hidden="true">
                 <path d="M2 2 L14 2 L8 12 Z" />
             </svg>
@@ -160,7 +160,7 @@ const PhoneScan = () => (
             <span className={styles.scanLine} />
         </div>
         <div className={styles.scanBottom}>
-            <span className={styles.scanEvent}>Afrikaburn 2025</span>
+            <span className={styles.scanEvent}>Burning Man 2026</span>
             <span className={styles.scanHint}>What to Do</span>
         </div>
         <MiniBottomNav active="connect" />
@@ -175,7 +175,7 @@ const PhoneMeets = () => (
                 <div className={`${styles.meetAvatar} ${styles.meetAvatarOrange}`}>A</div>
                 <div className={styles.meetMeta}>
                     <strong>Alex</strong>
-                    <span>Today · Afrikaburn</span>
+                    <span>Today · Burning Man</span>
                 </div>
                 <span className={styles.newDot} />
             </div>
@@ -183,14 +183,14 @@ const PhoneMeets = () => (
                 <div className={`${styles.meetAvatar} ${styles.meetAvatarPurple}`}>S</div>
                 <div className={styles.meetMeta}>
                     <strong>Sam</strong>
-                    <span>Yesterday · Afrikaburn</span>
+                    <span>Yesterday · Burning Man</span>
                 </div>
             </div>
             <div className={styles.meetEntry}>
                 <div className={`${styles.meetAvatar} ${styles.meetAvatarPink}`}>J</div>
                 <div className={styles.meetMeta}>
                     <strong>Jamie</strong>
-                    <span>2d ago · Afrikaburn</span>
+                    <span>2d ago · Burning Man</span>
                 </div>
             </div>
         </div>
@@ -255,8 +255,7 @@ const HeroSection = ({ heroRef, bubbles, icons, waving, onIconClick, onGetStarte
                 Never lose<br />a connection.
             </h1>
             <p className={styles.tagline}>
-                Save everyone you meet at festivals with a single QR scan.
-                Keep the magic alive long after the music stops.
+                No signal? No problem. Save people you meet with a simple QR scan.
             </p>
 
             <div className={styles.ctaRow}>
@@ -264,25 +263,28 @@ const HeroSection = ({ heroRef, bubbles, icons, waving, onIconClick, onGetStarte
                     Get Started
                 </button>
                 <button className={styles.ctaGhost} onClick={onSignIn}>
-                    I have an account
+                    Sign In
                 </button>
             </div>
         </div>
     </section>
 );
 
+
+
 const HowItWorksSection = ({ sectionRef, inView }) => (
-    <section ref={sectionRef} className={`${styles.section} ${inView ? styles.isVisible : ''}`}>
+    <section ref={sectionRef} className={`${styles.section} ${styles.sectionFirst} ${inView ? styles.isVisible : ''}`}>
         {/* Symbol-only decorations — no text bubbles below hero */}
         <div className={styles.sectionDecor}>
-            <img src={`${POP}/heart.svg`} className={`${styles.floatIcon} ${styles.scatterHeartA}`} alt="" width={36} height={36} />
             <img src={`${POP}/star.svg`} className={`${styles.floatIcon} ${styles.scatterStarA}`} alt="" width={36} height={36} />
             <img src={`${POP}/flash.svg`} className={`${styles.floatIcon} ${styles.cropLeftMid}`} alt="" width={36} height={36} />
         </div>
 
         <div className={styles.sectionHead}>
-            <span className={styles.sectionLabel}>How it works</span>
-            <h2 className={styles.sectionTitle}>Three taps. That&apos;s it.</h2>
+            <div className={styles.sectionLabelRow}>
+                <span className={styles.sectionLabel}>How It Works</span>
+            </div>
+            <h2 className={styles.sectionTitle}>Three Taps.</h2>
         </div>
 
         <div className={styles.howItWorksLayout}>
@@ -311,13 +313,11 @@ const FeaturesSection = ({ sectionRef, inView }) => (
         <div className={styles.sectionDecor}>
             <img src={`${POP}/heart.svg`} className={`${styles.floatIcon} ${styles.scatterHeartB}`} alt="" width={36} height={36} />
             <img src={`${POP}/star.svg`} className={`${styles.floatIcon} ${styles.scatterStarB}`} alt="" width={36} height={36} />
-            <img src={`${POP}/flash.svg`} className={`${styles.floatIcon} ${styles.scatterFlashB}`} alt="" width={36} height={36} />
-            <img src={`${POP}/heart.svg`} className={`${styles.floatIcon} ${styles.scatterHeartC}`} alt="" width={36} height={36} />
         </div>
 
         <div className={styles.sectionHead}>
-            <span className={styles.sectionLabel}>Why we built it</span>
-            <h2 className={styles.sectionTitle}>For the people<br />who actually go.</h2>
+            <span className={`${styles.sectionLabel} ${styles.sectionLabelFeatures}`}>Why we built it</span>
+            <h2 className={styles.sectionTitle}>Connections matter.</h2>
         </div>
 
         <div className={styles.features}>
@@ -326,8 +326,10 @@ const FeaturesSection = ({ sectionRef, inView }) => (
                     <div className={styles.featureIcon}>
                         <PopIcon name={feature.icon} size={36} alt="" />
                     </div>
-                    <h3 className={styles.featureTitle}>{feature.title}</h3>
-                    <p className={styles.featureBody}>{feature.body}</p>
+                    <div className={styles.featureText}>
+                        <h3 className={styles.featureTitle}>{feature.title}</h3>
+                        <p className={styles.featureBody}>{feature.body}</p>
+                    </div>
                 </div>
             ))}
         </div>
@@ -415,7 +417,7 @@ export default function MarketingLanding() {
         setTimeout(() => setWaving(false), 1200);
     };
 
-    const handleGetStarted = () => router.push('/landing');
+    const handleGetStarted = () => router.push('/profile?from=landing');
     const handleSignIn = () => router.push('/auth');
 
     const [stepsRef, stepsInView] = useInView();
@@ -432,6 +434,7 @@ export default function MarketingLanding() {
                 onGetStarted={handleGetStarted}
                 onSignIn={handleSignIn}
             />
+
 
             <HowItWorksSection sectionRef={stepsRef} inView={stepsInView} />
 

@@ -123,7 +123,7 @@ export default function ProfilePage() {
 
     useEffect(() => {
         if (!initialProfile) {
-            setHasChanges(!!(editingProfile.name && editingProfile.phone && editingProfile.instagram));
+            setHasChanges(!!(editingProfile.name && editingProfile.phone));
         } else {
             setHasChanges(JSON.stringify(editingProfile) !== JSON.stringify(initialProfile));
         }
@@ -183,34 +183,36 @@ export default function ProfilePage() {
                    console.log('cloud save result:', cloudSuccess, error)
                }
 
-               const wasNewProfile = !initialProfile
-               const elapsed = Date.now() - saveStart
-               const remaining = Math.max(0, 800 - elapsed)
+                const wasNewProfile = !initialProfile
+                const elapsed = Date.now() - saveStart
+                const remaining = Math.max(0, 800 - elapsed)
+                setTimeout(() => {
+                    setButtonState('saved')
+                    setInitialProfile(editingProfile)
+                    setShowErrors(false)
 
-               setTimeout(() => {
-                   setButtonState('saved')
-                   setInitialProfile(editingProfile)
-                   setShowErrors(false)
-                   if (wasNewProfile) showToast('Profile created! 🎉')
+                    setTimeout(() => {
+                        if (wasNewProfile) showToast('Profile created! 🎉')
+                        else showToast('Profile updated! ✨')
+                    }, 600)
 
-                   setTimeout(() => {
-                       setButtonState('default')
-                       isSavingRef.current = false
-                   }, 4000)
-               }, remaining)
-
-           } else {
+                    setTimeout(() => {
+                        setButtonState('default')
+                        isSavingRef.current = false
+                    }, 4000)
+                }, remaining)
+            } else {
                alert("Failed to save profile. Please try again.")
                setButtonState('default')
                isSavingRef.current = false
-           }
-       } catch (error) {
+            }
+        } catch (error) {
            console.error("Error saving profile:", error)
            alert("Failed to save profile. Please try again.")
            setButtonState('default')
            isSavingRef.current = false
-       }
-   }
+        }
+    }
 
     const handleClear = () => {
         localStorage.clear();
@@ -230,8 +232,7 @@ export default function ProfilePage() {
             isSaved: false,
         });
     };
-
-    const isFormValid = editingProfile.name && isValidPhone(editingProfile.phone) && editingProfile.instagram && hasChanges;
+    const isFormValid = editingProfile.name && isValidPhone(editingProfile.phone) && hasChanges;
     
     return (
         <div className={styles.container}>
@@ -252,7 +253,7 @@ export default function ProfilePage() {
                         <h1 className={styles.headerTitle}>{initialProfile ? "Edit Profile" : "Add Profile"}</h1>
                         {!initialProfile && (
                             <p className={styles.headerSubtitle}>
-                                Set up your profile so others can find you after the magic fades
+                                Set up your profile so the people you meet today can find you tomorrow :)
                             </p>
                         )}
                         <form onSubmit={handleSubmit} className={styles.form}>

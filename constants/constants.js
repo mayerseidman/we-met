@@ -17,7 +17,7 @@ export const FORM_FIELDS = [
         type: 'text',
         placeholder: 'What can we call you?',
         required: true,
-        errorMessage: 'Name is required',
+        errorMessage: 'Name required :)',
     },
     {
         name: 'phone',
@@ -25,7 +25,7 @@ export const FORM_FIELDS = [
         type: 'tel',
         placeholder: 'What are your digits?',
         required: true,
-        errorMessage: 'Phone is required',
+        errorMessage: 'Phone required :)',
         invalidMessage: 'Must be valid number: +1 (123) 123-1234',
     },
     {
@@ -33,8 +33,7 @@ export const FORM_FIELDS = [
         label: 'INSTAGRAM',
         type: 'text',
         placeholder: "What's your handle?",
-        required: true,
-        errorMessage: 'Instagram is required',
+        required: false,
     },
     {
         name: 'location',
