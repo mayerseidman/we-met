@@ -25,6 +25,7 @@ const ProfileView = ({ profile, onEdit, user, authLoading }) => {
             router.push('/')
         }, 500)
     }
+    console.log('user:', user, 'authLoading:', authLoading)
     return (
         <div className={styles.profileView}>
             <ProfilePhoto profile={profile} />
@@ -33,11 +34,6 @@ const ProfileView = ({ profile, onEdit, user, authLoading }) => {
             <ContactSection profile={profile} />
             <EditButton onEdit={onEdit} />
             {/* Only show sign out if user is logged in */}
-            {user && !authLoading && (
-                <button className={styles.signOutBtn} onClick={handleSignOut}>
-                    SIGN OUT
-                </button>
-            )}
             {user && !authLoading && (
                 <button className={styles.signOutBtn} onClick={handleSignOut}>
                     SIGN OUT

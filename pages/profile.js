@@ -250,7 +250,7 @@ export default function ProfilePage() {
                         <div className={styles.appIcon} aria-label="We Met">
                             <img src="/icons/pop/waving-hand-light.svg" alt="" width={56} height={56} />
                         </div>
-                        <h1 className={styles.headerTitle}>{initialProfile ? "Edit Profile" : "Add Profile"}</h1>
+                        <h1 className={styles.headerTitle}>Profile</h1>
                         {!initialProfile && (
                             <p className={styles.headerSubtitle}>
                                 Set up your profile so the people you meet today can find you tomorrow :)

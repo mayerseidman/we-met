@@ -124,7 +124,7 @@
     input,
     textarea {
         @include input-styled;
-
+        border: 2.5px solid #080666;
         &.error {
             border-color: $error-red;
             background: $error-bg;

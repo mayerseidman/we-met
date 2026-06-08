@@ -78,15 +78,15 @@
 // ── About Card ────────────────────────────────────────────────
 .aboutCard {
     background: $white;
-    border: $border-thick;
+    border: 2.5px solid #080666;
     border-radius: 6px;
     padding: $spacing-lg;
-    box-shadow: $shadow-medium;
+    box-shadow: $shadow-small;
     transition: all $transition-fast;
 
     &:hover {
         transform: translate(-1px, -1px);
-        box-shadow: $shadow-large;
+        box-shadow: $shadow-medium;
     }
 
     &:active {
@@ -128,7 +128,11 @@
         line-height: 1.6;
         color: $black;
         font-family: $font-sans;
-        font-weight: bold;
+        font-weight: 600;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 }
 
@@ -145,18 +149,18 @@
     align-items: center;
     gap: $spacing-md;
     padding: 1rem;
-    border: $border-thick;
-    border-radius: 14px;
+    border: 2.5px solid #080666;
+    border-radius: 6px;
     margin-bottom: $spacing-md;
     background: $white;
-    box-shadow: $shadow-medium;
+    box-shadow: $shadow-small;
     transition: all $transition-fast;
     text-decoration: none;
     color: $black;
 
     &:hover {
         transform: translate(-1px, -1px);
-        box-shadow: $shadow-large;
+        box-shadow: $shadow-medium;
     }
 
     &:active {
@@ -180,6 +184,7 @@
 .contactText {
     flex: 1;
     font-weight: bold;
+    font-weight: 600;
 }
 
 // ── Edit Button ───────────────────────────────────────────────
@@ -213,4 +218,8 @@
 .profileAvatar {
     border: $border-thick !important;
     box-shadow: $shadow-medium !important;
+}
+
+ .editButton::after {
+    display: none;
 }

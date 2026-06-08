@@ -46,7 +46,7 @@ export const FORM_FIELDS = [
         name: 'about',
         label: 'ABOUT',
         type: 'textarea',
-        placeholder: "Write something so people can remember you like your favorite color or your cat's name or whatever :)",
+        placeholder: "Write Something fun so people remember you-a favorite color or your cat's name :)",
         required: false,
     },
 ];
