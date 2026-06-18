@@ -152,7 +152,6 @@ $z-toast: 500;
     }
 
     &::after {
-        content: '→';
         font-size: 1.2em;
         line-height: 1;
         transition: transform $transition-fast;

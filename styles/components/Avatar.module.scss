@@ -6,7 +6,7 @@
     height: 145px;
     border-radius: 28px;
     border: $border-thick;
-    box-shadow: $shadow-medium;
+    box-shadow:  3px 3px 0px rgba(12, 9, 140, 0.2);
     object-fit: cover;
     background-color: #FFF5E6;
 }
@@ -16,7 +16,7 @@
     height: 100px;
     border-radius: 22px;
     border: $border-thick;
-    box-shadow: $shadow-medium;
+    box-shadow:  3px 3px 0px rgba(12, 9, 140, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;

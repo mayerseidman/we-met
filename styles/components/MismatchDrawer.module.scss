@@ -23,8 +23,8 @@
 }
 
 @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
+    from { transform: translateY(100%); opacity: 0.6; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes slideDown {
@@ -44,24 +44,24 @@
     border-top: 3px solid $black;
     border-radius: 12px 12px 0 0;
     z-index: 1000;
-    max-height: 70vh;
+    max-height: 80vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    animation: slideUp 0.3s ease-out;
+    animation: slideUp 0.35s ease-out;
 }
 
 .drawerClosing {
-    animation: slideDown 0.28s ease-in forwards;
+    animation: slideDown 0.22s ease-in forwards;
 }
 
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $spacing-lg $spacing-md;
-    border-bottom: 2px solid $black;
     flex-shrink: 0;
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba($black, 0.12);
 }
 
 .title {
@@ -80,8 +80,6 @@
     background: none;
     border: 2px solid $black;
     border-radius: 2px;
-    font-size: 1.25rem;
-    font-weight: 700;
     cursor: pointer;
     transition: all $transition-fast;
 
@@ -106,36 +104,119 @@
     }
 }
 
-.body {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: $spacing-sm;
-    flex: 1;
+// ── Description block ─────────────────────────────────────────
+.descriptionBlock {
+    padding: 0.5rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    flex-shrink: 0;
+}
+
+.highlight {
+    color: $orange;
+}
+
+.modalDescription {
+    margin-bottom: $spacing-md;
 }
 
 .description {
     font-size: 0.9rem;
     color: $dark-gray;
-    margin: 0 0 $spacing-sm;
+    margin: 0 0 0.5rem;
     line-height: 1.5;
-    padding: $spacing-sm $spacing-sm 0;
+    @media (max-width: 480px) {
+        font-size: 1rem;
+        padding: 1rem;
+    }
 }
 
-.subLabel {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: $dark-gray;
-    margin: 0 0 $spacing-sm;
-    padding: 0 $spacing-sm;
+.descriptionQuestion {
+    font-size: 0.9rem;
+    color: $black;
+    margin-bottom: 0;
+    @media (max-width: 480px) {
+        font-size: 1rem;
+        padding-left: 1rem;
+        margin-bottom: 12px;
+    }
 }
 
-.eventList {
+// ── Event container (bordered, distinct from description) ─────
+.eventContainer {
+    margin: 0.5rem;
+    border: 2px solid $black;
+    border-radius: 8px;
+    overflow: hidden;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: $spacing-sm;
-    padding: 0 $spacing-sm $spacing-sm;
+    min-height: 0;
+    background: $white;
+    max-height: 350px;
+}
+
+// ── Search ────────────────────────────────────────────────────
+.searchWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem $spacing-md;
+    border-bottom: 1.5px solid rgba($black, 0.1);
+    flex-shrink: 0;
+    background: $white;
+    @media (max-width: 480px) {
+        margin-left: 1.5rem;
+        margin-right: 1.5rem;
+    }
+}
+
+.searchIcon {
+    color: $medium-gray;
+    flex-shrink: 0;
+}
+
+.searchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: $font-mono;
+    font-size: 0.9rem;
+    background: transparent;
+    color: $black;
+
+    &::placeholder {
+        color: rgba($black, 0.45);
+    }
+}
+
+.searchClear {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $medium-gray;
+    font-size: 0.75rem;
+    padding: 0;
+    line-height: 1;
+
+    &:hover {
+        color: $black;
+    }
+}
+
+// ── Event list ────────────────────────────────────────────────
+.eventList {
+    overflow-y: auto;
+    padding: $spacing-sm;
+    flex: 1;
+}
+
+.noResults {
+    padding: $spacing-xl $spacing-md;
+    text-align: center;
+    font-size: 0.85rem;
+    color: $medium-gray;
+    font-family: $font-mono;
 }
 
 .eventItem {
@@ -145,26 +226,31 @@
     justify-content: space-between;
     padding: $spacing-md;
     background: $white;
-    border: 2px solid $black;
-    border-radius: 2px;
+    border: 1.5px solid rgba($black, 0.15);
+    border-radius: 4px;
+    margin-bottom: $spacing-xs;
     font-family: $font-mono;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: $black;
     cursor: pointer;
     transition: all $transition-fast;
-    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
+    @media (max-width: 480px) {
+        padding: 1rem;
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 
     &:hover {
         border-color: $orange;
-        transform: translate(-1px, -1px);
-        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
+        background: rgba($orange, 0.04);
     }
 
     &.selected {
         background-color: rgba(245, 114, 47, 0.1);
         border-color: $orange;
-        font-weight: 600;
     }
 }
 
@@ -174,10 +260,10 @@
 }
 
 .checkmark {
-    font-size: 1.25rem;
+    width: 20px;
+    height: 20px;
     color: $orange;
-    font-weight: 600;
-    margin-left: $spacing-sm;
+    flex-shrink: 0;
 }
 
 // ── Desktop Modal ─────────────────────────────────────────────
@@ -189,20 +275,80 @@
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    padding: 0 $spacing-md;
+    padding: $spacing-md;
     animation: fadeIn 0.2s ease-out;
+    overflow-y: auto;
 }
 
 .modal {
     background: $white;
     border: 2px solid $black;
-    border-radius: 2px;
+    border-radius: 8px;
     padding: $spacing-xl $spacing-lg $spacing-lg;
     width: 100%;
-    max-width: 400px;
+    max-width: 420px;
+    max-height: 85vh;
     box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
     position: relative;
     animation: modalIn 0.2s ease-out;
-    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    margin: auto;
+    flex-shrink: 0;
+}
+
+// ── Drawer flat event list ────────────────────────────────────
+.drawerEventSection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: 350px;
+}
+
+.drawerEventList {
     overflow-y: auto;
+    flex: 1;
+    padding-bottom: 80px;
+}
+
+.drawerEventItem {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-md $spacing-lg;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba($black, 0.08);
+    font-family: $font-mono;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $black;
+    cursor: pointer;
+    transition: all $transition-fast;
+    text-align: left;
+
+    &:hover {
+        background: rgba($orange, 0.06);
+        color: $orange;
+    }
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.drawerSelected {
+    color: $orange;
+    background: rgba($orange, 0.08);
+}
+
+.modalTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 $spacing-sm;
+    color: $black;
+    padding-left: 0.5rem;
 }

@@ -77,6 +77,11 @@ function MyApp({ Component, pageProps }) {
         }
     }, []);
 
+    // Reset dropdown state on navigation
+    useEffect(() => {
+        setIsDropdownOpen(false);
+    }, [router.pathname, router.query.tab]);
+
     // ── Connect drawer/popover handlers ───────────────────────
     const handleConnectClick = () => setShowConnectDrawer(true);
 

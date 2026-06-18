@@ -11,6 +11,10 @@
     animation: fadeIn 0.2s ease-out;
 }
 
+.searchInput::placeholder {
+    color: rgba($black, 0.45);
+}
+
 .backdropClosing {
     animation: fadeOut 0.28s ease-in forwards;
 }
@@ -59,9 +63,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $spacing-lg $spacing-md;
-    border-bottom: 2px solid $black;
     flex-shrink: 0;
+    padding: $spacing-lg $spacing-md;
+    border-bottom: 1px solid #bbb;
+    margin: 0 0.5rem;
 }
 
 .title {
@@ -96,7 +101,6 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem $spacing-md;
-    border-bottom: 1.5px solid rgba(0,0,0,0.1);
     background: $cream;
     flex-shrink: 0;
 }
@@ -187,7 +191,8 @@
 
 .checkmark {
     font-size: 1.25rem;
+    width: 20px;
+    height: 20px;
     color: $orange;
-    font-weight: 600;
-    margin-left: $spacing-sm;
+    flex-shrink: 0;
 }

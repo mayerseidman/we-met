@@ -43,7 +43,7 @@ const PhotoUpload = ({ photoPreview, onPhotoChange, onRemovePhoto, showError }) 
                 ) : (
                     <>
                         <p className={styles.photoPlaceholder}>
-                            Say Cheeeese, help people remember you!
+                            Say Cheese 🧀, help people remember you!
                         </p>
                         <button type="button" className={styles.link}>
                             <span className={styles.addPhotoWrapper}>

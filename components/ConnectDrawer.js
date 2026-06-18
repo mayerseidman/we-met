@@ -4,15 +4,15 @@ import styles from "../styles/components/ConnectDrawer.module.scss";
 const ACTIONS = [
     {
         id: "show",
-        label: "Show QR",
-        description: "Share your code with others",
-        icon: <img src="/icons/pop/qr-code.svg" alt="" width={36} height={36} />,
+        label: "SHOW QR",
+        description: "Let them scan you",
+        icon: <img src="/icons/pop/qr-code.svg" alt="" width={32} height={32} />,
     },
     {
         id: "scan",
-        label: "Scan QR",
-        description: "Scan another person's code",
-        icon: <img src="/icons/pop/camera.svg" alt="" width={36} height={36} />,
+        label: "SCAN QR",
+        description: "Scan someone else",
+        icon: <img src="/icons/pop/camera.svg" alt="" width={32} height={32} />,
     },
 ];
 
@@ -34,7 +34,7 @@ export default function ConnectDrawer({ onSelectAction, onClose }) {
             <div className={`${styles.backdrop} ${closing ? styles.backdropClosing : ''}`} onClick={handleClose} />
             <div className={`${styles.drawer} ${closing ? styles.drawerClosing : ''}`}>
                 <div className={styles.header}>
-                    <h2 className={styles.title}>Connect</h2>
+                    <h2 className={styles.title}>CONNECT</h2>
                     <button className={styles.closeButton} onClick={handleClose} aria-label="Close">
                         <img src="/icons/pop/close.svg" alt="" width={20} height={20} />
                     </button>

@@ -1,0 +1,233 @@
+@use '../variables' as *;
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes slideUpMobile {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes slideDownMobile {
+    from { transform: translateY(0); }
+    to { transform: translateY(100%); }
+}
+
+@keyframes slideInDesktop {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes slideOutDesktop {
+    from { transform: translateX(0); }
+    to { transform: translateX(100%); }
+}
+
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1100;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.backdropClosing {
+    animation: fadeOut 0.2s ease-in forwards;
+}
+
+// ── Shared panel base ───────────────────────────────────────────
+.panel {
+    position: fixed;
+    background: $cream;
+    z-index: 1101;
+    display: flex;
+    flex-direction: column;
+}
+
+// ── Mobile: near full-height sheet from bottom ──────────────────
+.panelMobile {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 8%;
+    border-top: 3px solid $black;
+    border-radius: 16px 16px 0 0;
+    animation: slideUpMobile 0.3s ease-out;
+}
+
+.panelMobile.panelClosing {
+    animation: slideDownMobile 0.22s ease-in forwards;
+}
+
+// ── Desktop: full-height sheet flush to right edge ──────────────
+.panelDesktop {
+    top: 8px;
+    right: 0;
+    bottom: 8px;
+    width: 380px;
+    max-width: 90vw;
+    border-left: 2px solid $black;
+    border-top: 2px solid $black;
+    border-bottom: 3px solid $black;
+    border-radius: 6px 0 0 6px;
+    animation: slideInDesktop 0.25s ease-out;
+}
+
+.panelDesktop.panelClosing {
+    animation: slideOutDesktop 0.2s ease-in forwards;
+}
+
+// ── Header ────────────────────────────────────────────────────
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-lg $spacing-lg;
+    border-bottom: 2px solid rgba($black, 0.12);
+    flex-shrink: 0;
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: $black;
+    font-family: $font-mono;
+}
+
+.closeButton {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 2px solid $black;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    img {
+        filter: brightness(0) opacity(0.6);
+    }
+
+    &:hover {
+        border-color: $orange;
+        background: rgba($black, 0.04);
+    }
+}
+
+// ── Body ──────────────────────────────────────────────────────
+.body {
+    flex: 1;
+    overflow-y: auto;
+    padding: $spacing-lg;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+}
+
+.fieldLabel {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: $dark-gray;
+    font-family: $font-mono;
+}
+
+// ── Festival select ───────────────────────────────────────────
+.selectWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.select {
+    width: 100%;
+    padding: 0.875rem 2.5rem 0.875rem 1rem;
+    font-family: $font-mono;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $black;
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+
+    &:focus {
+        outline: none;
+        border-color: $orange;
+    }
+}
+
+.selectArrow {
+    position: absolute;
+    right: 1rem;
+    color: $black;
+    pointer-events: none;
+}
+
+// ── Footer ────────────────────────────────────────────────────
+.footer {
+    display: flex;
+    gap: $spacing-md;
+    padding: $spacing-lg;
+    border-top: 2px solid rgba($black, 0.12);
+    flex-shrink: 0;
+}
+
+.clearBtn {
+    flex: 1;
+    padding: 0.875rem;
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    font-family: $font-mono;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: $black;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+        background: rgba($black, 0.04);
+    }
+}
+
+.viewBtn {
+    flex: 2;
+    padding: 0.875rem;
+    background: $orange;
+    color: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    font-family: $font-mono;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+        background: $dark-orange;
+    }
+}

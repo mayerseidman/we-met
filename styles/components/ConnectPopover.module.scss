@@ -7,7 +7,7 @@
     right: 0;
     bottom: 0;
     z-index: 999;
-    background: rgba(0, 0, 0, 0.3);  // dim the page
+    background: rgba(0, 0, 0, 0.3);
     animation: fadeIn 0.15s ease-out;
 }
 
@@ -15,17 +15,18 @@
     from { opacity: 0; }
     to { opacity: 1; }
 }
+
 .popover {
     position: fixed;
     bottom: 98px;
     left: 50%;
     transform: translateX(-50%);
     background-color: $white;
-    border: 1px solid rgba(0,0,0,0.15);  // much lighter border
-    border-radius: 8px;  // more rounded
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 8px;
     z-index: 1000;
-    width: 300px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);  // soft shadow instead
+    width: 225px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     animation: popIn 0.15s ease-out;
     overflow: visible;
 }
@@ -35,8 +36,6 @@
     to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-
-// Update caret to match lighter border
 .popover::after {
     border-top: 10px solid rgba(0,0,0,0.15);
 }
@@ -55,8 +54,8 @@
 .actionCard {
     display: flex;
     align-items: center;
-    gap: 0.7em;
-    padding: $spacing-md;
+    gap: 1rem;
+    padding: $spacing-md $spacing-lg;
     background: $white;
     border: none;
     border-bottom: 1.5px solid rgba(0,0,0,0.08);
@@ -85,11 +84,9 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    color: $orange;
 
-    svg {
-        width: 30px;
-        height: 30px;
+    img {
+        filter: opacity(0.72);
     }
 }
 
@@ -101,17 +98,13 @@
 .actionLabel {
     font-size: 0.9rem;
     font-weight: 600;
-    margin: 0 0 4px;
+    margin: 0 0 2px;
     color: $black;
 }
 
 .actionDescription {
     font-size: 0.75rem;
-    margin: 6px 0 0;
+    margin: 4px 0 0;
     color: $medium-gray;
     white-space: nowrap;
-}
-
-.actionArrow {
-    display: none;
 }

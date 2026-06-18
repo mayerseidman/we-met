@@ -125,13 +125,11 @@
 
 // ── Action Icon ───────────────────────────────────────────────
 .actionIcon {
-    width: 48px;
     height: 48px;
+    width: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid $black;
-    border-radius: 2px;
     flex-shrink: 0;
     
     svg {
@@ -139,6 +137,11 @@
         height: 24px;
         stroke-width: 2;
         color: $orange;
+        filter: opacity(0.72);
+    }
+
+    img {
+        filter: opacity(0.72);
     }
 }
 
@@ -151,7 +154,7 @@
 .actionLabel {
     font-size: 1.125rem;
     font-weight: 600;
-    margin: 0 0 $spacing-xs 0;
+    margin: 0 0 2px 0;
     color: $black;
 }
 

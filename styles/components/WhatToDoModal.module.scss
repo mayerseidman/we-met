@@ -1,0 +1,116 @@
+@import '../variables';
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 200;
+    padding: $spacing-xl $spacing-md;
+    animation: fadeIn 0.2s ease-out;
+    overflow-y: auto;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal {
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    padding: 1.75rem;
+    width: 100%;
+    max-width: 375px;
+    margin: auto;
+    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
+    position: relative;
+    text-align: center;
+    flex-shrink: 0;
+    animation: slideUp 0.2s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modalClose {
+    position: absolute;
+    top: $spacing-sm;
+    right: $spacing-sm;
+    background: none;
+    border: none;
+    cursor: pointer;
+    filter: brightness(0) opacity(0.6);
+}
+
+.modalTitle {
+    font-size: 1.25rem;
+    margin: 0 0 1rem;
+    color: #080666;
+}
+
+.wtdSteps {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    margin-top: $spacing-lg;
+    text-align: left;
+}
+
+.wtdStep {
+    position: relative;
+    background: $white;
+    border: 2.5px solid $black;
+    border-radius: 14px;
+    padding: 14px 14px 14px 12px;
+    box-shadow: 3px 3px 0 rgba($black, 0.15);
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+}
+
+.wtdNum {
+    position: absolute;
+    top: -12px;
+    right: 12px;
+    background: $black;
+    color: $yellow;
+    font-family: $font-mono;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.wtdIcon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.wtdText {
+    flex: 1;
+    min-width: 0;
+}
+
+.wtdTitle {
+    font-family: $font-mono;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 2px;
+    color: $orange;
+}
+
+.wtdBody {
+    font-size: 0.8rem;
+    color: $dark-gray;
+    margin: 0;
+    line-height: 1.4;
+}

@@ -1,4 +1,5 @@
 @import '../variables';
+
 @keyframes toastIn {
     from {
         opacity: 0;
@@ -8,6 +9,11 @@
         opacity: 1;
         transform: translateX(-50%) translateY(0) scale(1);
     }
+}
+
+@keyframes toastInMobile {
+    from { transform: translateY(200%); opacity: 1; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes toastOut {
@@ -21,28 +27,57 @@
     }
 }
 
+@keyframes toastOutMobile {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(100%); opacity: 0; }
+}
+
 .toast {
     position: fixed;
     bottom: 100px;
     left: 50%;
     transform: translateX(-50%);
-    background: $black;
-    color: $yellow;
+    background: $cream;
+    color: $black;
     font-family: $font-mono;
     font-weight: 600;
     font-size: 0.9rem;
     letter-spacing: 0.5px;
     padding: 12px 20px;
     border: $border-medium;
-    border-radius: 14px;
+    border-radius: 6px;
     box-shadow: $shadow-medium;
     z-index: 9999;
-    white-space: nowrap;
+    white-space: normal;
     animation: toastIn 0.5s $ease-out-quart;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    width: min(360px, calc(100vw - 48px));
+
+    @media (max-width: 480px) {
+        bottom: 90px;
+        left: 12px;
+        right: 12px;
+        transform: none;
+        border-radius: 6px;
+        width: auto;
+        max-width: 100%;
+        border-left: $border-medium;
+        border-right: $border-medium;
+        border-bottom: $border-medium;
+        animation: toastInMobile 0.4s $ease-out-quart;
+        padding: 14px 20px;
+    }
 }
 
 .toastClosing {
     animation: toastOut 0.25s $ease-out-quart forwards;
+
+    @media (max-width: 480px) {
+        animation: toastOutMobile 0.25s $ease-out-quart forwards;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,14 +1,12 @@
+import { useState } from "react";
 import QRCode from "react-qr-code";
 import styles from "../styles/components/ShowQR.module.scss";
 import Avatar from "./Avatar";
 import EventDrawer from "./EventDrawer";
 import EventDropdown from "./EventDropdown";
 import EmptyState from "./EmptyState";
+import WhatToDoModal from "./WhatToDoModal";
 import { EVENTS, formatEvent } from "../constants/events";
-
-// ══════════════════════════════════════════════════════════════
-// ShowQR Component
-// ══════════════════════════════════════════════════════════════
 
 export default function ShowQR({
     currentProfile,
@@ -25,7 +23,8 @@ export default function ShowQR({
     devMode = {},
     onDismiss,
 }) {
-    // Empty state
+    const [showWhatToDo, setShowWhatToDo] = useState(false);
+
     if (!currentProfile) {
         return <EmptyState onSetEditing={onSetEditing} />;
     }
@@ -51,7 +50,8 @@ export default function ShowQR({
                     onOpenDrawer={isMobile ? onOpenDrawer : undefined}
                 />
             </div>
-            <InfoNote />
+
+            <InfoNote onWhatToDo={() => setShowWhatToDo(true)} />
             
             {showEventDrawer && (
                 <EventDrawer
@@ -62,41 +62,22 @@ export default function ShowQR({
                 />
             )}
 
-            {/* Dev mode overlays */}
             {devMode.connectBack && (
                 <ConnectBackModal
                     profile={currentProfile}
                     onDismiss={onDismiss}
                 />
             )}
+
+            {showWhatToDo && (
+                <WhatToDoModal onDismiss={() => setShowWhatToDo(false)} />
+            )}
         </div>
     );
 }
 
-// ── Sub-components ────────────────────────────────────────────
-
-// const EmptyState = ({ onSetEditing }) => (
-//     <div className={styles.emptyState}>
-//         <div className={styles.qrCard}>
-//             <div className={styles.qrPlaceholder}>
-//                 <img src="/qr.png" className={styles.qrImage} alt="QR placeholder" />
-//             </div>
-//         </div>
-//         <p className={styles.emptyText}>
-//             Add your profile to connect with people you MEET!
-//         </p>
-//         <button className={styles.addProfileBtn} onClick={() => onSetEditing(true)}>
-//             ADD PROFILE
-//         </button>
-//     </div>
-// );
-
 const QRCard = ({ profile, hasPhoto, qrData, fgColor, bgColor }) => {
-    const avatarSrc = hasPhoto ? profile.photo : null; 
-
-    console.log('QR data:', qrData)
-
-    
+    const avatarSrc = hasPhoto ? profile.photo : null;
     return (
         <div className={styles.qrCardContainer}>
             <div className={styles.qrCard}>
@@ -111,26 +92,50 @@ const QRCard = ({ profile, hasPhoto, qrData, fgColor, bgColor }) => {
     );
 };
 
-const InfoNote = () => (
+const InfoNote = ({ onWhatToDo }) => (
     <p className={styles.infoNote}>
-        <span className={styles.infoIcon}>ⓘ</span>
         {"They don't have it?"}{" "}
-        <a href="#" className={styles.infoLink}>
+        <button className={styles.infoLink} onClick={onWhatToDo}>
             What to Do
-        </a>
+        </button>
     </p>
 );
+
+const STEPS = [
+    {
+        num: "01",
+        icon: "📱",
+        title: "Show Your QR",
+        body: "Show them your QR code.",
+    },
+    {
+        num: "02",
+        icon: "📸",
+        title: "They Capture It",
+        body: "They snap a photo of it.",
+    },
+    {
+        num: "03",
+        icon: "🤝",
+        title: "They Scan Later",
+        body: "When next online, they scan the photo and connect with you!",
+    },
+];
 
 const ConnectBackModal = ({ profile, onDismiss }) => (
     <div className={styles.modalOverlay}>
         <div className={styles.modal}>
-            <button className={styles.modalClose} onClick={onDismiss} aria-label="Close"><img src="/icons/pop/close.svg" alt="" width={20} height={20} /></button>
-            <div className={styles.modalEmoji}><img src="/icons/pop/waving-hand.svg" alt="" width={56} height={56} /></div>
+            <button className={styles.modalClose} onClick={onDismiss} aria-label="Close">
+                <img src="/icons/pop/close.svg" alt="" width={20} height={20} />
+            </button>
+            <div className={styles.modalEmoji}>
+                <img src="/icons/pop/waving-hand.svg" alt="" width={65} height={65} />
+            </div>
             <h3 className={styles.modalTitle}>Connect Back?</h3>
             <p className={styles.modalText}>
-                <strong>{profile.name}</strong> scanned your QR code.
+                <strong>{profile.name}</strong> scanned your QR code. Want to add them back?
             </p>
-            <button className={styles.modalBtn}>ADD THEM BACK</button>
+            <button className={styles.modalBtn}>Add Them Back</button>
         </div>
     </div>
 );
@@ -151,8 +156,8 @@ const MismatchModal = ({ profile, selectedEvent, onDismiss }) => (
                 <div className={styles.eventOption}>General (12)</div>
             </div>
             <div className={styles.modalActions}>
-                <button className={styles.modalCancelBtn} onClick={onDismiss}>CANCEL</button>
-                <button className={styles.modalBtn}>ADD THEM</button>
+                <button className={styles.modalCancelBtn} onClick={onDismiss}>Cancel</button>
+                <button className={styles.modalBtn}>Add Them</button>
             </div>
         </div>
     </div>

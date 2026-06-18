@@ -1,18 +1,20 @@
 import styles from "../styles/components/ConnectPopover.module.scss";
+
 const ACTIONS = [
     {
         id: "show",
-        label: "Show QR",
-        description: "Share your code with others",
-        icon: <img src="/icons/pop/qr-code.svg" alt="" width={36} height={36} />,
+        label: "SHOW QR",
+        description: "Let them scan you",
+        icon: <img src="/icons/pop/qr-code.svg" alt="" width={24} height={24} />,
     },
     {
         id: "scan",
-        label: "Scan QR",
-        description: "Scan another person's code",
-        icon: <img src="/icons/pop/camera.svg" alt="" width={36} height={36} />,
+        label: "SCAN QR",
+        description: "Scan someone else",
+        icon: <img src="/icons/pop/camera.svg" alt="" width={24} height={24} />,
     },
 ];
+
 export default function ConnectPopover({ onSelectAction, onClose }) {
     return (
         <>
@@ -30,7 +32,6 @@ export default function ConnectPopover({ onSelectAction, onClose }) {
                                 <h3 className={styles.actionLabel}>{action.label}</h3>
                                 <p className={styles.actionDescription}>{action.description}</p>
                             </div>
-                            <span className={styles.actionArrow}>→</span>
                         </button>
                     ))}
                 </div>

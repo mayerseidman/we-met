@@ -3,7 +3,9 @@
 .scanQr {
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 80px);
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
     background: #000;
     color: #fff;
     font-family: $font-mono;
@@ -50,10 +52,12 @@
 
     @media (max-width: 480px) {
         max-width: 95%;
+        max-height: calc(100dvh - 260px);
     }
 
     @media (min-width: 768px) {
-        max-width: 320px; // smaller on desktop
+        max-width: 320px;
+        max-height: 275px;
     }
 }
 
@@ -238,57 +242,11 @@
     padding: 1rem;
 }
 
-// — Success / Already Connected Modal —
-.successOverlay {
-    position: fixed;
-    z-index: 100;
-}
-
-.successDesktop {
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 0.2s ease-out;
-}
-
-.successCard {
-    background: $black;
-    border-top: 3px solid $orange;
-    border-radius: 12px 12px 0 0;
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
-    padding: $spacing-md $spacing-lg;
-    font-family: $font-mono;
-    color: $white;
-    display: flex;
-    align-items: center;
-    gap: $spacing-md;
-    position: relative;
-
-    .successDesktop & {
-        border: 2px solid $black;
-        border-radius: 4px;
-        box-shadow: 4px 4px 0 $black;
-        flex-direction: column;
-        text-align: center;
-        padding: $spacing-xl $spacing-lg $spacing-lg;
-        max-width: 360px;
-        width: 100%;
-        background: $cream;
-        color: $black;
-        border-top: 2px solid $black;
-    }
-}
-
+// ── Toast card content (used inside Toast.module.scss wrapper) ─
 .successText {
     flex: 1;
-
-    .successDesktop & {
-        text-align: center;
-    }
+    min-width: 0;
+    margin-left: 5px;
 }
 
 .successTitle {
@@ -303,90 +261,40 @@
 .successName {
     font-size: 1rem;
     font-weight: 600;
-    color: $white;
-    white-space: normal;
+    color: $black;
     line-height: 1.4;
-    padding-right: 2rem;
-
-    .successDesktop & {
-        color: $black;
-    }
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .successEmoji {
     font-size: 2rem;
     flex-shrink: 0;
+    line-height: 1;
 }
 
 .successClose {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: $spacing-md;
     width: 28px;
     height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: none;
-    border: 2px solid rgba(255,255,255,0.3);
+    border: 2px solid rgba(0,0,0,0.2);
     border-radius: 2px;
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    color: rgba(255,255,255,0.6);
+    color: rgba(0,0,0,0.4);
     line-height: 1;
+    flex-shrink: 0;
     transition: all $transition-fast;
 
     &:hover {
-        border-color: $white;
-        color: $white;
+        border-color: $black;
+        color: $black;
     }
-
-    .successDesktop & {
-        top: $spacing-sm;
-        transform: none;
-        border-color: rgba(0,0,0,0.2);
-        color: rgba(0,0,0,0.4);
-
-        &:hover {
-            border-color: $black;
-            color: $black;
-        }
-    }
-}
-
-@keyframes slideDown {
-    from { transform: translateY(0); opacity: 1; }
-    to { transform: translateY(100%); opacity: 0; }
-}
-
-@keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
-}
-
-.successMobile {
-    bottom: 80px;
-    left: 0;
-    right: 0;
-    padding: 0;
-    transform: translateY(0);
-    opacity: 1;
-    transition: transform 0.28s ease-in, opacity 0.28s ease-in;
-    animation: slideUp 0.3s ease-out;
-}
-
-.successMobileClosing {
-    animation: none;  // kill the slide-in animation
-    transform: translateY(100%);
-    opacity: 0;
-    transition: transform 0.28s ease-in, opacity 0.28s ease-in;
-}
-
-.successDesktopClosing {
-    opacity: 0;
-    transition: opacity 0.28s ease-in;
 }
 
 @keyframes slideUp {
@@ -399,7 +307,7 @@
     to { opacity: 1; }
 }
 
-// — What To Do —
+// ── What To Do ────────────────────────────────────────────────
 .whatToDoBackdrop {
     position: fixed;
     inset: 0;
@@ -530,4 +438,3 @@
     color: $black;
     line-height: 1.4;
 }
-

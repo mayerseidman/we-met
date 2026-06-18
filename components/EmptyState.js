@@ -8,11 +8,11 @@ export default function EmptyState({ onSetEditing }) {
                     <img src="/qr.png" className={styles.qrImage} alt="QR placeholder" />
                 </div>*/}
                 <div className={styles.brandPlaceholder}>
-                    <img src="/icons/pop/waving-hand.svg" alt="" width={72} height={72} />
+                    <img src="/icons/pop/waving-hand.svg" alt="" width={95} height={95} />
                 </div>
             </div>
             <p className={styles.emptyText}>
-                Add your profile to connect with people you MEET!
+                Add your profile to connect with people you meet!
             </p>
             <button className={styles.addProfileBtn} onClick={() => onSetEditing(true)}>
                 ADD PROFILE

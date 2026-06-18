@@ -12,6 +12,11 @@
     animation: fadeIn 0.4s ease-out;
 }
 
+.emptyState .qrCard {
+    min-height: 265px;
+    justify-content: center;
+}
+
 .emptyState {
     display: flex;
     flex-direction: column;
@@ -90,8 +95,8 @@
     width: 100%;
     background: $white;
     border: $border-medium;
-    border-radius: 14px;
-    padding: 0rem 1rem 0rem;
+    border-radius: 6px;
+    padding: 1.5rem 1rem;
     box-shadow: $shadow-medium;
     display: flex;
     flex-direction: column;
@@ -171,10 +176,10 @@
     // Inner avatar (image or initials) — small rounded square, no shadow
     img,
     [class*=avatarPlaceholder] {
-        width: 40px;
-        height: 40px;
+        width: 48px;
+        height: 48px;
         border: $border-medium;
-        border-radius: 10px;
+        border-radius: 50%;
         box-shadow: none;
     }
 }
@@ -243,11 +248,17 @@
 }
 
 .infoLink {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: $font-mono;
+    font-size: inherit;
     color: $black;
     font-weight: normal;
     text-decoration: underline;
+    cursor: pointer;
     transition: color $transition-fast;
-    
+
     &:hover {
         color: $orange;
     }
@@ -295,26 +306,28 @@
 .modalOverlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     z-index: 200;
-    padding: 0 $spacing-md;
+    padding: $spacing-xl $spacing-md;
     animation: fadeIn 0.2s ease-out;
+    overflow-y: auto;
 }
 
 .modal {
     background: $white;
     border: 2px solid $black;
     border-radius: 2px;
-    padding: 1.25rem;
+    padding: 1.75rem;
     width: 100%;
-    max-width: 400px;
-    margin: 0 $spacing-md;
+    max-width: 375px;
+    margin: auto;
     box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.15);
     position: relative;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .modalClose {
@@ -326,24 +339,29 @@
     font-size: 1rem;
     cursor: pointer;
     color: $dark-gray;
+    filter: brightness(0) opacity(0.6);
 }
+
+.modalText {
+    margin-bottom: $spacing-xl;
+    line-height: 1.5;
+}
+
 
 .modalEmoji {
     font-size: 2rem;
-    margin-bottom: $spacing-md;
+    margin-bottom: 0.5rem;
 }
 
 .modalTitle {
     font-size: 1.25rem;
-    font-weight: 600;
-    margin: 0 0 0.75rem;
+    margin: 0 0 1rem;
 }
 
-.modalText {
-    font-size: 0.9rem;
-    color: $dark-gray;
-    margin-bottom: $spacing-xl;
-    margin-top: 0;
+.modalSubtitle {
+    font-size: 0.85rem;
+    color: $medium-gray;
+    margin: 0.25rem 0 0;
 }
 
 .modalSubLabel {
@@ -403,4 +421,105 @@
 @keyframes slideUp {
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+.stepsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    text-align: left;
+    margin-top: $spacing-lg;
+}
+
+.stepRow {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-md 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+
+    &:last-child { border-bottom: none; }
+}
+
+.stepNum {
+    width: 28px;
+    height: 28px;
+    background: $black;
+    color: $yellow;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.stepText {
+    font-size: 0.9rem;
+    margin: 0;
+    color: $black;
+    line-height: 1.5;
+}
+
+.wtdSteps {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    margin-top: $spacing-lg;
+    text-align: left;
+}
+
+.wtdStep {
+    position: relative;
+    background: $white;
+    border: 2.5px solid $black;
+    border-radius: 14px;
+    padding: 14px 14px 14px 12px;
+    box-shadow: 3px 3px 0 rgba($black, 0.15);
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+}
+
+.wtdNum {
+    position: absolute;
+    top: -12px;
+    right: 12px;
+    background: $black;
+    color: $yellow;
+    font-family: $font-mono;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.wtdIcon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.wtdText {
+    flex: 1;
+    min-width: 0;
+}
+
+.wtdTitle {
+    font-family: $font-mono;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 2px;
+    color: $orange;
+}
+
+.wtdBody {
+    font-size: 0.8rem;
+    color: $dark-gray;
+    margin: 0;
+    line-height: 1.4;
 }

@@ -12,6 +12,7 @@
     max-width: 400px;
     margin: 0 auto;
     width: 100%;
+    padding: 0 $spacing-md;
 }
 
 .loading {
@@ -33,113 +34,95 @@
     letter-spacing: 1px;
 }
 
-.meta {
-    display: flex;
-    gap: $spacing-md;
-    align-items: center;
-}
-
-.metaItem {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: $brown;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-
-    svg {
-        opacity: 0.7;
-    }
+.titleCount {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: $dark-gray;
+    letter-spacing: normal;
+    margin-left: 0.35rem;
 }
 
 // ── Banners ───────────────────────────────────────────────────
-.banner {
+// ── Top banner (full-width system strip) ───────────────────────
+.topBanner {
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem $spacing-md;
-    margin: 0 $spacing-md $spacing-md;
-    background: $white;
-    border: $border-medium;
-    border-radius: 12px;
-    box-shadow: $shadow-small;
-}
-
-.bannerText {
+    justify-content: center;
+    gap: $spacing-md;
+    padding: 0.6rem $spacing-md;
+    background: rgba($orange, 0.2);
+    border-bottom: 1px solid rgba($black, 0.25);
     font-size: 0.8rem;
-    font-weight: 600;
+    flex-wrap: wrap;
+    text-align: center;
 }
 
-.bannerActions {
+.topBannerText {
+    font-weight: 600;
+    color: $black;
+}
+
+.topBannerActions {
     display: flex;
+    align-items: center;
     gap: $spacing-sm;
-    margin-left: $spacing-md;
 }
 
-.bannerBtn {
-    padding: 0.5rem 0.85rem;
-    background: $orange;
-    color: $white;
-    border: 3px solid $black;
-    border-radius: 10px;
+.topBannerLink {
+    background: none;
+    border: none;
+    padding: 0;
     font-family: $font-mono;
-    font-weight: 600;
-    font-size: 0.75rem;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-decoration: underline;
     cursor: pointer;
     white-space: nowrap;
-    box-shadow: 4px 4px 0 rgba($black, 0.3);
-    transition: all $transition-fast;
+    transition: color $transition-fast;
 
     &:hover {
-        transform: translate(2px, 2px);
-        box-shadow: 2px 2px 0 rgba($black, 0.3);
-    }
-
-    &:active {
-        transform: translate(4px, 4px);
-        box-shadow: none;
+        color: $orange;
     }
 }
 
-.bannerClose {
+.topBannerClose {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     padding: 0;
-    background: transparent;
-    border: 2px solid $black;
-    border-radius: 10px;
+    background: none;
+    border: none;
     cursor: pointer;
-    transition: all $transition-fast;
+    opacity: 0.5;
+    transition: opacity $transition-fast;
 
     &:hover {
-        background: rgba($black, 0.05);
+        opacity: 1;
     }
 }
 
 // ── Empty State ───────────────────────────────────────────────
 .empty {
     text-align: center;
-    padding: $spacing-2xl $spacing-md;
+    padding: $spacing-lg 0 $spacing-2xl;
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 32rem;
+    max-width: 26rem;
     margin: 0 auto;
 }
 
 .emptyIcon {
-    margin-bottom: $spacing-lg;
+    margin-bottom: $spacing-md;
     display: inline-flex;
 
     img {
         display: block;
+        width: 64px;
+        height: 64px;
         animation: emptyHandshake 3.6s ease-in-out infinite;
         transform-origin: 50% 80%;
     }
@@ -158,22 +141,13 @@
     .emptyIcon img { animation: none; }
 }
 
-.emptyTitle {
-    font-family: $font-mono;
-    font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: $black;
-    margin: 0 0 $spacing-sm;
-}
-
 .emptyText {
     font-family: $font-sans;
     font-size: 0.95rem;
     font-weight: 500;
     line-height: 1.55;
     color: $dark-gray;
-    max-width: 30ch;
+    max-width: 26ch;
     margin: 0 auto $spacing-xl;
 
     strong {
@@ -185,50 +159,55 @@
     }
 }
 
+// ── Empty state steps — matches WhatToDoModal style ────────────
 .emptySteps {
     display: flex;
     flex-direction: column;
-    gap: $spacing-sm;
+    gap: $spacing-md;
     width: 100%;
     max-width: 18rem;
+    text-align: left;
 }
 
 .emptyStep {
+    position: relative;
+    width: 100%;
+    background: $white;
+    border: 2.5px solid $black;
+    border-radius: 14px;
+    padding: 14px 14px 14px 12px;
+    box-shadow: 3px 3px 0 rgba($black, 0.15);
     display: flex;
     align-items: center;
     gap: $spacing-md;
-    padding: 10px 14px;
-    background: $white;
-    border: $border-medium;
-    border-radius: 12px;
-    box-shadow: $shadow-small;
     font-family: $font-mono;
     font-size: 0.9rem;
     font-weight: 600;
     color: $black;
-    text-align: left;
+}
+
+.emptyStepIcon {
+    flex-shrink: 0;
+    opacity: 0.85;
+    filter: brightness(0) saturate(100%);
 }
 
 .emptyStepNum {
-    width: 26px;
-    height: 26px;
-    flex: 0 0 26px;
-    border-radius: 50%;
-    background: $yellow;
-    border: 2px solid $black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: absolute;
+    top: -12px;
+    right: 12px;
+    background: $black;
+    color: $yellow;
     font-family: $font-mono;
     font-weight: 700;
-    font-size: 0.8rem;
-    color: $black;
-    font-variant-numeric: tabular-nums;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 6px;
 }
 
 // ── List ──────────────────────────────────────────────────────
 .list {
-    padding: 0 $spacing-md;
     display: flex;
     flex-direction: column;
     gap: $spacing-md;
@@ -258,7 +237,7 @@
     padding: 0.875rem $spacing-md;
     background: $white;
     border: $border-medium;
-    border-radius: 12px;
+    border-radius: 2px;
     box-shadow: $shadow-small;
     cursor: pointer;
     font-family: $font-mono;
@@ -266,6 +245,7 @@
     transition: all $transition-fast;
 
     &:hover {
+        opacity: 0.85;
         transform: translate(-1px, -1px);
         box-shadow: $shadow-medium;
         border-color: $orange;
@@ -286,7 +266,7 @@
     font-size: 0.95rem;
     font-weight: 700;
     color: $black;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.4rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -295,10 +275,10 @@
 .cardMeta {
     display: flex;
     align-items: center;
-    gap: $spacing-md;
-    font-size: 0.7rem;
-    color: $gray;
-    font-weight: 600;
+    gap: 0.6rem;
+    font-size: 0.72rem;
+    color: $dark-gray;
+    font-weight: 700;
 
     span {
         display: flex;
@@ -308,13 +288,56 @@
 
     svg {
         flex-shrink: 0;
-        opacity: 0.6;
+        opacity: 0.8;
     }
 }
 
-.chevron {
-    color: $light-gray;
+.cardMetaDivider {
+    width: 1px;
+    height: 11px;
+    background: rgba($black, 0.18);
     flex-shrink: 0;
+}
+
+.cardAvatar {
+    display: inline-flex;
+    flex-shrink: 0;
+}
+
+@keyframes cardAvatarBounce {
+    0%, 100% { transform: translateX(0); }
+    30%      { transform: translateX(-3px); }
+    60%      { transform: translateX(2px); }
+}
+
+.card:hover .cardAvatar {
+    animation: cardAvatarBounce 0.65s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card:hover .cardAvatar { animation: none; }
+}
+
+.chevron {
+    color: $black;
+    flex-shrink: 0;
+    transition: opacity $transition-fast;
+}
+
+@keyframes chevronWiggle {
+    0%, 100% { transform: translateX(0); }
+    30%      { transform: translateX(-0.5px); }
+    60%      { transform: translateX(1.5px); }
+}
+
+.card:hover .chevron {
+    color: $orange;
+    opacity: 1;
+    animation: chevronWiggle 0.45s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card:hover .chevron { animation: none; }
 }
 
 // ── Detail View ───────────────────────────────────────────────
@@ -478,4 +501,180 @@
 
 .contactBtnCopied {
     background: $green;
+}
+
+// ── Loading state ─────────────────────────────────────────────
+.loadingPage {
+    min-height: 100vh;
+    background: $cream;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-md;
+    font-family: $font-mono;
+}
+
+.loadingSpinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgba($black, 0.15);
+    border-top-color: $orange;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loadingText {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $dark-gray;
+}
+
+// ── Search + filter (merged single bar) ─────────────────────────
+.searchRow {
+    margin-bottom: $spacing-md;
+}
+
+.searchWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem $spacing-md;
+    background: $white;
+    border: $border-medium;
+    border-radius: 2px;
+    box-shadow: $shadow-small;
+}
+
+.searchIcon {
+    color: $medium-gray;
+    flex-shrink: 0;
+}
+
+.searchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: $font-mono;
+    font-size: 0.9rem;
+    background: transparent;
+    color: $black;
+    min-width: 0;
+
+    &::placeholder {
+        color: rgba($black, 0.4);
+    }
+}
+
+.searchClear {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $medium-gray;
+    font-size: 0.75rem;
+    padding: 0;
+    line-height: 1;
+    flex-shrink: 0;
+
+    &:hover {
+        color: $black;
+    }
+}
+
+.filterDivider {
+    width: 1px;
+    height: 22px;
+    background: rgba($black, 0.15);
+    flex-shrink: 0;
+}
+
+.filterTrigger {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    color: $black;
+    cursor: pointer;
+    transition: color $transition-fast;
+
+    &:hover {
+        color: $orange;
+    }
+}
+
+.filterTriggerActive {
+    color: $orange;
+}
+
+.filterBadge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 16px;
+    height: 16px;
+    background: $orange;
+    color: $white;
+    border-radius: 50%;
+    font-size: 0.6rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid $white;
+}
+
+// ── No results ────────────────────────────────────────────────
+.noResults {
+    text-align: center;
+    padding: $spacing-2xl $spacing-md;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.noResultsIcon {
+    margin-bottom: $spacing-md;
+}
+
+.noResultsTitle {
+    font-family: $font-mono;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $black;
+    margin-bottom: $spacing-sm;
+}
+
+.noResultsText {
+    font-size: 0.9rem;
+    color: $dark-gray;
+    margin: 0 0 $spacing-lg;
+    max-width: 28ch;
+}
+
+.noResultsClear {
+    padding: 0.75rem $spacing-lg;
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    font-family: $font-mono;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: $black;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+        border-color: $orange;
+        color: $orange;
+    }
 }

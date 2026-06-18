@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import Avatar from './Avatar';
+import toastStyles from '../styles/components/Toast.module.scss';
 import styles from '../styles/components/ScanQR.module.scss';
 
-export default function ScanSuccessModal({ name, photo, onDismiss, isMobile }) {
+export default function ScanSuccessModal({ name, photo, onDismiss }) {
     const [closing, setClosing] = useState(false);
 
     const handleDismiss = () => {
@@ -17,16 +18,13 @@ export default function ScanSuccessModal({ name, photo, onDismiss, isMobile }) {
 
     return (
         <div
-            className={`${styles.successOverlay} ${isMobile ? styles.successMobile : styles.successDesktop} ${closing && isMobile ? styles.successMobileClosing : ''} ${closing && !isMobile ? styles.successDesktopClosing : ''}`}
+            className={`${toastStyles.toast} ${closing ? toastStyles.toastClosing : ''}`}
             onClick={handleDismiss}
         >
-            <div className={styles.successCard} onClick={e => e.stopPropagation()}>
-                <button className={styles.successClose} onClick={handleDismiss}>×</button>
-                <Avatar src={photo} name={name} size={44} />
-                <div className={styles.successText}>
-                    <div className={styles.successTitle}>New Connection Added</div>
-                    <div className={styles.successName}>{name}</div>
-                </div>
+            <Avatar src={photo} name={name} size={44} />
+            <div className={styles.successText}>
+                <div className={styles.successTitle}>New Connection Added</div>
+                <div className={styles.successName}>{name}</div>
             </div>
         </div>
     );

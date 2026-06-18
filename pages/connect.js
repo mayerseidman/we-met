@@ -71,7 +71,12 @@ export default function ConnectPage({ onDropdownToggle }) {
     const router = useRouter();
     const { profile, isReady } = useStorage();
     const [showEventDrawer, setShowEventDrawer] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState("Afrikaburn 2025");
+    const [selectedEvent, setSelectedEvent] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('selectedEvent') || "Burning Man 2026";
+        }
+        return "Burning Man 2026";
+    });
     const [isMobile, setIsMobile] = useState(false);
     const [devMode, setDevMode] = useState(DEV_DEFAULT);
     const [scanDevMode, setScanDevMode] = useState(SCAN_DEV_DEFAULT);
@@ -129,6 +134,7 @@ export default function ConnectPage({ onDropdownToggle }) {
 
     const handleEventChange = useCallback((event) => {
         setSelectedEvent(event);
+        localStorage.setItem('selectedEvent', event);
         setShowEventDrawer(false);
     }, []);
 
