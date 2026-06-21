@@ -316,7 +316,7 @@ export default function Meets() {
                         <div className={styles.emptyTitleRow}>
                             <img src={`${POP}/handshake.svg`} alt="" width={22} height={22} style={{ flexShrink: 0 }} />
                             <p className={styles.emptyText}>
-                                You have no meets yet. Let's change that!
+                                You have no meets yet. Let&apos;s change that!
                             </p>
                         </div>
                         <StepCardList steps={EMPTY_STEPS} />
