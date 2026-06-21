@@ -1,0 +1,50 @@
+@use '../variables' as *;
+
+.stepList {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    width: 100%;
+    max-width: 18rem;
+    text-align: left;
+}
+
+.stepCard {
+    position: relative;
+    width: 100%;
+    background: $white;
+    border: 2.5px solid $black;
+    border-radius: 14px;
+    padding: 14px 14px 14px 12px;
+    box-shadow: 3px 3px 0 rgba($black, 0.15);
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    font-family: $font-mono;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $black;
+}
+
+.stepIcon {
+    flex-shrink: 0;
+    opacity: 0.85;
+}
+
+.stepLabel {
+    flex: 1;
+}
+
+.stepNum {
+    position: absolute;
+    top: -12px;
+    right: 12px;
+    background: $black;
+    color: $yellow;
+    font-family: $font-mono;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 6px;
+}

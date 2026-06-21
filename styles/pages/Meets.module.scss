@@ -13,24 +13,22 @@
     margin: 0 auto;
     width: 100%;
     padding: 0 $spacing-md;
-}
-
-.loading {
-    min-height: 100vh;
-    background: $cream;
+    animation: detailFadeInUp 0.2s ease-out;
 }
 
 // ── Header ────────────────────────────────────────────────────
 .header {
     padding: $spacing-xl $spacing-md $spacing-md;
+    padding-bottom: 1.5rem;
     text-align: center;
 }
 
 .title {
-    font-size: 2rem;
+    font-size: 2.25rem;
     font-weight: 600;
     color: $black;
     margin: 0 0 $spacing-sm;
+    margin-bottom: 0;
     letter-spacing: 1px;
 }
 
@@ -104,10 +102,15 @@
     }
 }
 
-// ── Empty State ───────────────────────────────────────────────
+// ── No-profile state (reuses shared EmptyState component) ──────
+.noProfileWrapper {
+    margin-top: -2rem; // compensates for EmptyState's built-in top padding (from ShowQR.module.scss), which wasn't designed for use under Meets' own header — adjust if it doesn't line up
+}
+
+// ── Empty State (has profile, zero connections) ────────────────
 .empty {
     text-align: center;
-    padding: $spacing-lg 0 $spacing-2xl;
+    padding: 0 0 $spacing-2xl;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -115,30 +118,12 @@
     margin: 0 auto;
 }
 
-.emptyIcon {
-    margin-bottom: $spacing-md;
-    display: inline-flex;
-
-    img {
-        display: block;
-        width: 64px;
-        height: 64px;
-        animation: emptyHandshake 3.6s ease-in-out infinite;
-        transform-origin: 50% 80%;
-    }
-}
-
-@keyframes emptyHandshake {
-    0%, 60%, 100% { transform: rotate(0deg); }
-    8%           { transform: rotate(-6deg); }
-    16%          { transform: rotate(6deg); }
-    24%          { transform: rotate(-4deg); }
-    32%          { transform: rotate(4deg); }
-    44%          { transform: rotate(0deg); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .emptyIcon img { animation: none; }
+.emptyTitleRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .emptyText {
@@ -147,63 +132,13 @@
     font-weight: 500;
     line-height: 1.55;
     color: $dark-gray;
-    max-width: 26ch;
-    margin: 0 auto $spacing-xl;
-
-    strong {
-        font-family: $font-mono;
-        font-weight: 600;
-        color: $black;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
+    max-width: 32ch;
+    margin: 0;
 }
 
-// ── Empty state steps — matches WhatToDoModal style ────────────
-.emptySteps {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-md;
-    width: 100%;
-    max-width: 18rem;
-    text-align: left;
-}
-
-.emptyStep {
-    position: relative;
-    width: 100%;
-    background: $white;
-    border: 2.5px solid $black;
-    border-radius: 14px;
-    padding: 14px 14px 14px 12px;
-    box-shadow: 3px 3px 0 rgba($black, 0.15);
-    display: flex;
-    align-items: center;
-    gap: $spacing-md;
-    font-family: $font-mono;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: $black;
-}
-
-.emptyStepIcon {
-    flex-shrink: 0;
-    opacity: 0.85;
-    filter: brightness(0) saturate(100%);
-}
-
-.emptyStepNum {
-    position: absolute;
-    top: -12px;
-    right: 12px;
-    background: $black;
-    color: $yellow;
-    font-family: $font-mono;
+.emptyConnect {
+    color: $orange;
     font-weight: 700;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    padding: 3px 8px;
-    border-radius: 6px;
 }
 
 // ── List ──────────────────────────────────────────────────────
@@ -224,7 +159,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: $brown;
+    color: rgba($black, 0.72);
     padding: 0 0.25rem;
 }
 
@@ -242,10 +177,11 @@
     cursor: pointer;
     font-family: $font-mono;
     text-align: left;
+    overflow: hidden;
     transition: all $transition-fast;
 
     &:hover {
-        opacity: 0.85;
+        opacity: 0.8;
         transform: translate(-1px, -1px);
         box-shadow: $shadow-medium;
         border-color: $orange;
@@ -260,6 +196,7 @@
 .cardInfo {
     flex: 1;
     min-width: 0;
+    overflow: hidden;
 }
 
 .cardName {
@@ -279,16 +216,32 @@
     font-size: 0.72rem;
     color: $dark-gray;
     font-weight: 700;
+    min-width: 0;
 
     span {
         display: flex;
         align-items: center;
         gap: 0.3rem;
+        flex-shrink: 0;
+        white-space: nowrap;
     }
 
     svg {
         flex-shrink: 0;
         opacity: 0.8;
+    }
+
+    .cardMetaEvent {
+        flex-shrink: 1;
+    }
+
+    .cardMetaEventText {
+        display: inline-block !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width: 0;
+        max-width: 100%;
     }
 }
 
@@ -340,62 +293,83 @@
     .card:hover .chevron { animation: none; }
 }
 
-// ── Detail View ───────────────────────────────────────────────
-.detail {
-    padding: $spacing-md;
+// ── Detail View — full-bleed zones, centered content ────────────
+// .detailPage has no max-width — each zone's background goes edge to
+// edge, while .detailInner (nested inside each zone) caps content at
+// 400px and centers it, matching the rest of the app's content width.
+
+@keyframes detailFadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.detailPage {
+    width: 100%;
+    animation: detailFadeInUp 0.2s ease-out;
+}
+
+.detailInner {
     max-width: 400px;
     margin: 0 auto;
     width: 100%;
 }
 
+.detailHeaderBar {
+    padding: $spacing-md;
+    border-bottom: 1px solid rgba($black, 0.12);
+}
+
 .backBtn {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.2rem;
     background: none;
     border: none;
     font-family: $font-mono;
     font-size: 0.875rem;
     font-weight: 700;
-    color: $orange;
+    color: $black;
     cursor: pointer;
     padding: 0;
-    margin-bottom: $spacing-xl;
     transition: all $transition-fast;
 
     &:hover {
-        gap: 0.6rem;
+        gap: 0.15rem;
+        color: $orange;
+        text-decoration: underline;
     }
 }
 
-.detailTop {
+.detailCover {
+    background: rgba($orange, 0.12);
+    border-bottom: 1px solid rgba($black, 0.12);
+    padding: $spacing-xl $spacing-md;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    margin-bottom: $spacing-xl;
+
+    img,
+    [class*="avatarPlaceholder"] {
+        border-radius: 50% !important;
+    }
 }
 
 .detailName {
-    font-size: 1.75rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 700;
     color: $black;
-    margin: $spacing-md 0 $spacing-sm;
+    margin: 0.4rem 0 0.85rem; // tighter to avatar above, more space before meta row below
     letter-spacing: 0.5px;
 }
 
-.detailPill {
+.detailMetaRow {
     display: flex;
     align-items: center;
     gap: $spacing-md;
-    padding: 0.5rem $spacing-md;
-    background: $white;
-    border: 1.5px solid $black;
-    border-radius: 2px;
-    box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: $gray;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $dark-gray;
 
     span {
         display: flex;
@@ -404,46 +378,52 @@
     }
 
     svg {
-        opacity: 0.6;
+        color: $orange;
+        flex-shrink: 0;
     }
+
+    img {
+        flex-shrink: 0;
+    }
+}
+
+.detailContent {
+    padding: $spacing-xl $spacing-md;
 }
 
 // ── Detail Sections ───────────────────────────────────────────
 .detailSection {
     margin-bottom: $spacing-xl;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .detailSectionLabel {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: $dark-gray;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: rgba($black, 0.72);
     margin-bottom: $spacing-sm;
 }
 
-.detailAbout {
+.detailAboutText {
     font-family: $font-mono;
     font-size: 0.9rem;
     line-height: 1.6;
     color: $black;
-    padding: $spacing-md;
-    background: $white;
-    border: 1.5px solid $black;
-    border-radius: 2px;
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+    margin: 0;
 }
 
-// ── Contact Rows ──────────────────────────────────────────────
-.contactRow {
+// ── Contact Tiles (quiet, plain — no boxed buttons) ─────────────
+.contactTile {
     display: flex;
     align-items: center;
     gap: $spacing-md;
     padding: 0.875rem $spacing-md;
-    background: $white;
-    border: 1.5px solid $black;
+    background: $off-white;
+    border: 1.5px solid rgba($black, 0.15);
     border-radius: 2px;
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
     margin-bottom: $spacing-sm;
 
     &:last-child {
@@ -451,68 +431,72 @@
     }
 }
 
-.contactIcon {
+.contactIconBadge {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: $cream;
-    border: 1.5px solid $black;
+    background: rgba($orange, 0.15);
+    color: $orange;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+
+    svg {
+        display: block;
+    }
 }
 
-.contactText {
+.contactValue {
     flex: 1;
     font-size: 0.9rem;
     font-weight: 700;
+    color: $black;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.contactBtn {
+.contactActionQuiet {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.4rem 0.875rem;
-    background: $orange;
-    color: $white;
-    border: 2px solid $black;
-    border-radius: 2px;
+    gap: 0.3rem;
+    background: none;
+    border: none;
+    padding: 0;
     font-family: $font-mono;
-    font-size: 0.7rem;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    color: $black;
     cursor: pointer;
     white-space: nowrap;
     flex-shrink: 0;
-    transition: all $transition-fast;
-    box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+    transition: color $transition-fast;
 
     &:hover {
-        transform: translate(1px, 1px);
-        box-shadow: none;
+        color: $orange;
+        text-decoration: underline;
     }
 }
 
-.contactBtnCopied {
-    background: $green;
+.contactActionCopied {
+    color: $green;
+
+    &:hover {
+        color: $green;
+    }
 }
 
-// ── Loading state ─────────────────────────────────────────────
-.loadingPage {
-    min-height: 100vh;
-    background: $cream;
+// ── Loading state — header + spinner + skeleton cards ──────────
+.loadingSpinnerRow {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: $spacing-md;
-    font-family: $font-mono;
+    gap: $spacing-sm;
+    padding: $spacing-sm 0 $spacing-xl;
 }
 
 .loadingSpinner {
@@ -534,9 +518,58 @@
     color: $dark-gray;
 }
 
+.skeletonList {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+}
+
+.skeletonCard {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: 0.875rem $spacing-md;
+    background: $white;
+    border: $border-medium;
+    border-radius: 2px;
+    box-shadow: $shadow-small;
+}
+
+.skeletonAvatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba($black, 0.08);
+    flex-shrink: 0;
+    animation: skeletonPulse 1.4s ease-in-out infinite;
+}
+
+.skeletonLines {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.skeletonLine {
+    height: 10px;
+    border-radius: 4px;
+    background: rgba($black, 0.08);
+    animation: skeletonPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.4; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skeletonAvatar, .skeletonLine { animation: none; }
+}
+
 // ── Search + filter (merged single bar) ─────────────────────────
 .searchRow {
-    margin-bottom: $spacing-md;
+    margin-bottom: $spacing-lg;
 }
 
 .searchWrapper {
@@ -631,17 +664,68 @@
     border: 1.5px solid $white;
 }
 
+// ── Active filter pills ──────────────────────────────────────
+.activeFilters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: -$spacing-md;
+    margin-bottom: $spacing-lg;
+}
+
+.filterPill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.5rem 0.35rem 0.75rem;
+    background: rgba($orange, 0.1);
+    border: 1.5px solid $orange;
+    border-radius: 999px;
+    box-shadow: 2px 2px 0 rgba($orange, 0.15);
+    font-family: $font-mono;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: $orange;
+}
+
+.filterPillRemove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    background: none;
+    border: none;
+    padding: 0;
+    color: $orange;
+    cursor: pointer;
+    font-size: 0.7rem;
+    line-height: 1;
+    transition: opacity $transition-fast;
+
+    &:hover {
+        opacity: 0.6;
+    }
+}
+
 // ── No results ────────────────────────────────────────────────
 .noResults {
     text-align: center;
-    padding: $spacing-2xl $spacing-md;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+.noResultsTitleRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
 .noResultsIcon {
-    margin-bottom: $spacing-md;
+    margin-bottom: 0.3rem;
 }
 
 .noResultsTitle {
@@ -649,7 +733,6 @@
     font-size: 1.1rem;
     font-weight: 700;
     color: $black;
-    margin-bottom: $spacing-sm;
 }
 
 .noResultsText {
@@ -660,21 +743,7 @@
 }
 
 .noResultsClear {
-    padding: 0.75rem $spacing-lg;
-    background: $white;
-    border: 2px solid $black;
-    border-radius: 2px;
-    font-family: $font-mono;
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: $black;
-    cursor: pointer;
-    transition: all $transition-fast;
-
-    &:hover {
-        border-color: $orange;
-        color: $orange;
-    }
+    @include cta-primary;
+    min-height: auto;
+    box-shadow: $shadow-small;
 }

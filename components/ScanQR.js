@@ -160,7 +160,7 @@ export default function ScanQR({
     if (devMode.noProfile || !profile) {
         return (
             <div style={{ background: '#FFEFD7', minHeight: '100vh', paddingBottom: '5rem' }}>
-                <h1 style={{ textAlign: 'center', padding: '2rem 0 1rem', margin: 0, fontSize: '2rem', fontWeight: 900, fontFamily: 'inherit' }}>
+                <h1 style={{ textAlign: 'center', padding: '2rem 0 1rem', paddingBottom: '1.5rem', margin: 0, fontSize: '2rem', fontWeight: 900, fontFamily: 'inherit' }}>
                     Scan QR
                 </h1>
                 <div style={{ maxWidth: '375px', margin: '0 auto', padding: '0 1rem' }}>
@@ -172,7 +172,7 @@ export default function ScanQR({
 
     return (
         <div className={styles.scanQr}>
-            <h1 style={{ color: '#fff', textAlign: 'center', padding: '2rem 0 1rem', margin: 0, fontSize: '2rem', fontWeight: 900 }}>
+            <h1 style={{ color: '#fff', textAlign: 'center', padding: '2rem 0 1rem', paddingBottom: '1.5rem', margin: 0, fontSize: '2rem', fontWeight: 900 }}>
                 Scan QR
             </h1>
             <div className={styles.inner}>
@@ -282,7 +282,7 @@ const ScanSuccessModal = ({ name, photo, onDismiss }) => {
     }, []);
 
     return (
-        <div className={toastStyles.toast} onClick={onDismiss}>
+        <div className={`${toastStyles.toast} ${styles.toastLight}`} onClick={onDismiss}>
             <Avatar src={photo} name={name} size={44} />
             <div className={styles.successText}>
                 <div className={styles.successTitle}>New Connection Added</div>
@@ -299,7 +299,7 @@ const AlreadyConnectedModal = ({ name, daysAgo, onDismiss }) => {
     }, []);
 
     return (
-        <div className={toastStyles.toast} onClick={onDismiss}>
+        <div className={`${toastStyles.toast} ${styles.toastLight}`} onClick={onDismiss}>
             <div className={styles.successEmoji}>
                 <img src={`${POP}/handshake.svg`} alt="" width={36} height={36} />
             </div>
@@ -318,7 +318,7 @@ const ScanErrorModal = ({ onDismiss }) => {
     }, []);
 
     return (
-        <div className={toastStyles.toast} onClick={onDismiss}>
+        <div className={`${toastStyles.toast} ${styles.toastLight}`} onClick={onDismiss}>
             <div className={styles.successEmoji}>💩</div>
             <div className={styles.successText}>
                 <div className={styles.successTitle}>Scan Failed</div>

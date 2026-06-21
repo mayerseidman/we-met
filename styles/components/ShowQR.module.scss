@@ -35,6 +35,23 @@
     align-items: center;
     justify-content: center;
     font-size: 7.5rem;
+    img {
+        animation: emptyWave 3.6s ease-in-out infinite;
+        transform-origin: 50% 80%;
+    }
+}
+
+@keyframes emptyWave {
+    0%, 60%, 100% { transform: rotate(0deg); }
+    8%           { transform: rotate(-6deg); }
+    16%          { transform: rotate(6deg); }
+    24%          { transform: rotate(-4deg); }
+    32%          { transform: rotate(4deg); }
+    44%          { transform: rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .brandPlaceholder img { animation: none; }
 }
 
 

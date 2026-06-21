@@ -34,6 +34,10 @@ function MyApp({ Component, pageProps }) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
 
+    const isPendingProfileSync = router.pathname === '/' && (authLoading || (user && !profileSynced))
+    const isHomeRedirecting = router.pathname === '/' && !authLoading && isReady && profileSynced && (profile || user)
+
+
     // Must be first effect — gates everything else
     useEffect(() => {
         setMounted(true);
@@ -124,8 +128,11 @@ function MyApp({ Component, pageProps }) {
         </Head>
     );
 
-    // Block render until client has mounted and storage is ready
-    if (!mounted || !isReady) {
+    // Block render until client has mounted, storage is ready, and (for a
+    // logged-in user landing on '/') we know whether to redirect them —
+    // otherwise the marketing page briefly flashes before the redirect fires.
+
+    if (!mounted || !isReady || isPendingProfileSync || isHomeRedirecting) {
         return (
             <>
                 {ogHead}
@@ -152,6 +159,7 @@ function MyApp({ Component, pageProps }) {
                     {...pageProps}
                     onDropdownToggle={setIsDropdownOpen}
                     user={user}
+                    authLoading={authLoading}
                 />
             </div>
             {showNav && (

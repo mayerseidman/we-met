@@ -90,7 +90,9 @@
     align-items: center;
     justify-content: space-between;
     padding: $spacing-lg $spacing-lg;
-    border-bottom: 2px solid rgba($black, 0.12);
+    border-bottom: 1px solid rgba($black, 0.12); // lighter than full black, matching EventDrawer's softened version
+    margin: 0 0rem 1rem;
+    padding-bottom: $spacing-md; // re-add since margin replaces what border-bottom used to butt against
     flex-shrink: 0;
 }
 
@@ -113,10 +115,6 @@
     border-radius: 2px;
     cursor: pointer;
     transition: all $transition-fast;
-
-    img {
-        filter: brightness(0) opacity(0.6);
-    }
 
     &:hover {
         border-color: $orange;
@@ -150,15 +148,18 @@
 }
 
 // ── Festival select ───────────────────────────────────────────
-.selectWrapper {
+
+// ── Custom filter dropdown (replaces native select) ──────────
+.dropdownWrapper {
     position: relative;
-    display: flex;
-    align-items: center;
 }
 
-.select {
+.dropdownTrigger {
     width: 100%;
-    padding: 0.875rem 2.5rem 0.875rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1rem;
     font-family: $font-mono;
     font-size: 1rem;
     font-weight: 600;
@@ -166,14 +167,87 @@
     background: $white;
     border: 2px solid $black;
     border-radius: 2px;
-    appearance: none;
-    -webkit-appearance: none;
     cursor: pointer;
+    transition: border-color $transition-fast;
 
-    &:focus {
-        outline: none;
+    &:hover {
         border-color: $orange;
     }
+}
+
+.dropdownTriggerOpen {
+    border-color: $orange;
+}
+
+.dropdownValue {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dropdownArrow {
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+    color: $black;
+    transition: transform $transition-fast;
+}
+
+.dropdownArrowOpen {
+    transform: rotate(180deg);
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    max-height: 240px;
+    overflow-y: auto;
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    box-shadow: $shadow-medium;
+    z-index: 10;
+    padding: $spacing-xs;
+}
+
+.dropdownItem {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacing-sm;
+    padding: 0.65rem 0.75rem;
+    background: none;
+    border: none;
+    border-radius: 2px;
+    font-family: $font-mono;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $black;
+    text-align: left;
+    cursor: pointer;
+    transition: background $transition-fast;
+
+    &:hover {
+        background: rgba($orange, 0.08);
+    }
+}
+
+.dropdownItemSelected {
+    background: rgba($orange, 0.1);
+    color: $orange;
+}
+
+.dropdownItemLabel {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.checkmark {
+    color: $orange;
+    flex-shrink: 0;
 }
 
 .selectArrow {
@@ -188,7 +262,10 @@
     display: flex;
     gap: $spacing-md;
     padding: $spacing-lg;
-    border-top: 2px solid rgba($black, 0.12);
+    padding-left: 0;
+    padding-right: 0;
+    border-top: 1px solid rgba($black, 0.12); // same lighter tone as the header divider
+    margin: 1rem 1.5rem 0;
     flex-shrink: 0;
 }
 
@@ -231,3 +308,17 @@
         background: $dark-orange;
     }
 }
+
+.viewBtnCount {
+    animation: viewCountIn 0.18s ease-out;
+}
+ 
+@keyframes viewCountIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+}
+ 
+@media (prefers-reduced-motion: reduce) {
+    .viewBtnCount { animation: none; }
+}
+ 

@@ -49,7 +49,7 @@
 
 // ── Name ──────────────────────────────────────────────────────
 .name {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
     font-weight: 600;
     text-align: center;
     margin-top: 16px;
@@ -194,7 +194,39 @@
     margin-top: 8px;
 }
 
+.signInLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    font-family: $font-mono;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $medium-gray;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-top: 1.25rem;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    transition: color $transition-fast;
+
+    svg {
+        flex-shrink: 0;
+    }
+
+    &:hover {
+        color: $orange;
+    }
+}
+
 .signOutBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     background: none;
     border: none;
     font-family: $font-mono;
@@ -205,10 +237,13 @@
     text-decoration: underline;
     margin-top: $spacing-md;
     padding: 0;
-    display: block;
     width: 100%;
     text-align: center;
     transition: color $transition-fast;
+
+    svg {
+        flex-shrink: 0;
+    }
 
     &:hover {
         color: $orange;

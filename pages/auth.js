@@ -19,7 +19,7 @@
 // ever creating an account. Auth is additive, not required.
 // ══════════════════════════════════════════════════════════════
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { signUp, signIn, resetPassword } from '../lib/auth'
 import Toast from '../components/Toast'
@@ -37,6 +37,16 @@ export default function AuthPage() {
     const [error, setError] = useState(null)
     const [verificationSent, setVerificationSent] = useState(false)
     const [forgotPassword, setForgotPassword] = useState(false)
+
+    // Honor ?mode=signin (or ?mode=signup) from the URL — e.g. the Profile
+    // page's "Sign in" link sends people here with ?mode=signin so they
+    // land on the right tab instead of always defaulting to sign-up.
+    useEffect(() => {
+        if (!router.isReady) return
+        if (router.query.mode === 'signin' || router.query.mode === 'signup') {
+            setMode(router.query.mode)
+        }
+    }, [router.isReady, router.query.mode])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -63,7 +73,7 @@ export default function AuthPage() {
             return
         }
 
-        showToast('Welcome back! 👋')
+        showToast('👋 Welcome back! ')
         setTimeout(() => {
             router.push('/')
         }, 1500)

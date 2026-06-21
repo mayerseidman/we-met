@@ -44,6 +44,26 @@ a {
     animation: fadeInUp 0.2s ease-out;
 }
 
+.closeButton {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 2px solid $black;
+    border-radius: 2px;
+    color: $black;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all $transition-fast;
+
+    &:hover {
+        border-color: $orange;
+        color: $orange;
+    }
+}
+
 
 /*@media (prefers-color-scheme: dark) {
     html {

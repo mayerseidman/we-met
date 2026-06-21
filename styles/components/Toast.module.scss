@@ -11,11 +11,6 @@
     }
 }
 
-@keyframes toastInMobile {
-    from { transform: translateY(200%); opacity: 1; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
 @keyframes toastOut {
     from {
         opacity: 1;
@@ -27,9 +22,9 @@
     }
 }
 
-@keyframes toastOutMobile {
-    from { transform: translateY(0); opacity: 1; }
-    to { transform: translateY(100%); opacity: 0; }
+@keyframes toastInMobile {
+    from { transform: translateY(200%); opacity: 1; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 .toast {
@@ -37,15 +32,15 @@
     bottom: 100px;
     left: 50%;
     transform: translateX(-50%);
-    background: $cream;
-    color: $black;
+    background: $black; // navy (#080666) — new default, was $cream which was invisible on most pages
+    color: $white;       // was $black
     font-family: $font-mono;
     font-weight: 600;
     font-size: 0.9rem;
     letter-spacing: 0.5px;
     padding: 12px 20px;
     border: $border-medium;
-    border-radius: 6px;
+    border-radius: 14px;
     box-shadow: $shadow-medium;
     z-index: 9999;
     white-space: normal;
@@ -54,14 +49,13 @@
     align-items: center;
     gap: 12px;
     cursor: pointer;
-    width: min(360px, calc(100vw - 48px));
 
     @media (max-width: 480px) {
         bottom: 90px;
         left: 12px;
         right: 12px;
         transform: none;
-        border-radius: 6px;
+        border-radius: 14px;
         width: auto;
         max-width: 100%;
         border-left: $border-medium;
@@ -74,10 +68,6 @@
 
 .toastClosing {
     animation: toastOut 0.25s $ease-out-quart forwards;
-
-    @media (max-width: 480px) {
-        animation: toastOutMobile 0.25s $ease-out-quart forwards;
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {

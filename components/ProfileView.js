@@ -18,14 +18,23 @@ const ProfileView = ({ profile, onEdit, user, authLoading }) => {
     const { toastMessage, toastVisible, showToast, hideToast } = useToast()
 
     const handleSignOut = async () => {
-        showToast('See you next time! 👋')
+        showToast('👋 See you next time!')
         setTimeout(async () => {
-            await signOut()
+            const { error } = await signOut()
+            if (error) {
+                console.error('Sign out failed:', error)
+                // Still proceed — local state should reflect signed-out even if
+                // the Supabase call had an issue, so the user isn't stuck.
+            }
             localStorage.removeItem('we-met-auth')
-            router.push('/')
+            router.push(profile ? '/meets' : '/')
         }, 500)
     }
-    console.log('user:', user, 'authLoading:', authLoading)
+
+    // Pass mode=signin explicitly — was previously just '/auth' with no
+    // mode, which was landing people on the sign-up tab by default.
+    const handleSignInClick = () => router.push('/auth?mode=signin')
+
     return (
         <div className={styles.profileView}>
             <ProfilePhoto profile={profile} />
@@ -36,12 +45,14 @@ const ProfileView = ({ profile, onEdit, user, authLoading }) => {
             {/* Only show sign out if user is logged in */}
             {user && !authLoading && (
                 <button className={styles.signOutBtn} onClick={handleSignOut}>
-                    SIGN OUT
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="9 17 4 12 9 7"/><line x1="4" y1="12" x2="15" y2="12"/></svg>
+                    Sign Out
                 </button>
             )}
             {!user && !authLoading && (
-                <button className={styles.signOutBtn} onClick={() => router.push('/auth')}>
-                    SIGN IN / CREATE ACCOUNT
+                <button className={styles.signInLink} onClick={handleSignInClick}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                    Sign In
                 </button>
             )}
             <Toast message={toastMessage} visible={toastVisible} onHide={hideToast} />

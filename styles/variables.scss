@@ -134,7 +134,7 @@ $z-toast: 500;
     background: $orange;
     color: $white;
     border: $border-thick;
-    border-radius: 14px;
+    border-radius: 10px;
     padding: 16px 28px;
     min-height: 48px;
     font-family: $font-mono;
@@ -145,6 +145,11 @@ $z-toast: 500;
     cursor: pointer;
     box-shadow: $shadow-large;
     transition: all $transition-fast;
+
+    @media (min-width: $mobile) {
+        min-height: 40px;
+        padding: 10px 28px;
+    }
 
     &:focus-visible {
         outline: 3px solid rgba($orange, 0.5);

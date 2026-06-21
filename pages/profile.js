@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from 'next/router';
-import { useAuth } from '../hooks/useAuth'
 
 import Toast from '../components/Toast';
 import { useToast } from '../hooks/useToast';
@@ -29,9 +28,15 @@ import {
 // ProfilePage Component
 // ══════════════════════════════════════════════════════════════
 // Main profile page with edit form and view mode
+//
+// NOTE: user/authLoading come from props (set by _app.js), not from
+// calling useAuth() again here. _app.js already computes the live,
+// correct auth state once — calling useAuth() a second time created
+// a second independent session-read, which could drift out of sync
+// with the first (especially right after sign-in/sign-out, where
+// timing matters). Always consume the prop, never re-derive it.
 
-export default function ProfilePage() {
-    const { user, loading: authLoading } = useAuth()
+export default function ProfilePage({ user, authLoading }) {
     const { isReady, profile, saveProfile } = useStorage();
     const [editingProfile, setEditingProfile] = useState(EMPTY_PROFILE);
     const [photoPreview, setPhotoPreview] = useState(null);
@@ -247,9 +252,9 @@ export default function ProfilePage() {
             <div className={styles.content}>
                 {isEditing ? (
                     <div key="edit" className={styles.editMode}>
-                        <div className={styles.appIcon} aria-label="We Met">
+                       {/* <div className={styles.appIcon} aria-label="We Met">
                             <img src="/icons/pop/waving-hand-light.svg" alt="" width={56} height={56} />
-                        </div>
+                        </div>*/}
                         <h1 className={styles.headerTitle}>Profile</h1>
                         {!initialProfile && (
                             <p className={styles.headerSubtitle}>

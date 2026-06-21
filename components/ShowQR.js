@@ -101,27 +101,6 @@ const InfoNote = ({ onWhatToDo }) => (
     </p>
 );
 
-const STEPS = [
-    {
-        num: "01",
-        icon: "📱",
-        title: "Show Your QR",
-        body: "Show them your QR code.",
-    },
-    {
-        num: "02",
-        icon: "📸",
-        title: "They Capture It",
-        body: "They snap a photo of it.",
-    },
-    {
-        num: "03",
-        icon: "🤝",
-        title: "They Scan Later",
-        body: "When next online, they scan the photo and connect with you!",
-    },
-];
-
 const ConnectBackModal = ({ profile, onDismiss }) => (
     <div className={styles.modalOverlay}>
         <div className={styles.modal}>
