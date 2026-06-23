@@ -75,7 +75,8 @@ export default function AuthPage() {
 
         showToast('👋 Welcome back! ')
         setTimeout(() => {
-            router.push('/')
+            const redirectTo = router.query.redirect || '/'
+            router.push(redirectTo)
         }, 1500)
     }
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
+import CloseButton from "../components/CloseButton";
 import styles from "../styles/components/MeetsFilterPanel.module.scss";
 import { EVENTS, formatEvent } from "../constants/events";
 
@@ -154,9 +155,7 @@ export default function MeetsFilterPanel({
             >
                 <div className={styles.header}>
                     <h3 className={styles.title}>Filters</h3>
-                    <button className={styles.closeButton} onClick={handleClose} aria-label="Close">
-                        <img src="/icons/pop/close.svg" alt="" width={18} height={18} />
-                    </button>
+                    <CloseButton onClick={handleClose} className={styles.closeButtonPosition} />
                 </div>
 
                 <div className={styles.body}>

@@ -23,6 +23,12 @@
     margin-bottom: 16px;
 }
 
+.aboutIcon svg,
+.contactIcon svg {
+    color: $pink;
+    flex-shrink: 0;
+}
+
 .photo {
     width: 145px;
     height: 145px;

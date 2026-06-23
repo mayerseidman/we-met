@@ -6,6 +6,7 @@ import EventDrawer from "./EventDrawer";
 import EventDropdown from "./EventDropdown";
 import EmptyState from "./EmptyState";
 import WhatToDoModal from "./WhatToDoModal";
+import CloseButton from "../components/CloseButton";
 import { EVENTS, formatEvent } from "../constants/events";
 
 export default function ShowQR({
@@ -104,9 +105,7 @@ const InfoNote = ({ onWhatToDo }) => (
 const ConnectBackModal = ({ profile, onDismiss }) => (
     <div className={styles.modalOverlay}>
         <div className={styles.modal}>
-            <button className={styles.modalClose} onClick={onDismiss} aria-label="Close">
-                <img src="/icons/pop/close.svg" alt="" width={20} height={20} />
-            </button>
+            <CloseButton onClick={onDismiss} className={styles.closeButtonPosition} />
             <div className={styles.modalEmoji}>
                 <img src="/icons/pop/waving-hand.svg" alt="" width={65} height={65} />
             </div>

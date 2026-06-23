@@ -257,7 +257,6 @@ const HeroSection = ({ heroRef, bubbles, icons, waving, onIconClick, onGetStarte
             <p className={styles.tagline}>
                 No signal? No problem. Save people you meet with a simple QR scan.
             </p>
-
             <div className={styles.ctaRow}>
                 <button className={styles.ctaPrimary} onClick={onGetStarted}>
                     Get Started
@@ -266,6 +265,7 @@ const HeroSection = ({ heroRef, bubbles, icons, waving, onIconClick, onGetStarte
                     Sign In
                 </button>
             </div>
+            <p className={styles.noAccountNote}>No account needed. Free forever.</p>
         </div>
     </section>
 );

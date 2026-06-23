@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import CloseButton from "../components/CloseButton";
 import styles from '../styles/components/Drawer.module.scss';
 
 // ══════════════════════════════════════════════════════════════
@@ -23,7 +24,7 @@ export default function Drawer({ title, onClose, isModal = false, children }) {
         return (
             <div className={`${styles.modalOverlay} ${closing ? styles.modalOverlayClosing : ''}`} onClick={handleClose}>
                 <div className={`${styles.modal} ${closing ? styles.modalClosing : ''}`} onClick={e => e.stopPropagation()}>
-                    <button className={styles.closeButton} onClick={handleClose} aria-label="Close"><img src="/icons/pop/close.svg" alt="" width={20} height={20} /></button>
+                    <CloseButton onClick={handleClose} className={styles.closeButtonPosition} />
                     {children}
                 </div>
             </div>
@@ -36,7 +37,7 @@ export default function Drawer({ title, onClose, isModal = false, children }) {
             <div className={`${styles.drawer} ${closing ? styles.drawerClosing : ''}`}>
                 <div className={styles.header}>
                     <h3 className={styles.title}>{title}</h3>
-                    <button className={styles.closeButton} onClick={handleClose} aria-label="Close"><img src="/icons/pop/close.svg" alt="" width={20} height={20} /></button>
+                    <CloseButton onClick={handleClose} className={styles.closeButtonPosition} />
                 </div>
                 {children}
             </div>

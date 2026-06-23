@@ -48,6 +48,12 @@
     filter: brightness(0) opacity(0.6);
 }
 
+.closeButtonPosition {
+    position: absolute;
+    top: $spacing-sm;
+    right: $spacing-sm;
+}
+
 .modalTitle {
     font-size: 1.25rem;
     margin: 0 0 1rem;

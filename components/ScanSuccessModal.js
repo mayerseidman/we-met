@@ -18,7 +18,7 @@ export default function ScanSuccessModal({ name, photo, onDismiss }) {
 
     return (
         <div
-            className={`${toastStyles.toast} ${closing ? toastStyles.toastClosing : ''}`}
+            className={`${toastStyles.toast} ${styles.toastLight} ${closing ? toastStyles.toastClosing : ''}`}
             onClick={handleDismiss}
         >
             <Avatar src={photo} name={name} size={44} />

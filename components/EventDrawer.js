@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import CloseButton from "../components/CloseButton";
 import styles from "../styles/components/EventDrawer.module.scss";
 import { EVENTS, formatEvent } from "../constants/events";
 
@@ -34,13 +35,7 @@ export default function EventDrawer({ selectedEvent, onSelect, onClose }) {
             <div className={`${styles.drawer} ${closing ? styles.drawerClosing : ''}`}>
                 <div className={styles.header}>
                     <h3 className={styles.title}>Select Event</h3>
-                    <button
-                        className={styles.closeButton}
-                        onClick={handleClose}
-                        aria-label="Close"
-                    >
-                        <img src="/icons/pop/close.svg" alt="" width={20} height={20} />
-                    </button>
+                    <CloseButton onClick={handleClose} className={styles.closeButtonPosition} />
                 </div>
 
                 <div className={styles.searchWrapper}>

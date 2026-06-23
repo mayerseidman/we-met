@@ -54,6 +54,12 @@
     .brandPlaceholder img { animation: none; }
 }
 
+.closeButtonPosition {
+    position: absolute;
+    top: $spacing-sm;
+    right: $spacing-sm;
+}
+
 
 // ── Avatar Wrapper (overlaps card) ────────────────────────────
 .avatarWrapper {

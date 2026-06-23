@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import CloseButton from "../components/CloseButton";
 import styles from "../styles/components/MismatchDrawer.module.scss";
 import { EVENTS, formatEvent } from "../constants/events";
 
@@ -131,9 +132,7 @@ export default function MismatchDrawer({
         return (
             <div className={styles.modalOverlay} onClick={handleClose}>
                 <div className={styles.modal} onClick={e => e.stopPropagation()}>
-                    <button className={styles.closeButton} onClick={handleClose} aria-label="Close">
-                        <img src="/icons/pop/close.svg" alt="" width={20} height={20} style={{ filter: 'brightness(0) opacity(0.5)' }} />
-                    </button>
+                    <CloseButton onClick={handleClose} className={styles.closeButtonPosition} />
                     <h3 className={styles.modalTitle}>Wrong Event?</h3>
                     <Description scannerName={scannerName} scannedEvent={scannedEvent} selectedEvent={selectedEvent} styles={styles} />
                     <ModalEventList />
@@ -148,9 +147,7 @@ export default function MismatchDrawer({
             <div className={`${styles.drawer} ${closing ? styles.drawerClosing : ''}`}>
                 <div className={styles.header}>
                     <h3 className={styles.title}>Wrong Event?</h3>
-                    <button className={styles.closeButton} onClick={handleClose} aria-label="Close">
-                        <img src="/icons/pop/close.svg" alt="" width={20} height={20} />
-                    </button>
+                    <CloseButton onClick={handleClose} className={styles.closeButtonPosition} />
                 </div>
                 <Description scannerName={scannerName} scannedEvent={scannedEvent} selectedEvent={selectedEvent} styles={styles} />
                 <DrawerEventList />

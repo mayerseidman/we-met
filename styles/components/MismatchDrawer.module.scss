@@ -7,6 +7,11 @@
     z-index: 999;
     animation: fadeIn 0.2s ease-out;
 }
+.closeButtonPosition {
+    position: absolute;
+    top: $spacing-sm;
+    right: $spacing-sm;
+}
 
 .backdropClosing {
     animation: fadeOut 0.28s ease-in forwards;

@@ -305,7 +305,9 @@ const AlreadyConnectedModal = ({ name, daysAgo, onDismiss }) => {
             </div>
             <div className={styles.successText}>
                 <div className={styles.successTitle}>Already Connected</div>
-                <div className={styles.successName}>{name} · {daysAgo === 0 ? 'today' : `${daysAgo}d ago`}</div>
+                <div className={styles.successName}>
+                    {name} <span style={{ color: 'rgba(8,6,102,0.3)', margin: '1px' }}>|</span> {daysAgo === 0 ? 'today' : `${daysAgo}d ago`}
+                </div>
             </div>
         </div>
     );
@@ -319,7 +321,7 @@ const ScanErrorModal = ({ onDismiss }) => {
 
     return (
         <div className={`${toastStyles.toast} ${styles.toastLight}`} onClick={onDismiss}>
-            <div className={styles.successEmoji}>💩</div>
+            <img src="/icons/pop/warning-triangle.svg" alt="" width={24} height={24} />
             <div className={styles.successText}>
                 <div className={styles.successTitle}>Scan Failed</div>
                 <div className={styles.successName}>Check lighting & camera</div>

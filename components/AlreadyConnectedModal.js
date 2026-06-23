@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import CloseButton from "../components/CloseButton";
 import styles from '../styles/components/ScanQR.module.scss';
 
 export default function AlreadyConnectedModal({ name, daysAgo, onDismiss, isMobile }) {
@@ -20,12 +21,12 @@ export default function AlreadyConnectedModal({ name, daysAgo, onDismiss, isMobi
             onClick={handleDismiss}
         >
             <div className={styles.successCard} onClick={e => e.stopPropagation()}>
-                <button className={styles.successClose} onClick={handleDismiss} aria-label="Close"><img src="/icons/pop/close.svg" alt="" width={18} height={18} /></button>
+                <CloseButton onClick={handleDismiss} className={styles.closeButtonPosition} />
                 <div className={styles.successEmoji}><img src="/icons/pop/handshake.svg" alt="" width={48} height={48} /></div>
                 <div className={styles.successText}>
                     <div className={styles.successTitle}>Already Connected</div>
                     <div className={styles.successName}>
-                        {name} · {daysAgo === 0 ? 'today' : `${daysAgo}d ago`}
+                        {name} <span style={{ color: 'rgba(0,0,0,0.3)', margin: '0 2px' }}>|</span> {daysAgo === 0 ? 'today' : `${daysAgo}d ago`}
                     </div>
                 </div>
             </div>
