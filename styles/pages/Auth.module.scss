@@ -20,8 +20,8 @@
 .iconTile {
     width: 88px;
     height: 88px;
-    margin: 0 auto $spacing-lg;
-    background: $yellow;
+    margin: 0 auto $spacing-xl;
+    background: $orange;
     border: $border-extra-thick;
     border-radius: 22px;
     box-shadow: $shadow-large;
@@ -31,17 +31,12 @@
     transform: rotate(-4deg);
 }
 
-.bareIcon {
-    display: block;
-    margin: 0 auto $spacing-lg;
-}
-
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-// ── Header ────────────────────────────────────────────────────
+// ── Header (used for check email + reset password states only) ─
 .title {
     font-size: 2rem;
     font-weight: 600;
@@ -114,12 +109,12 @@
     font-family: $font-mono;
     font-size: 0.875rem;
     font-weight: 600;
-    color: $orange;
+    color: $black;
     cursor: pointer;
     text-decoration: underline;
 
     &:hover {
-        color: $black;
+        color: $orange;
     }
 }
 

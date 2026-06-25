@@ -44,8 +44,18 @@
     bottom: 0;
     left: 0;
     right: 0;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 400px;
+
+    @media (min-width: 768px) {
+        max-width: 320px;
+    }
+
     background-color: $cream;
     border-top: 3px solid $black;
+    border-left: 3px solid $black;
+    border-right: 3px solid $black;
     border-radius: 12px 12px 0 0;
     z-index: 1000;
     max-height: 70vh;

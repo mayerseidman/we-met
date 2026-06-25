@@ -1,30 +1,11 @@
-// ══════════════════════════════════════════════════════════════
-// pages/auth.js
-// ══════════════════════════════════════════════════════════════
-// Sign up and sign in page.
-//
-// WHY THIS EXISTS:
-// Users need a way to create an account or log in so their
-// profile and connections can be backed up to Supabase.
-//
-// FLOW:
-// - User lands here when they choose to create an account
-// - They can toggle between sign up and sign in
-// - Sign up → always goes to /profile to set up profile info
-// - Sign in → goes to / and lets _app.js gatekeeper decide
-// - On error we show a clear message explaining what went wrong
-//
-// NOTE:
-// This page is optional — users can use the app without
-// ever creating an account. Auth is additive, not required.
-// ══════════════════════════════════════════════════════════════
-
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { signUp, signIn, resetPassword } from '../lib/auth'
 import Toast from '../components/Toast'
 import { useToast } from '../hooks/useToast'
 import styles from '../styles/pages/Auth.module.scss'
+
+const POP = '/icons/pop'
 
 export default function AuthPage() {
     const router = useRouter()
@@ -38,9 +19,6 @@ export default function AuthPage() {
     const [verificationSent, setVerificationSent] = useState(false)
     const [forgotPassword, setForgotPassword] = useState(false)
 
-    // Honor ?mode=signin (or ?mode=signup) from the URL — e.g. the Profile
-    // page's "Sign in" link sends people here with ?mode=signin so they
-    // land on the right tab instead of always defaulting to sign-up.
     useEffect(() => {
         if (!router.isReady) return
         if (router.query.mode === 'signin' || router.query.mode === 'signup') {
@@ -64,9 +42,6 @@ export default function AuthPage() {
         }
 
         if (mode === 'signup') {
-            // TODO: Email confirmation is currently OFF in Supabase (dev mode).
-            // Before launch: Supabase → Authentication → Sign In / Providers → toggle "Confirm email" ON
-            // When on, user won't be able to sign in until they confirm their email.
             showToast('Account created! 🎉')
             setVerificationSent(true)
             setLoading(false)
@@ -102,6 +77,11 @@ export default function AuthPage() {
     return (
         <div className={styles.page}>
             <div className={styles.content}>
+
+                {/* App icon — shown on all states */}
+                <div className={styles.iconTile}>
+                    <img src={`${POP}/waving-hand.svg`} alt="" width={44} height={44} />
+                </div>
 
                 {verificationSent ? (
                     <>
@@ -167,14 +147,6 @@ export default function AuthPage() {
                     </>
                 ) : (
                     <>
-                        <h1 className={styles.title}>
-                            {mode === 'signup' ? 'Create Account' : 'Sign In'}
-                        </h1>
-                        <p className={styles.subtitle}>
-                            {mode === 'signup'
-                                ? 'Back up your connections across festivals'
-                                : 'Welcome back'}
-                        </p>
                         <form onSubmit={handleSubmit} className={styles.form}>
                             <div className={styles.formGroup}>
                                 <label className={styles.label}>Email</label>
@@ -240,7 +212,7 @@ export default function AuthPage() {
                                     setError(null)
                                 }}
                             >
-                                {mode === 'signup' ? 'Sign In' : 'Create Account'}
+                                {mode === 'signup' ? 'Sign in' : 'Create account'}
                             </button>
                         </p>
                     </>

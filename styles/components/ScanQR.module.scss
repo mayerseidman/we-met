@@ -112,11 +112,14 @@
     flex-direction: column;
     align-items: center;
 }
-
 .eventSection {
     width: 100%;
     max-width: 400px;
     margin-bottom: $spacing-md;
+
+    @media (min-width: 768px) {
+        max-width: 320px;
+    }
 
     @media (max-width: 480px) {
         max-width: 95%;
@@ -289,6 +292,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 200px;
 }
 
 .successEmoji {
