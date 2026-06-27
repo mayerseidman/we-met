@@ -5,26 +5,32 @@
     min-height: 100vh;
     background-color: $cream;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-family: $font-mono;
     padding: $spacing-lg;
+    padding-top: 4rem; // just enough to clear the fixed banner
+    font-family: $font-mono;
 }
+
 
 .content {
     width: 100%;
-    max-width: 400px;
+    max-width: 600px;
     animation: fadeIn 0.4s ease-out;
+    min-height: 520px; // enough to hold the taller Sign In state
 }
 
 .iconTile {
-    width: 88px;
-    height: 88px;
-    margin: 0 auto $spacing-xl;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto $spacing-lg;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
     background: $orange;
     border: $border-extra-thick;
     border-radius: 22px;
-    box-shadow: $shadow-large;
+    box-shadow: 6px 6px 0px rgba(12, 9, 140, 0.28);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -50,6 +56,10 @@
     color: $medium-gray;
     text-align: center;
     margin: 0 0 $spacing-xl;
+    strong {
+        color: $black;
+        font-weight: 700;
+    }
 }
 
 // ── Form ──────────────────────────────────────────────────────
@@ -103,31 +113,125 @@
     color: $dark-gray;
 }
 
+.modeLabel {
+    font-family: $font-mono;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: $medium-gray;
+    text-align: center;
+    margin: 0 0 $spacing-xl;
+}
+
+.brandName {
+    font-family: $font-mono;
+    font-weight: 700;
+    font-size: 3.75rem;
+    letter-spacing: -0.03em;
+    color: $black;
+    text-align: center;
+    margin: 0 0 $spacing-xl;
+}
+
 .toggleBtn {
     background: none;
     border: none;
     font-family: $font-mono;
     font-size: 0.875rem;
     font-weight: 600;
-    color: $black;
+    color: $orange;
     cursor: pointer;
     text-decoration: underline;
 
     &:hover {
-        color: $orange;
+        color: $black;
     }
 }
 
 // ── Email Providers ───────────────────────────────────────────
+.topBanner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba($black, 0.75);
+    color: $white;
+    font-family: $font-mono;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 0.6rem $spacing-md;
+    letter-spacing: 0.03em;
+    z-index: 10;
+}
+
 .emailProviders {
     display: flex;
-    flex-direction: column;
     gap: $spacing-sm;
-    margin-top: $spacing-md;
+    margin-top: $spacing-lg;
+    justify-content: center;
+
+    @media (max-width: 480px) {
+        flex-direction: column;
+    }
 }
 
 .providerBtn {
-    @include cta-ghost;
-    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.65rem 1rem;
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 6px;
+    font-family: $font-mono;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $black;
     text-decoration: none;
+    box-shadow: $shadow-small;
+    transition: all $transition-fast;
+    white-space: nowrap;
+    flex: 1;
+
+    &:hover {
+        border-color: $orange;
+        color: $orange;
+        transform: translate(-1px, -1px);
+    }
+}
+
+.iconTile {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    background: $orange;
+    border: $border-extra-thick;
+    border-radius: 22px;
+    box-shadow: 6px 6px 0px rgba(12, 9, 140, 0.28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-4deg);
+}
+
+.brandRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-sm; // tight to modeLabel
+}
+
+.modeLabel {
+    font-family: $font-mono;
+    font-size: 1rem;
+    font-weight: 500;
+    color: $medium-gray;
+    text-align: center;
+    text-transform: none;
+    letter-spacing: 0;
+    margin: 0 0 $spacing-2xl; // more breathing room before form
 }

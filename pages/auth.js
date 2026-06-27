@@ -16,7 +16,7 @@ export default function AuthPage() {
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
-    const [verificationSent, setVerificationSent] = useState(false)
+    const [verificationSent, setVerificationSent] = useState(true) // TEMP
     const [forgotPassword, setForgotPassword] = useState(false)
 
     useEffect(() => {
@@ -76,34 +76,44 @@ export default function AuthPage() {
 
     return (
         <div className={styles.page}>
+           {!verificationSent && (
+               <div className={styles.topBanner}>
+                   {mode === 'signup' ? 'Join We Met' : 'Welcome back, sign in!'}
+               </div>
+           )}
             <div className={styles.content}>
 
-                {/* App icon — shown on all states */}
-                <div className={styles.iconTile}>
-                    <img src={`${POP}/waving-hand.svg`} alt="" width={44} height={44} />
+                <div className={styles.brandRow}>
+                    <div className={styles.iconTile}>
+                        <img src={`${POP}/waving-hand.svg`} alt="" width={56} height={56} />
+                    </div>
+                    <h1 className={styles.brandName}>WE MET</h1>
                 </div>
 
                 {verificationSent ? (
                     <>
-                        <h1 className={styles.title}>Check your email! 📬</h1>
                         <p className={styles.subtitle}>
-                            We sent a confirmation link to <strong>{email}</strong>.
-                            Click it to activate your account.
+                            <strong>Email sent!</strong> A confirmation link is on the way to <strong>{email || 'your inbox'}.</strong>
                         </p>
                         <div className={styles.emailProviders}>
                             <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer" className={styles.providerBtn}>
-                                Open Gmail
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width={16} height={16}><path d="M20.283 10.356h-8.327v3.451h4.792c-.446 2.193-2.313 3.453-4.792 3.453a5.27 5.27 0 0 1-5.279-5.28 5.27 5.27 0 0 1 5.279-5.279c1.259 0 2.397.447 3.29 1.178l2.6-2.599c-1.584-1.381-3.615-2.233-5.89-2.233a8.908 8.908 0 0 0-8.934 8.934 8.908 8.908 0 0 0 8.934 8.934c4.467 0 8.529-3.249 8.529-8.934 0-.528-.081-1.097-.202-1.625z"/></svg>
+                                Gmail
                             </a>
                             <a href="https://outlook.live.com" target="_blank" rel="noopener noreferrer" className={styles.providerBtn}>
-                                Open Outlook
-                            </a>
-                            <a href="https://mail.yahoo.com" target="_blank" rel="noopener noreferrer" className={styles.providerBtn}>
-                                Open Yahoo
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width={16} height={16}><path d="M7.462 0H0v7.19h7.462zM0 9.143v7.19h7.462v-7.19zm9.143 0v7.19H16.6v-7.19zm7.457 0v7.19H24v-7.19zM9.143 0v7.19H16.6V0zm7.457 0v7.19H24V0zm0 16.286V24H24v-7.714zm-7.457 0V24H16.6v-7.714zM0 16.286V24h7.462v-7.714zm9.143 0V24H16.6v-7.714z"/></svg>
+                                Outlook
                             </a>
                             <a href="mailto:" className={styles.providerBtn}>
-                                Open Mail App
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width={16} height={16}><path d="M3 3h18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm17 4.238l-7.928 7.1L4 7.216V19h16V7.238zM4.511 5l7.55 6.662L19.502 5H4.511z"/></svg>
+                                Mail App
                             </a>
                         </div>
+                        <p className={styles.toggle}>
+                            <button type="button" className={styles.toggleBtn} onClick={() => { setVerificationSent(false); setMode('signin'); }}>
+                                Back to sign in
+                            </button>
+                        </p>
                     </>
                 ) : forgotPassword ? (
                     <>
@@ -141,7 +151,7 @@ export default function AuthPage() {
                                     setError(null)
                                 }}
                             >
-                                Back to Sign In
+                                Back to sign in
                             </button>
                         </p>
                     </>
