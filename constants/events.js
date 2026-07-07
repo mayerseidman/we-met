@@ -2,41 +2,49 @@
 // constants/events.js
 // ══════════════════════════════════════════════════════════════
 // Master list of supported festivals and events.
-// To add a new event, add an entry to the EVENTS array.
+//
+// Names are evergreen — no year suffix. The year a connection
+// happened is captured by the Meet's own timestamp, not the
+// event name, so this list never needs annual maintenance.
+//
+// To add a new event: add its name to the array below.
+// To retire one: just remove it — existing Meets store the name
+// as plain text at time of connection, so removing it here has
+// no effect on historical data.
+//
 // Events are displayed in the order they appear here.
+// ══════════════════════════════════════════════════════════════
 
 export const EVENTS = [
     // ── Burn Circuit ─────────────────────────────────────────
-    { name: "Burning Man 2025", category: "burn" },
-    { name: "Afrikaburn 2025", category: "burn" },
-    { name: "Boom 2025", category: "burn" },
-    { name: "Borderland 2025", category: "burn" },
-    { name: "Nowhere 2025", category: "burn" },
-    { name: "Midburn 2025", category: "burn" },
-    { name: "Kiez Burn 2025", category: "burn" },
-    { name: "Transformus 2025", category: "burn" },
-    { name: "Blazing Swan 2025", category: "burn" },
-    { name: "Element 11 2025", category: "burn" },
-
+    { name: "Burning Man" },
+    { name: "Afrikaburn" },
+    { name: "Boom" },
+    { name: "Borderland" },
+    { name: "Nowhere" },
+    { name: "Midburn" },
+    { name: "Kiez Burn" },
+    { name: "Transformus" },
+    { name: "Blazing Swan" },
+    { name: "Element 11" },
     // ── Music Festivals ───────────────────────────────────────
-    { name: "Coachella 2025", category: "music" },
-    { name: "Glastonbury 2025", category: "music" },
-    { name: "Tomorrowland 2025", category: "music" },
-    { name: "Lightning in a Bottle 2025", category: "music" },
-    { name: "Shambhala 2025", category: "music" },
-    { name: "Envision 2025", category: "music" },
-    { name: "Rainbow Serpent 2025", category: "music" },
-    { name: "Ozora 2025", category: "music" },
-    { name: "Fusion 2025", category: "music" },
-    { name: "Epizode 2025", category: "music" },
-    { name: "Symbiosis 2025", category: "music" },
-    { name: "Lucidity 2025", category: "music" },
-    { name: "Desert Hearts 2025", category: "music" },
-    { name: "Ocaso 2025", category: "music" },
-    { name: "Wanderlust 2025", category: "music" },
-
+    { name: "Coachella" },
+    { name: "Glastonbury" },
+    { name: "Tomorrowland" },
+    { name: "Lightning in a Bottle" },
+    { name: "Shambhala" },
+    { name: "Envision" },
+    { name: "Rainbow Serpent" },
+    { name: "Ozora" },
+    { name: "Fusion" },
+    { name: "Epizode" },
+    { name: "Symbiosis" },
+    { name: "Lucidity" },
+    { name: "Desert Hearts" },
+    { name: "Ocaso" },
+    { name: "Wanderlust" },
     // ── Catch-all ─────────────────────────────────────────────
-    { name: "General", category: "general" },
+    { name: "General" },
 ];
 
 export const formatEvent = (event) => event.name;

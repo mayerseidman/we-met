@@ -11,12 +11,13 @@ export default function AuthPage() {
     const router = useRouter()
     const { toastMessage, toastVisible, showToast, hideToast } = useToast()
 
+    const [resetSent, setResetSent] = useState(false);
     const [mode, setMode] = useState('signup')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
-    const [verificationSent, setVerificationSent] = useState(true) // TEMP
+    const [verificationSent, setVerificationSent] = useState(false) // TEMP
     const [forgotPassword, setForgotPassword] = useState(false)
 
     useEffect(() => {
@@ -68,19 +69,12 @@ export default function AuthPage() {
             return
         }
 
-        showToast('Reset link sent! Check your email 📬')
         setLoading(false)
-        setForgotPassword(false)
-        setMode('signin')
+        setResetSent(true)
     }
 
     return (
         <div className={styles.page}>
-           {!verificationSent && (
-               <div className={styles.topBanner}>
-                   {mode === 'signup' ? 'Join We Met' : 'Welcome back, sign in!'}
-               </div>
-           )}
             <div className={styles.content}>
 
                 <div className={styles.brandRow}>
@@ -117,43 +111,47 @@ export default function AuthPage() {
                     </>
                 ) : forgotPassword ? (
                     <>
-                        <h1 className={styles.title}>Reset Password</h1>
-                        <p className={styles.subtitle}>
-                            Enter your email and we&apos;ll send you a reset link.
-                        </p>
-                        <form onSubmit={handleForgotPassword} className={styles.form}>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Email</label>
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className={styles.input}
-                                    placeholder="your@email.com"
-                                    required
-                                />
-                            </div>
-                            {error && <p className={styles.error}>{error}</p>}
-                            <button
-                                type="submit"
-                                className={styles.submitBtn}
-                                disabled={loading}
-                            >
-                                {loading ? 'Sending...' : 'Send Reset Link'}
-                            </button>
-                        </form>
-                        <p className={styles.toggle}>
-                            <button
-                                type="button"
-                                className={styles.toggleBtn}
-                                onClick={() => {
-                                    setForgotPassword(false)
-                                    setError(null)
-                                }}
-                            >
-                                Back to sign in
-                            </button>
-                        </p>
+                        {resetSent ? (
+                            <>
+                                <p className={styles.subtitle}>
+                                    <img src={`${POP}/key.svg`} alt="" width={18} height={18} style={{ verticalAlign: '-3px', marginRight: 8 }} />
+                                    We&apos;re dusting off your reset link. Check your email at <strong>{email || 'your inbox'}</strong>.
+                                </p>
+                                <p className={styles.toggle}>
+                                    <button type="button" className={styles.toggleBtn} onClick={() => { setForgotPassword(false); setResetSent(false); setError(null); }}>
+                                        Back to sign in
+                                    </button>
+                                </p>
+                            </>
+                        ) : (
+                            <>
+                                <p className={styles.subtitle}>
+                                    Enter your email and we&apos;ll send you a reset link.
+                                </p>
+                                <form onSubmit={handleForgotPassword} className={styles.form}>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label}>Email</label>
+                                        <input
+                                            type="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            className={styles.input}
+                                            placeholder="your@email.com"
+                                            required
+                                        />
+                                    </div>
+                                    {error && <p className={styles.error}>{error}</p>}
+                                    <button type="submit" className={styles.submitBtn} disabled={loading}>
+                                        {loading ? 'Sending...' : 'Send Reset Link'}
+                                    </button>
+                                </form>
+                                <p className={styles.toggle}>
+                                    <button type="button" className={styles.toggleBtn} onClick={() => { setForgotPassword(false); setError(null); }}>
+                                        Back to sign in
+                                    </button>
+                                </p>
+                            </>
+                        )}
                     </>
                 ) : (
                     <>

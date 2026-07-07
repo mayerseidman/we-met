@@ -1,21 +1,11 @@
-// ══════════════════════════════════════════════════════════════
-// pages/reset-password.js
-// ══════════════════════════════════════════════════════════════
-// Page where users land after clicking the reset password link
-// in their email. Supabase handles the token exchange via the
-// URL hash — we just need to show a new password form.
-//
-// FLOW:
-// User clicks reset link in email → lands here with token in URL
-// → enters new password → success → redirect to /profile
-// ══════════════════════════════════════════════════════════════
-
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { supabase } from '../lib/supabase'
 import Toast from '../components/Toast'
 import { useToast } from '../hooks/useToast'
 import styles from '../styles/pages/Auth.module.scss'
+
+const POP = '/icons/pop'
 
 export default function ResetPasswordPage() {
     const router = useRouter()
@@ -27,10 +17,7 @@ export default function ResetPasswordPage() {
     const [error, setError] = useState(null)
     const [ready, setReady] = useState(false)
 
-    // Wait for Supabase to process the token from the URL hash
-    // Without this the session won't be set yet when the page loads
     useEffect(() => {
-        // Fallback in case PASSWORD_RECOVERY event already fired before we subscribed
         supabase.auth.getSession().then(({ data: { session } }) => {
             if (session) setReady(true)
         })
@@ -73,21 +60,22 @@ export default function ResetPasswordPage() {
         }, 1500)
     }
 
+    const BrandRow = () => (
+        <div className={styles.brandRow}>
+            <div className={styles.iconTile}>
+                <img src={`${POP}/waving-hand.svg`} alt="" width={56} height={56} />
+            </div>
+            <h1 className={styles.brandName}>WE MET</h1>
+        </div>
+    )
+
     if (!ready) {
         return (
             <div className={styles.page}>
                 <div className={styles.content}>
-                    <img
-                        src="/icons/pop/key.svg"
-                        alt=""
-                        width={64}
-                        height={64}
-                        className={styles.bareIcon}
-                    />
-                    <h1 className={styles.title}>One sec...</h1>
-                    <p className={styles.subtitle}>
-                        Dusting off your reset link. Won&apos;t take a minute.
-                    </p>
+                    <BrandRow />
+                    <h2 className={styles.title}>One sec...</h2>
+                    <p className={styles.subtitle}>We&apos;re dusting off your reset link</p>
                 </div>
             </div>
         )
@@ -96,10 +84,8 @@ export default function ResetPasswordPage() {
     return (
         <div className={styles.page}>
             <div className={styles.content}>
-                <div className={styles.iconTile}>
-                    <img src="/icons/pop/key.svg" alt="" width={48} height={48} />
-                </div>
-                <h1 className={styles.title}>New Password</h1>
+                <BrandRow />
+                <h2 className={styles.title}>New Password</h2>
                 <p className={styles.subtitle}>
                     Choose a new password for your account.
                 </p>

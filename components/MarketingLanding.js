@@ -25,9 +25,6 @@ const BUBBLE_TEXTS = [
 
 const FLOAT_ICONS = ['heart', 'star', 'flash', 'heart', 'star'];
 
-// Icons used as decorations in non-hero sections (no text bubbles below hero)
-const SECTION_ICONS = ['heart', 'star', 'flash', 'star', 'heart'];
-
 const STEPS = [
     {
         icon: 'users',
@@ -129,6 +126,16 @@ const MiniBottomNav = ({ active = 'meets', theme = 'light' }) => (
     </div>
 );
 
+// ── Mock photo URLs ───────────────────────────────────────────
+
+const MOCK_PHOTOS = {
+    alex:  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop',
+    sam:   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop',
+    jamie: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop',
+};
+
+// ── Phone screens ─────────────────────────────────────────────
+
 const PhoneShowQR = () => (
     <div className={`${styles.phoneScreen} ${styles.screenShow}`}>
         <div className={styles.screenH}>Show QR</div>
@@ -140,57 +147,89 @@ const PhoneShowQR = () => (
         </div>
         <div className={styles.screenLabel}>Event</div>
         <div className={styles.eventSelect}>
-            <span>Burning Man 2026</span>
+            <span>Burning Man</span>
             <svg className={styles.eventChevron} width="12" height="10" viewBox="0 0 16 14" fill="currentColor" aria-hidden="true">
                 <path d="M2 2 L14 2 L8 12 Z" />
             </svg>
         </div>
-        <div className={styles.screenHint}>They don&apos;t have it? <u>What to Do</u></div>
         <MiniBottomNav active="connect" />
     </div>
 );
 
-const PhoneScan = () => (
-    <div className={`${styles.phoneScreen} ${styles.screenScan}`}>
-        <div className={styles.viewfinder}>
-            <span className={`${styles.corner} ${styles.cornerTl}`} />
-            <span className={`${styles.corner} ${styles.cornerTr}`} />
-            <span className={`${styles.corner} ${styles.cornerBl}`} />
-            <span className={`${styles.corner} ${styles.cornerBr}`} />
-            <span className={styles.scanLine} />
+// Scan screen — toast appears within the same frame after a delay
+const PhoneScanWithToast = () => {
+    const [showToast, setShowToast] = useState(false);
+    const [toastLeaving, setToastLeaving] = useState(false);
+
+    useEffect(() => {
+        const showTimer = setTimeout(() => setShowToast(true), 2200);      // was 1500
+        const leaveTimer = setTimeout(() => setToastLeaving(true), 2200 + 2000); // leave after 2s visible
+        return () => {
+            clearTimeout(showTimer);
+            clearTimeout(leaveTimer);
+        };
+    }, []);
+
+    return (
+        <div className={`${styles.phoneScreen} ${styles.screenScan}`}>
+        <div className={styles.screenH} style={{ color: '#fff' }}>Scan QR</div>
+            <div className={styles.viewfinder}>
+                <span className={`${styles.corner} ${styles.cornerTl}`} />
+                <span className={`${styles.corner} ${styles.cornerTr}`} />
+                <span className={`${styles.corner} ${styles.cornerBl}`} />
+                <span className={`${styles.corner} ${styles.cornerBr}`} />
+                {!showToast && <span className={styles.scanLine} />}
+            </div>
+
+            <div className={styles.scanBottom}>
+                <div className={styles.scanEventDropdown}>
+                    <span>Burning Man</span>
+                    <svg width="10" height="8" viewBox="0 0 16 14" fill="currentColor" aria-hidden="true">
+                        <path d="M2 2 L14 2 L8 12 Z" />
+                    </svg>
+                </div>
+            </div>
+
+            {showToast && (
+                <div className={`${styles.mockToast} ${toastLeaving ? styles.mockToastLeaving : ''}`}>
+                    <img src={MOCK_PHOTOS.alex} alt="" className={styles.mockToastPhoto} />
+                    <div className={styles.mockToastText}>
+                        <div className={styles.mockToastTitle}>New Connection</div>
+                        <div className={styles.mockToastName}>Alex Rivera</div>
+                        <div className={styles.mockToastMeta}>Burning Man</div>
+                    </div>
+                </div>
+            )}
+
+            <MiniBottomNav active="connect" theme="dark" />
         </div>
-        <div className={styles.scanBottom}>
-            <span className={styles.scanEvent}>Burning Man 2026</span>
-            <span className={styles.scanHint}>What to Do</span>
-        </div>
-        <MiniBottomNav active="connect" />
-    </div>
-);
+    );
+};
 
 const PhoneMeets = () => (
     <div className={`${styles.phoneScreen} ${styles.screenDone}`}>
-        <div className={styles.meetsHeader}>Meets</div>
+        <div className={styles.screenH }>Meets</div>
         <div className={styles.meetsList}>
             <div className={`${styles.meetEntry} ${styles.meetEntryNew}`}>
-                <div className={`${styles.meetAvatar} ${styles.meetAvatarOrange}`}>A</div>
+                <img src={MOCK_PHOTOS.alex} alt="" className={styles.meetAvatarPhoto} />
                 <div className={styles.meetMeta}>
-                    <strong>Alex</strong>
-                    <span>Today · Burning Man</span>
+                    <strong>Alex Rivera</strong>
+                    <span>Now · Burning Man</span>
                 </div>
                 <span className={styles.newDot} />
             </div>
             <div className={styles.meetEntry}>
-                <div className={`${styles.meetAvatar} ${styles.meetAvatarPurple}`}>S</div>
+                <img src={MOCK_PHOTOS.sam} alt="" className={styles.meetAvatarPhoto} />
                 <div className={styles.meetMeta}>
                     <strong>Sam</strong>
-                    <span>Yesterday · Burning Man</span>
+                    <span>1d ago · Afrikaburn</span>
                 </div>
             </div>
             <div className={styles.meetEntry}>
-                <div className={`${styles.meetAvatar} ${styles.meetAvatarPink}`}>J</div>
+                <img src={MOCK_PHOTOS.jamie} alt="" className={styles.meetAvatarPhoto} />
                 <div className={styles.meetMeta}>
                     <strong>Jamie</strong>
-                    <span>2d ago · Burning Man</span>
+                    <span>2d ago · Boom</span>
                 </div>
             </div>
         </div>
@@ -198,26 +237,44 @@ const PhoneMeets = () => (
     </div>
 );
 
-const PHONE_SCREENS = [PhoneShowQR, PhoneScan, PhoneMeets];
+// ── Animated Phone ────────────────────────────────────────────
+// 3 screens: ShowQR → Scan (toast appears within) → Meets
+// Scan screen gets 4.5s total: 1.5s scan + 2.2s toast visible + 0.6s toast leaving + 0.2s buffer
 
-// Auto-advancing phone mockup cycling through all 3 screens
+const SCREEN_DURATIONS = [2500, 4500, 2500];
+
 const AnimatedPhone = () => {
     const [activeStep, setActiveStep] = useState(0);
+    const [fading, setFading] = useState(false);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setActiveStep(prev => (prev + 1) % STEPS.length);
-        }, 2500);
-        return () => clearInterval(interval);
-    }, []);
+        const duration = SCREEN_DURATIONS[activeStep];
+        const timer = setTimeout(() => {
+            setFading(true);
+            setTimeout(() => {
+                setActiveStep(prev => (prev + 1) % SCREEN_DURATIONS.length);
+                setFading(false);
+            }, 300);
+        }, duration);
+        return () => clearTimeout(timer);
+    }, [activeStep]);
 
-    const Screen = PHONE_SCREENS[activeStep];
+    const renderScreen = () => {
+        switch (activeStep) {
+            case 0: return <PhoneShowQR />;
+            case 1: return <PhoneScanWithToast />;
+            case 2: return <PhoneMeets />;
+            default: return <PhoneShowQR />;
+        }
+    };
 
     return (
         <div className={styles.animatedPhoneWrapper}>
             <div className={styles.phone}>
                 <div className={styles.phoneFrame}>
-                    <Screen />
+                    <div className={`${styles.phoneScreenWrapper} ${fading ? styles.phoneScreenFading : ''}`}>
+                        {renderScreen()}
+                    </div>
                 </div>
             </div>
         </div>
@@ -270,11 +327,8 @@ const HeroSection = ({ heroRef, bubbles, icons, waving, onIconClick, onGetStarte
     </section>
 );
 
-
-
 const HowItWorksSection = ({ sectionRef, inView }) => (
     <section ref={sectionRef} className={`${styles.section} ${styles.sectionFirst} ${inView ? styles.isVisible : ''}`}>
-        {/* Symbol-only decorations — no text bubbles below hero */}
         <div className={styles.sectionDecor}>
             <img src={`${POP}/star.svg`} className={`${styles.floatIcon} ${styles.scatterStarA}`} alt="" width={36} height={36} />
             <img src={`${POP}/flash.svg`} className={`${styles.floatIcon} ${styles.cropLeftMid}`} alt="" width={36} height={36} />
@@ -309,7 +363,6 @@ const HowItWorksSection = ({ sectionRef, inView }) => (
 
 const FeaturesSection = ({ sectionRef, inView }) => (
     <section ref={sectionRef} className={`${styles.section} ${inView ? styles.isVisible : ''}`}>
-        {/* Symbol-only decorations */}
         <div className={styles.sectionDecor}>
             <img src={`${POP}/heart.svg`} className={`${styles.floatIcon} ${styles.scatterHeartB}`} alt="" width={36} height={36} />
             <img src={`${POP}/star.svg`} className={`${styles.floatIcon} ${styles.scatterStarB}`} alt="" width={36} height={36} />
@@ -434,7 +487,6 @@ export default function MarketingLanding() {
                 onGetStarted={handleGetStarted}
                 onSignIn={handleSignIn}
             />
-
 
             <HowItWorksSection sectionRef={stepsRef} inView={stepsInView} />
 

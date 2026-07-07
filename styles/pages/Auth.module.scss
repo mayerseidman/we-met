@@ -13,14 +13,12 @@
     font-family: $font-mono;
 }
 
-
 .content {
     width: 100%;
-    max-width: 600px;
+    max-width: 480px;
     animation: fadeIn 0.4s ease-out;
-    min-height: 520px; // enough to hold the taller Sign In state
+    min-height: 520px;
 }
-
 .iconTile {
     width: 72px;
     height: 72px;
@@ -35,6 +33,11 @@
     align-items: center;
     justify-content: center;
     transform: rotate(-4deg);
+    img {
+        animation: appIconWave 3s ease-in-out infinite;
+        transform-origin: 50% 78%;
+        width: 75%;
+    }
 }
 
 @keyframes fadeIn {
@@ -56,8 +59,9 @@
     color: $medium-gray;
     text-align: center;
     margin: 0 0 $spacing-xl;
+    line-height: 1.65;
     strong {
-        color: $black;
+        color: $dark-gray;
         font-weight: 700;
     }
 }
@@ -131,7 +135,7 @@
     letter-spacing: -0.03em;
     color: $black;
     text-align: center;
-    margin: 0 0 $spacing-xl;
+    margin: 0 0 $spacing-lg;
 }
 
 .toggleBtn {
@@ -151,19 +155,22 @@
 
 // ── Email Providers ───────────────────────────────────────────
 .topBanner {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: rgba($black, 0.75);
-    color: $white;
-    font-family: $font-mono;
-    font-size: 1rem;
-    font-weight: 600;
-    text-align: center;
+    width: 96%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-md;
     padding: 0.6rem $spacing-md;
-    letter-spacing: 0.03em;
-    z-index: 10;
+    background: rgba($orange, 0.2);
+    border-bottom: 2px solid rgba($black, 0.25);
+    border-left: 2px solid rgba($black, 0.25);
+    border-right: 2px solid rgba($black, 0.25);
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 2px 0 rgba($black, 0.1);
+    font-size: 0.8rem;
+    flex-wrap: wrap;
+    text-align: center;
+    margin: 0 auto;
 }
 
 .emailProviders {
@@ -204,25 +211,33 @@
 }
 
 .iconTile {
-    width: 72px;
-    height: 72px;
+    width: 56px;
+    height: 56px;
     flex-shrink: 0;
     background: $orange;
     border: $border-extra-thick;
-    border-radius: 22px;
+    border-radius: 16px;
     box-shadow: 6px 6px 0px rgba(12, 9, 140, 0.28);
     display: flex;
     align-items: center;
     justify-content: center;
     transform: rotate(-4deg);
+    margin: 0;
+    margin-top: -28px;
+
+    img {
+        animation: appIconWave 3s ease-in-out infinite;
+        transform-origin: 50% 78%;
+        width: 75%;
+    }
 }
 
 .brandRow {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $spacing-md;
-    margin-bottom: $spacing-sm; // tight to modeLabel
+    gap: 1.25rem;
+    margin-bottom: 0;
 }
 
 .modeLabel {
