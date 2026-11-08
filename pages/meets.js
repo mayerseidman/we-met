@@ -65,11 +65,11 @@ export default function Meets() {
         const handler = (e) => {
             e.preventDefault()
             setInstallPrompt(e)
-            setShowInstallBanner(true)
+            if (isMobile) setShowInstallBanner(true)
         }
         window.addEventListener('beforeinstallprompt', handler)
         return () => window.removeEventListener('beforeinstallprompt', handler)
-    }, [])
+    }, [isMobile])
 
     const handleInstall = async () => {
         if (!installPrompt) return
@@ -217,7 +217,7 @@ export default function Meets() {
 
     return (
         <div className={styles.page}>
-            {!user && hasConnections && (
+            {/*{!user && hasConnections && (
                 <div className={styles.topBanner}>
                     <span className={styles.topBannerText}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#000000" width={18} height={18} style={{ verticalAlign: '-4px', marginRight: 8 }}>
@@ -226,18 +226,17 @@ export default function Meets() {
                         <button className={styles.topBannerLink} onClick={() => router.push('/auth?mode=signin')}>Sign In To Back Up</button>
                     </span>
                 </div>
-            )}
+            )}*/}
 
-            {showInstallBanner && (
+            {showInstallBanner && user && (
                 <div className={styles.topBanner}>
-                    <span className={styles.topBannerText}>
-                        <img src={`${POP}/smartphone.svg`} alt="" width={18} height={18} style={{ verticalAlign: '-4px', marginRight: 6 }} />
-                        Add We Met to your home screen
-                    </span>
-                    <div className={styles.topBannerActions}>
-                        <button className={styles.topBannerLink} onClick={handleInstall}>Install</button>
-                        <button className={styles.topBannerClose} onClick={() => setShowInstallBanner(false)} aria-label="Close"><img src={`${POP}/close.svg`} alt="" width={14} height={14} /></button>
-                    </div>
+                    <button className={styles.topBannerLink} onClick={handleInstall}>
+                        <img src={`${POP}/smartphone.svg`} alt="" width={14} height={14} style={{ verticalAlign: '-2px', marginRight: 6 }} />
+                        {isMobile ? 'Add to Home Screen' : 'Install We Met'}
+                    </button>
+                    <button className={styles.topBannerClose} onClick={() => setShowInstallBanner(false)} aria-label="Close" style={{ position: 'absolute', right: '1rem' }}>
+                        <img src={`${POP}/close.svg`} alt="" width={14} height={14} />
+                    </button>
                 </div>
             )}
 

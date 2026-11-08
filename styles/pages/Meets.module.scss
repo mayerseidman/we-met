@@ -43,22 +43,22 @@
 // ── Banners ───────────────────────────────────────────────────
 // ── Top banner (full-width system strip) ───────────────────────
 .topBanner {
-    width: 96%;
+    position: relative;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $spacing-md;
+    gap: 0.5rem;
     padding: 0.6rem $spacing-md;
     background: rgba($orange, 0.2);
     border-bottom: 2px solid rgba($black, 0.25);
-    border-left: 2px solid rgba($black, 0.25);
-    border-right: 2px solid rgba($black, 0.25);
-    border-radius: 0 0 16px 16px;
-    box-shadow: 0 2px 0 rgba($black, 0.1);
     font-size: 0.8rem;
     flex-wrap: wrap;
     text-align: center;
-    margin: 0 auto;
+}
+.topBannerMeta {
+    font-weight: 500;
+    opacity: 0.7;
 }
 .topBannerText {
     font-weight: 600;
