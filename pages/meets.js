@@ -46,6 +46,7 @@ export default function Meets() {
     const [selectedConn, setSelectedConn] = useState(null)
     const [copyFeedback, setCopyFeedback] = useState(null)
     const [isMobile, setIsMobile] = useState(false)
+    const [showIosHint, setShowIosHint] = useState(false)
 
     // Search + filters
     const [searchQuery, setSearchQuery] = useState('')
@@ -62,14 +63,37 @@ export default function Meets() {
     }, [])
 
     useEffect(() => {
-        const handler = (e) => {
-            e.preventDefault()
-            setInstallPrompt(e)
-            if (isMobile) setShowInstallBanner(true)
+        if (typeof window === 'undefined') return
+
+        const dismissed = () => {
+            try { return localStorage.getItem('installBannerDismissed') === '1' } catch { return false }
         }
-        window.addEventListener('beforeinstallprompt', handler)
-        return () => window.removeEventListener('beforeinstallprompt', handler)
-    }, [isMobile])
+
+        const pickUpPrompt = () => {
+            const e = window.__installPrompt
+            if (!e) return
+            setInstallPrompt(e)
+            if (window.innerWidth < 768 && !dismissed()) setShowInstallBanner(true)
+        }
+
+        pickUpPrompt() // the event may have fired before this page mounted
+        window.addEventListener('installpromptready', pickUpPrompt)
+        return () => window.removeEventListener('installpromptready', pickUpPrompt)
+    }, [])
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return
+        const ua = window.navigator.userAgent
+        // iPadOS reports a Mac user agent, so also check for touch
+        const isIos = /iPad|iPhone|iPod/.test(ua) || (ua.includes('Mac') && navigator.maxTouchPoints > 1)
+        const isStandalone =
+            window.navigator.standalone === true ||
+            window.matchMedia('(display-mode: standalone)').matches
+        let dismissed = false
+        try { dismissed = localStorage.getItem('iosHintDismissed') === '1' } catch {}
+
+        if (isIos && !isStandalone && !dismissed) setShowIosHint(true)
+    }, [])
 
     const handleInstall = async () => {
         if (!installPrompt) return
@@ -77,6 +101,17 @@ export default function Meets() {
         const { outcome } = await installPrompt.userChoice
         if (outcome === 'accepted') setShowInstallBanner(false)
         setInstallPrompt(null)
+        window.__installPrompt = null // a prompt can only be used once
+    }
+
+    const dismissIosHint = () => {
+        setShowIosHint(false)
+        try { localStorage.setItem('iosHintDismissed', '1') } catch {}
+    }
+
+    const dismissInstallBanner = () => {
+        setShowInstallBanner(false)
+        try { localStorage.setItem('installBannerDismissed', '1') } catch {}
     }
 
     const formatTime = (scannedAt) => {
@@ -228,7 +263,7 @@ export default function Meets() {
                 </div>
             )}
 
-            {showInstallBanner && user && (
+            {showInstallBanner && user && hasConnections && (
                 <div className={styles.topBanner}>
                     <button className={styles.topBannerLink} onClick={handleInstall}>
                         <img src={`${POP}/smartphone.svg`} alt="" width={14} height={14} style={{ verticalAlign: '-2px', marginRight: 6 }} />
@@ -236,14 +271,31 @@ export default function Meets() {
                     </button>
                     <button
                         className={styles.topBannerClose}
-                        onClick={() => setShowInstallBanner(false)}
+                        onClick={dismissInstallBanner}
                         aria-label="Close"
                         style={{ position: 'absolute', right: '1rem' }}
                     >
                         <img src={`${POP}/close.svg`} alt="" width={14} height={14} />
                     </button>
                 </div>
-            )}    
+            )}
+
+            {showIosHint && user && hasConnections && (
+                <div className={styles.topBanner}>
+                    <span className={styles.topBannerText}>
+                        <img src={`${POP}/smartphone.svg`} alt="" width={14} height={14} style={{ verticalAlign: '-2px', marginRight: 6 }} />
+                        Tap Share, then Add to Home Screen
+                    </span>
+                    <button
+                        className={styles.topBannerClose}
+                        onClick={dismissIosHint}
+                        aria-label="Close"
+                        style={{ position: 'absolute', right: '1rem' }}
+                    >
+                        <img src={`${POP}/close.svg`} alt="" width={14} height={14} />
+                    </button>
+                </div>
+            )}
 
             <div className={styles.header}>
                 <h1 className={styles.title}>

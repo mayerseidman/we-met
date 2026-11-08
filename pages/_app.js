@@ -81,6 +81,23 @@ function MyApp({ Component, pageProps }) {
         }
     }, []);
 
+    // ── Capture the install prompt app-wide ───────────────────
+    useEffect(() => {
+        const onPrompt = (e) => {
+            e.preventDefault()
+            window.__installPrompt = e
+            window.dispatchEvent(new Event('installpromptready'))
+        }
+        const onInstalled = () => { window.__installPrompt = null }
+
+        window.addEventListener('beforeinstallprompt', onPrompt)
+        window.addEventListener('appinstalled', onInstalled)
+        return () => {
+            window.removeEventListener('beforeinstallprompt', onPrompt)
+            window.removeEventListener('appinstalled', onInstalled)
+        }
+    }, []);
+
     // Reset dropdown state on navigation
     useEffect(() => {
         setIsDropdownOpen(false);
