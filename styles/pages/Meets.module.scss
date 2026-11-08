@@ -48,7 +48,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: $spacing-md;
     padding: 0.6rem $spacing-md;
     background: rgba($orange, 0.2);
     border-bottom: 2px solid rgba($black, 0.25);
