@@ -114,7 +114,7 @@ export default function AuthPage() {
                             <>
                                 <p className={styles.subtitle}>
                                     <img src={`${POP}/key.svg`} alt="" width={18} height={18} style={{ verticalAlign: '-3px', marginRight: 8 }} />
-                                    We&apos;re dusting off your reset link. Check your email at <strong>{email || 'your inbox'}</strong>.
+                                    Your reset link was sent! Check your email at <strong>{email || 'your inbox'}</strong>.
                                 </p>
                                 <p className={styles.toggle}>
                                     <button type="button" className={styles.toggleBtn} onClick={() => { setForgotPassword(false); setResetSent(false); setError(null); }}>
