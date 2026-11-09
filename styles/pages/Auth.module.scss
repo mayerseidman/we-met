@@ -7,9 +7,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     padding: $spacing-lg;
-    /*padding-top: 4rem; // just enough to clear the fixed banner*/
+    padding-top: 2.5rem; // just enough to clear the fixed banner
     font-family: $font-mono;
 }
 
