@@ -75,8 +75,7 @@ export default function AuthPage() {
 
     return (
         <div className={styles.page}>
-            <div className={styles.content}>
-
+            <div className={`${styles.content} ${styles.contentFit}`}>
                 <div className={styles.brandRow}>
                     <div className={styles.iconTile}>
                         <img src={`${POP}/waving-hand.svg`} alt="" width={56} height={56} />

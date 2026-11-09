@@ -48,7 +48,7 @@ export function useAuth() {
         const timeout = setTimeout(() => {
             setLoading(false)
             setProfileSynced(true)
-        }, 500)
+        }, 2500)
 
         // Listen for auth state changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(

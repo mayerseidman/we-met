@@ -280,7 +280,7 @@ export default function Meets() {
                 </div>
             )}
 
-            {showIosHint && user && hasConnections && (
+            {showIosHint && !showInstallBanner && user && hasConnections && (
                 <div className={styles.topBanner}>
                     <span className={styles.topBannerText}>
                         <img src={`${POP}/smartphone.svg`} alt="" width={14} height={14} style={{ verticalAlign: '-2px', marginRight: 6 }} />
