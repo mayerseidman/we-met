@@ -12,6 +12,13 @@
     animation: fadeIn 0.4s ease-out;
 }
 
+.showQr {
+    @media (min-width: 768px) and (pointer: coarse) {
+        width: 100%;
+        max-width: 760px;
+    }
+}
+
 .emptyState .qrCard {
     min-height: 265px;
     justify-content: center;
@@ -173,12 +180,11 @@
     display: flex;
     justify-content: center;
     line-height: 0;
-    
     svg {
         width: 100%;
-        display: block;        
+        display: block;
         margin: 0;
-        padding: 1rem;
+        padding: 0.5rem;
     }
 }
 

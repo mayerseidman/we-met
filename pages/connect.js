@@ -105,6 +105,7 @@ export default function ConnectPage({ onDropdownToggle }) {
               name: devProfile.name,
               phone: devProfile.phone,
               instagram: devProfile.instagram,
+              pt: devProfile.photoUrl ? devProfile.photoUrl.split('?')[0].split('.').pop() : null,
               event: selectedEvent,
               userId: user?.id || null,
           })

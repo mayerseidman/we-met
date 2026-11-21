@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import QRCode from "react-qr-code";
 import styles from "../styles/components/ShowQR.module.scss";
 import Avatar from "./Avatar";
@@ -78,12 +78,34 @@ export default function ShowQR({
 }
 
 const QRCard = ({ profile, hasPhoto, qrData, fgColor, bgColor }) => {
+    const [qrSize, setQrSize] = useState(280);
+
+    useEffect(() => {
+        const pick = () => {
+            const w = window.innerWidth;
+            const isTouch = window.matchMedia('(pointer: coarse)').matches;
+            if (isTouch && w >= 768) {
+                setQrSize(Math.min(640, Math.max(400, Math.round(w * 0.38))));
+            } else {
+                setQrSize(280);
+            }
+        };
+        pick();
+        window.addEventListener('resize', pick);
+        return () => window.removeEventListener('resize', pick);
+    }, []);
+
     const avatarSrc = hasPhoto ? profile.photo : null;
     return (
         <div className={styles.qrCardContainer}>
             <div className={styles.qrCard}>
                 <div className={styles.qrWrapper}>
-                    <QRCode value={qrData} level="M" size={400} style={{ width: '100%', maxWidth: '400px', height: 'auto' }} />
+                    <QRCode
+                        value={qrData}
+                        level="M"
+                        size={qrSize}
+                        style={{ width: '100%', maxWidth: `${qrSize}px`, height: 'auto' }}
+                    />
                     <div className={styles.qrAvatar}>
                         <Avatar src={avatarSrc} name={profile.name} size={60} />
                     </div>

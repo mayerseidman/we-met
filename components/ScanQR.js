@@ -97,7 +97,9 @@ export default function ScanQR({
                     phone: connectionData.phone || null,
                     instagram: connectionData.instagram || null,
                     about: connectionData.about || null,
-                    photo: connectionData.photo || null,
+                    photo: (connectionData.pt && connectionData.userId)
+                        ? `https://jkoypgrmxchpfhcovaxh.supabase.co/storage/v1/object/public/avatars/${connectionData.userId}/avatar.${connectionData.pt}`
+                        : (connectionData.photo || null),
                     connectedUserId: connectionData.userId || null,
                     event: selectedEventRef.current || 'Unknown',
                     scannedAt: new Date().toISOString(),
