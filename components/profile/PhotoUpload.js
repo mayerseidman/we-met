@@ -60,7 +60,7 @@ const PhotoUpload = ({ photoPreview, onPhotoChange, onRemovePhoto, showError }) 
                 <input 
                     type="file" 
                     id="photoInput" 
-                    accept="image/*" 
+                    accept="image/jpeg,image/png,image/webp"
                     onChange={onPhotoChange}
                 />
             </div>

@@ -139,16 +139,24 @@ export default function ProfilePage({ user, authLoading }) {
         setEditingProfile(prev => ({ ...prev, [name]: value }));
     };
 
+    const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+
     const handlePhotoChange = (e) => {
         const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPhotoPreview(reader.result);
-                setEditingProfile(prev => ({ ...prev, photo: reader.result }));
-            };
-            reader.readAsDataURL(file);
+        if (!file) return;
+
+        if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
+            showToast('Please choose a JPG, PNG or WebP file.');
+            e.target.value = '';
+            return;
         }
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setPhotoPreview(reader.result);
+            setEditingProfile(prev => ({ ...prev, photo: reader.result }));
+        };
+        reader.readAsDataURL(file);
     };
 
     const handleRemovePhoto = () => {
@@ -167,26 +175,29 @@ export default function ProfilePage({ user, authLoading }) {
        const saveStart = Date.now()
 
        try {
-           const success = await saveProfile(editingProfile)
-           console.log('save result:', success)
+            const success = await saveProfile({
+                ...editingProfile,
+                photoUrl: editingProfile.photo ? (profile?.photoUrl || null) : null,
+            })
+            console.log('save result:', success)
            
            if (success) {
-               if (user) {
-                   let profileToSave = { ...editingProfile }
-                   console.log('photo value:', editingProfile.photo?.substring(0, 50))
-                   if (editingProfile.photo && editingProfile.photo.startsWith('data:')) {
-                       console.log('uploading photo...')
-                       const { url, error: uploadError } = await uploadAvatar(user.id, editingProfile.photo)
-                       console.log('upload result:', url, uploadError)
-                       if (url) {
-                           profileToSave.photo = url
-                       }
-                   } else {
-                       console.log('no base64 photo — skipping upload')
-                   }
-                   const { success: cloudSuccess, error } = await saveUserProfile(user.id, profileToSave)
-                   console.log('cloud save result:', cloudSuccess, error)
-               }
+                if (user) {
+                    const syncToCloud = async () => {
+                        let profileToSave = { ...editingProfile }
+                        if (editingProfile.photo && editingProfile.photo.startsWith('data:')) {
+                            const { url } = await uploadAvatar(user.id, editingProfile.photo)
+                            if (url) {
+                                profileToSave.photo = url
+                                console.log('photoUrl saving locally:', url)
+                                await saveProfile({ ...editingProfile, photoUrl: url })
+                            }
+                        }
+                        const { success: cloudSuccess, error } = await saveUserProfile(user.id, profileToSave)
+                        console.log('cloud save result:', cloudSuccess, error)
+                    }
+                    syncToCloud().catch((err) => console.error('Cloud sync failed:', err))
+                }
 
                 const wasNewProfile = !initialProfile
                 const elapsed = Date.now() - saveStart
@@ -195,11 +206,11 @@ export default function ProfilePage({ user, authLoading }) {
                     setButtonState('saved')
                     setInitialProfile(editingProfile)
                     setShowErrors(false)
-
+                    setTimeout(() => setIsEditing(false), 1200)
                     setTimeout(() => {
-                        if (wasNewProfile) showToast('Profile created! 🎉')
-                        else showToast('Profile updated! ✨')
-                    }, 600)
+                        if (wasNewProfile) showToast('Profile Created! 🎉')
+                        else showToast('Profile Updated! ✨')
+                    }, 1400)
 
                     setTimeout(() => {
                         setButtonState('default')

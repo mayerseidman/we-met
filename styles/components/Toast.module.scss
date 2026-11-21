@@ -27,6 +27,11 @@
     to { transform: translateY(0); opacity: 1; }
 }
 
+@keyframes toastOutMobile {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(200%); opacity: 0; }
+}
+
 .toast {
     position: fixed;
     bottom: 100px;
@@ -64,10 +69,18 @@
         animation: toastInMobile 0.4s $ease-out-quart;
         padding: 14px 20px;
     }
+    @media (min-width: 481px) {
+        width: max-content;
+        max-width: min(420px, calc(100vw - 24px));
+    }
 }
 
 .toastClosing {
     animation: toastOut 0.25s $ease-out-quart forwards;
+
+    @media (max-width: 480px) {
+        animation: toastOutMobile 0.25s $ease-out-quart forwards;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {

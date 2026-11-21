@@ -52,36 +52,41 @@ export function useAuth() {
 
         // Listen for auth state changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            async (_event, session) => {
+            (_event, session) => {
                 const currentUser = session?.user ?? null
                 setUser(currentUser)
                 setLoading(false)
 
-                // When a user signs in fresh, pull profile from Supabase
+                // When a user signs in fresh, pull profile from Supabase.
+                // The work runs after the callback returns so Supabase is not
+                // left waiting on us (awaiting inside this callback can deadlock it).
                 if (_event === 'SIGNED_IN' && currentUser) {
-                    try {
-                        const cloudProfile = await getUserProfile(currentUser.id)
-                        if (cloudProfile) {
-                            const localProfile = {
-                                name: cloudProfile.name || '',
-                                phone: cloudProfile.phone || '',
-                                instagram: cloudProfile.instagram || '',
-                                location: cloudProfile.location || '',
-                                about: cloudProfile.about || '',
-                                photo: cloudProfile.photo_url || null,
+                    setTimeout(async () => {
+                        try {
+                            const cloudProfile = await getUserProfile(currentUser.id)
+                            if (cloudProfile) {
+                                const localProfile = {
+                                    name: cloudProfile.name || '',
+                                    phone: cloudProfile.phone || '',
+                                    instagram: cloudProfile.instagram || '',
+                                    location: cloudProfile.location || '',
+                                    about: cloudProfile.about || '',
+                                    photo: cloudProfile.photo_url || null,
+                                    photoUrl: cloudProfile.photo_url && cloudProfile.photo_url.startsWith('http')
+                                        ? cloudProfile.photo_url
+                                        : null,
+                                }
+                                await storageManager.init()
+                                await storageManager.saveProfile(localProfile)
+                                console.log('Profile synced from Supabase to local storage')
                             }
-                            await storageManager.init()
-                            await storageManager.saveProfile(localProfile)
-                            console.log('Profile synced from Supabase to local storage')
+                        } catch (error) {
+                            console.error('Failed to sync profile from Supabase:', error)
+                        } finally {
+                            setProfileSynced(true)
                         }
-                    } catch (error) {
-                        console.error('Failed to sync profile from Supabase:', error)
-                    } finally {
-                        // Always mark as synced so routing can proceed
-                        setProfileSynced(true)
-                    }
+                    }, 0)
                 } else {
-                    // For any other event (SIGNED_OUT, TOKEN_REFRESHED etc)
                     setProfileSynced(true)
                 }
             }

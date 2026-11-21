@@ -83,7 +83,7 @@ const QRCard = ({ profile, hasPhoto, qrData, fgColor, bgColor }) => {
         <div className={styles.qrCardContainer}>
             <div className={styles.qrCard}>
                 <div className={styles.qrWrapper}>
-                    <QRCode value={qrData} size={220} level="H" />
+                    <QRCode value={qrData} level="M" size={400} style={{ width: '100%', maxWidth: '400px', height: 'auto' }} />
                     <div className={styles.qrAvatar}>
                         <Avatar src={avatarSrc} name={profile.name} size={60} />
                     </div>

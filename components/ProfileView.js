@@ -43,7 +43,7 @@ const ProfileView = ({ profile, onEdit, user, authLoading }) => {
             {!user && !authLoading && (
                 <button className={styles.signInLink} onClick={handleSignInClick}>
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                    Sign In
+                    Sign In or Create Account
                 </button>
             )}
             <Toast message={toastMessage} visible={toastVisible} onHide={hideToast} />
@@ -87,24 +87,26 @@ const ProfileName = ({ name }) => (
     <h1 className={styles.name}>{name}</h1>
 );
 
-const AboutSection = ({ profile }) => (
-    <div className={styles.section}>
-        <div className={styles.sectionLabel}>ABOUT</div>
-        <div className={styles.aboutCard}>
-            {profile.location && (
-                <>
+const AboutSection = ({ profile }) => {
+    if (!profile.location && !profile.about) return null;
+
+    return (
+        <div className={styles.section}>
+            <div className={styles.sectionLabel}>ABOUT</div>
+            <div className={styles.aboutCard}>
+                {profile.location && (
                     <AboutRow icon={<IconPin />} content={profile.location} />
+                )}
+                {profile.location && profile.about && (
                     <div className={styles.aboutDivider}></div>
-                </>
-            )}
-            <AboutRow
-                icon={<IconChat />}
-                content={profile.about || "Write something so people can remember you like your favorite color or your cat's name or whatever :)"}
-                isText
-            />
+                )}
+                {profile.about && (
+                    <AboutRow icon={<IconChat />} content={profile.about} isText />
+                )}
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 const AboutRow = ({ icon, content, isText }) => (
     <div className={styles.aboutRow}>
@@ -129,7 +131,7 @@ const ContactSection = ({ profile }) => {
                 <ContactRow icon={<IconPhone />} text={profile.phone} />
             )}
             {profile.instagram && (
-                <ContactRow icon={<IconInstagram />} text={`@${profile.instagram}`} />
+                <ContactRow icon={<IconInstagram />} text={`@${profile.instagram.replace(/^@+/, '')}`} />
             )}
         </div>
     );

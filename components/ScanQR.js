@@ -136,12 +136,32 @@ export default function ScanQR({
             try {
                 const scanner = new Html5Qrcode("qr-reader");
                 scannerRef.current = scanner;
-                await scanner.start(
-                    { facingMode: "environment" },
-                    { fps: 10, aspectRatio: 1.0, experimentalFeatures: { useBarCodeDetectorIfSupported: true } },
-                    onQRDetected,
-                    () => {},
-                );
+
+                try {
+                    // Ask for a sharper camera picture so small QR squares can be read
+                    await scanner.start(
+                        {
+                            facingMode: "environment",
+                            width: { ideal: 1920 },
+                            height: { ideal: 1080 },
+                        },
+                        {
+                            fps: 15,
+                            aspectRatio: 1.0,
+                            experimentalFeatures: { useBarCodeDetectorIfSupported: true },
+                        },
+                        onQRDetected,
+                        () => {},
+                    );
+                } catch (hdErr) {
+                    console.warn("HD camera request failed, using default:", hdErr);
+                    await scanner.start(
+                        { facingMode: "environment" },
+                        { fps: 10, aspectRatio: 1.0, experimentalFeatures: { useBarCodeDetectorIfSupported: true } },
+                        onQRDetected,
+                        () => {},
+                    );
+                }
             } catch (err) {
                 console.error("Error starting scanner:", err);
                 setCameraError(true);

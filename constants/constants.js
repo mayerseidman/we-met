@@ -46,7 +46,7 @@ export const FORM_FIELDS = [
         name: 'about',
         label: 'ABOUT',
         type: 'textarea',
-        placeholder: "Write Something fun so people remember you-a favorite color or your cat's name :)",
+        placeholder: "Add something people will remember you by :)",
         required: false,
     },
 ];
@@ -56,7 +56,7 @@ export const SAMPLE_DATA = {
     phone: "+1 114-432-3087",
     instagram: "bigmaestrotimo99",
     location: "Columbus, Ohio",
-    about: "Write something so people can remember you like your favorite color or your cat's name or whatever :)",
+    about: "Add something people will remember you by :)",
     photo: null,
 };
 

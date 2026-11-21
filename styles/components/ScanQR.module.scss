@@ -266,6 +266,9 @@
 .toastLight {
     background: $cream !important;
     color: $black !important;
+    @media (min-width: 481px) {
+        min-width: 380px;
+    }
 }
 
 // ── Toast card content (used inside Toast.module.scss wrapper) ─
@@ -292,7 +295,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 200px;
 }
 
 .successEmoji {

@@ -99,6 +99,17 @@ export default function ConnectPage({ onDropdownToggle }) {
         ...profile,
         photo: devMode.hasPhoto ? DEV_PHOTO : profile?.photo,
     };
+
+    const qrData = devProfile
+        ? JSON.stringify({
+              name: devProfile.name,
+              phone: devProfile.phone,
+              instagram: devProfile.instagram,
+              event: selectedEvent,
+              userId: user?.id || null,
+          })
+        : "";
+
     const devHasPhoto = devMode.noPhoto ? false : devMode.hasPhoto ? true : !!(profile?.photo);
 
     useEffect(() => {
@@ -145,17 +156,6 @@ export default function ConnectPage({ onDropdownToggle }) {
     const handleCloseDrawer = useCallback(() => {
         setShowEventDrawer(false);
     }, []);
-
-    const qrData = devProfile
-        ? JSON.stringify({
-              name: devProfile.name,
-              phone: devProfile.phone,
-              instagram: devProfile.instagram,
-              about: devProfile.about,
-              event: selectedEvent,
-              userId: user?.id || null, 
-          })
-        : "";
 
     // Show success modal after a real scan
     const handleScanSuccess = useCallback((connectionData) => {
