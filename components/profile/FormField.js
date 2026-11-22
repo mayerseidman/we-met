@@ -1,10 +1,11 @@
-import { useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 import { isValidPhone } from '../../constants/constants';
 import styles from '../../styles/pages/Profile.module.scss';
 
 const FormField = ({ field, value, onChange, showError, onBlur }) => {
     const { name, label, type, placeholder, required, errorMessage, invalidMessage, icon } = field;
     const textareaRef = useRef(null);
+    const ABOUT_MAX = 60;
     
     let hasError = false;
     let displayMessage = errorMessage;
@@ -30,6 +31,17 @@ const FormField = ({ field, value, onChange, showError, onBlur }) => {
         e.target.style.height = e.target.scrollHeight + 'px';
     };
 
+    const [bump, setBump] = useState(false);
+    const aboutLen = (value || '').length;
+
+    useEffect(() => {
+        if (name === 'about' && aboutLen >= ABOUT_MAX) {
+            setBump(true);
+            const t = setTimeout(() => setBump(false), 1500);
+            return () => clearTimeout(t);
+        }
+    }, [aboutLen, name]);
+
     if (type === 'textarea') {
         return (
             <div className={styles.formGroup}>
@@ -46,7 +58,13 @@ const FormField = ({ field, value, onChange, showError, onBlur }) => {
                     required={required}
                     placeholder={placeholder}
                     className={inputClassName}
+                    maxLength={name === 'about' ? ABOUT_MAX : undefined}
                 />
+                {name === 'about' && (
+                    <div className={`${styles.charCount} ${bump ? styles.charCountBump : ''}`}>
+                        {aboutLen}/{ABOUT_MAX}
+                    </div>
+                )}
                 {hasError && displayMessage && (
                     <div className={styles.errorMessage}>                            
                         {displayMessage}

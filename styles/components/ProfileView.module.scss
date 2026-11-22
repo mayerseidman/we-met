@@ -139,6 +139,8 @@
         -webkit-line-clamp: 4;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        overflow-wrap: anywhere;
+        word-break: break-word;
     }
 }
 

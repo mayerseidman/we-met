@@ -46,7 +46,7 @@ export const FORM_FIELDS = [
         name: 'about',
         label: 'ABOUT',
         type: 'textarea',
-        placeholder: "Add something people will remember you by :)",
+        placeholder: "Something people will remember you by (60 max) :)",
         required: false,
     },
 ];

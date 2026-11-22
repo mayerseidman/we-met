@@ -101,14 +101,15 @@ export default function ConnectPage({ onDropdownToggle }) {
     };
 
     const qrData = devProfile
-        ? JSON.stringify({
-              name: devProfile.name,
-              phone: devProfile.phone,
-              instagram: devProfile.instagram,
-              pt: devProfile.photoUrl ? devProfile.photoUrl.split('?')[0].split('.').pop() : null,
-              event: selectedEvent,
-              userId: user?.id || null,
-          })
+       ? JSON.stringify({
+             name: devProfile.name,
+             phone: devProfile.phone,
+             instagram: devProfile.instagram,
+             about: (devProfile.about || '').slice(0, 60),
+             pt: devProfile.photoUrl ? devProfile.photoUrl.split('?')[0].split('.').pop() : null,
+             event: selectedEvent,
+             userId: user?.id || null,
+         })
         : "";
 
     const devHasPhoto = devMode.noPhoto ? false : devMode.hasPhoto ? true : !!(profile?.photo);

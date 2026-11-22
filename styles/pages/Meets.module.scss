@@ -417,6 +417,8 @@
     line-height: 1.6;
     color: $black;
     margin: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 // ── Contact Tiles (quiet, plain — no boxed buttons) ─────────────
