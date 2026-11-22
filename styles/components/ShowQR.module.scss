@@ -19,6 +19,22 @@
     }
 }
 
+.qrHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.qrName {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: $black;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
 .emptyState .qrCard {
     min-height: 265px;
     justify-content: center;
