@@ -1,6 +1,6 @@
 import { useAuth } from '../hooks/useAuth'
 import { useRouter } from 'next/router'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useStorage } from '../hooks/useStorage'
 import Avatar from '../components/Avatar'
 import EmptyState from '../components/EmptyState'
@@ -52,6 +52,19 @@ export default function Meets() {
     const [searchQuery, setSearchQuery] = useState('')
     const [showFilterPanel, setShowFilterPanel] = useState(false)
     const [filters, setFilters] = useState({ festival: 'all', timePeriod: 'all' })
+
+    const stickyRef = useRef(null)
+
+    useEffect(() => {
+        const el = stickyRef.current
+        if (!el) return
+        const setHeight = () =>
+            document.documentElement.style.setProperty('--meets-sticky-h', `${el.offsetHeight}px`)
+        setHeight()
+        const ro = new ResizeObserver(setHeight)
+        ro.observe(el)
+        return () => ro.disconnect()
+    }, [mounted, loading, isReady, profile, selectedConn, connections.length])
 
     useEffect(() => { setMounted(true) }, [])
 
@@ -297,49 +310,55 @@ export default function Meets() {
                 </div>
             )}
 
-            <div className={styles.header}>
-                <h1 className={styles.title}>
-                    Meets
-                    {hasConnections && (
-                        <span className={styles.titleCount}>({connections.length})</span>
-                    )}
-                </h1>
-            </div>
+            {/* Sticky block: title + search row ONLY. It must close before the list,
+                otherwise its parent is as tall as itself and nothing can stick. */}
+            <div className={styles.stickyTop} ref={stickyRef}>
+                <div className={styles.header}>
+                    <h1 className={styles.title}>
+                        Meets
+                        {hasConnections && (
+                            <span className={styles.titleCount}>({connections.length})</span>
+                        )}
+                    </h1>
+                </div>
 
-            <div className={styles.inner}>
                 {hasConnections && (
-                    <div className={styles.searchRow}>
-                        <div className={styles.searchWrapper}>
-                            <svg className={styles.searchIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                            </svg>
-                            <input
-                                className={styles.searchInput}
-                                type="text"
-                                placeholder="Search by name or event..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                            {searchQuery && (
-                                <button className={styles.searchClear} onClick={() => setSearchQuery('')}>✕</button>
-                            )}
-                            <span className={styles.filterDivider} />
-                            <button
-                                className={`${styles.filterTrigger} ${activeFilterCount > 0 ? styles.filterTriggerActive : ''}`}
-                                onClick={() => setShowFilterPanel(true)}
-                                aria-label="Filters"
-                            >
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <line x1="4" y1="6" x2="20" y2="6"/>
-                                    <line x1="8" y1="12" x2="16" y2="12"/>
-                                    <line x1="11" y1="18" x2="13" y2="18"/>
+                    <div className={styles.inner}>
+                        <div className={styles.searchRow}>
+                            <div className={styles.searchWrapper}>
+                                <svg className={styles.searchIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                                 </svg>
-                                {activeFilterCount > 0 && <span className={styles.filterBadge}>{activeFilterCount}</span>}
-                            </button>
+                                <input
+                                    className={styles.searchInput}
+                                    type="text"
+                                    placeholder="Search by name or event..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                                {searchQuery && (
+                                    <button className={styles.searchClear} onClick={() => setSearchQuery('')}>✕</button>
+                                )}
+                                <span className={styles.filterDivider} />
+                                <button
+                                    className={`${styles.filterTrigger} ${activeFilterCount > 0 ? styles.filterTriggerActive : ''}`}
+                                    onClick={() => setShowFilterPanel(true)}
+                                    aria-label="Filters"
+                                >
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <line x1="4" y1="6" x2="20" y2="6"/>
+                                        <line x1="8" y1="12" x2="16" y2="12"/>
+                                        <line x1="11" y1="18" x2="13" y2="18"/>
+                                    </svg>
+                                    {activeFilterCount > 0 && <span className={styles.filterBadge}>{activeFilterCount}</span>}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}
+            </div>
 
+            <div className={styles.inner}>
                 {hasConnections && (filters.festival !== 'all' || filters.timePeriod !== 'all') && (
                     <div className={styles.activeFilters}>
                         {filters.festival !== 'all' && (
@@ -434,6 +453,7 @@ export default function Meets() {
                     </div>
                 )}
             </div>
+
             {showFilterPanel && (
                 <MeetsFilterPanel
                     isMobile={isMobile}

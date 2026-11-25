@@ -77,52 +77,15 @@ export default function ShowQR({
     );
 }
 
-// const QRCard = ({ profile, hasPhoto, qrData, fgColor, bgColor }) => {
-//     const [qrSize, setQrSize] = useState(280);
-
-//     useEffect(() => {
-//         const pick = () => {
-//             const w = window.innerWidth;
-//             const isTouch = window.matchMedia('(pointer: coarse)').matches;
-//             if (isTouch && w >= 768) {
-//                 setQrSize(Math.min(640, Math.max(400, Math.round(w * 0.38))));
-//             } else {
-//                 setQrSize(280);
-//             }
-//         };
-//         pick();
-//         window.addEventListener('resize', pick);
-//         return () => window.removeEventListener('resize', pick);
-//     }, []);
-
-//     const avatarSrc = hasPhoto ? profile.photo : null;
-//     return (
-//         <div className={styles.qrCardContainer}>
-//             <div className={styles.qrCard}>
-//                 <div className={styles.qrWrapper}>
-//                     <QRCode
-//                         value={qrData}
-//                         level="M"
-//                         size={qrSize}
-//                         style={{ width: '100%', maxWidth: `${qrSize}px`, height: 'auto' }}
-//                     />
-//                     <div className={styles.qrAvatar}>
-//                         <Avatar src={avatarSrc} name={profile.name} size={60} />
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
 const QRCard = ({ profile, hasPhoto, qrData }) => {
     const [qrSize, setQrSize] = useState(280);
-
+    const [isPhone, setIsPhone] = useState(false);
     useEffect(() => {
         const pick = () => {
             const w = window.innerWidth;
             const isTouch = window.matchMedia('(pointer: coarse)').matches;
             setQrSize(isTouch && w >= 768 ? 400 : 280);
+            setIsPhone(w <= 480);
         };
         pick();
         window.addEventListener('resize', pick);
@@ -134,7 +97,7 @@ const QRCard = ({ profile, hasPhoto, qrData }) => {
         <div className={styles.qrCardContainer}>
             <div className={styles.qrCard}>
                 <div className={styles.qrHeader}>
-                    <Avatar src={avatarSrc} name={profile.name} size={100} />
+                    <Avatar src={avatarSrc} name={profile.name} size={isPhone ? 48 : 100} />
                     <span className={styles.qrName}>{profile.name}</span>
                 </div>
                 <div className={styles.qrWrapper}>

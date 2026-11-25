@@ -22,32 +22,67 @@
     left: 50%;
     transform: translateX(-50%);
     background-color: $white;
-    border: 1px solid rgba(0,0,0,0.15);
-    border-radius: 8px;
+    border: 2px solid $black;           
+    border-radius: 8px;                 
     z-index: 1000;
-    width: 225px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-    animation: popIn 0.15s ease-out;
+    width: 290px;                       
+    box-shadow:
+        3px 3px 0 rgba(0, 0, 0, 0.12),  
+        0 8px 24px rgba(0, 0, 0, 0.12);
+    transform-origin: 50% 100%;                      
+    animation: popIn 0.24s cubic-bezier(0.34, 1.4, 0.64, 1) backwards;
     overflow: visible;
+    animation-duration: 0.36s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); // gentle ease-out, no bounce
+}
+
+@media (max-width: 767px) {
+    .popover {
+        width: min(360px, calc(100vw - 48px));
+        animation-duration: 0.36s;
+        animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .actionCard {
+        padding: 1rem 1.25rem;
+        gap: 1.1rem;
+    }
+
+    .actionIcon {
+        width: 40px;
+        height: 40px;
+
+        img {
+            width: 32px;
+            height: 32px;
+        }
+    }
 }
 
 @keyframes popIn {
-    from { opacity: 0; transform: translateX(-50%) translateY(8px); }
-    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    from { opacity: 0; transform: translateX(-50%) translateY(14px) scale(0.92); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
 }
 
+
+// Notch pointing at the Connect button (replaces your ::before / ::after)
 .popover::after {
-    border-top: 10px solid rgba(0,0,0,0.15);
-}
-
-.popover::before {
-    border-top: 8px solid $white;
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    background: $white;
+    border-right: 2px solid $black;
+    border-bottom: 2px solid $black;
+    transform: translateX(-50%) rotate(45deg);
 }
 
 .actions {
     display: flex;
     flex-direction: column;
-    border-radius: 4px;
+    border-radius: 6px;
     overflow: hidden;
 }
 
@@ -58,11 +93,12 @@
     padding: $spacing-md $spacing-lg;
     background: $white;
     border: none;
-    border-bottom: 1.5px solid rgba(0,0,0,0.08);
+    border-bottom: 1.5px solid rgba(0, 0, 0, 0.15); 
     cursor: pointer;
     transition: all $transition-fast;
     width: 100%;
     font-family: $font-mono;
+    animation: rowRise 0.28s ease-out backwards;
 
     &:last-child {
         border-bottom: none;
@@ -77,6 +113,13 @@
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .popover,
+    .actionCard {
+        animation: none;
+    }
+}
+
 .actionIcon {
     width: 32px;
     height: 32px;
@@ -84,10 +127,6 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-
-    img {
-        filter: opacity(0.72);
-    }
 }
 
 .actionText {

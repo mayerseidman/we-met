@@ -8,7 +8,7 @@
 // We use it to:
 // 1. Check auth state and route accordingly
 // 2. Show the bottom nav on all pages that need it
-// 3. Show the ConnectDrawer/Popover globally
+// 3. Show the ConnectPopover globally
 //
 // ROUTING LOGIC:
 // - Has local profile → /meets (offline-first, no account needed)
@@ -18,7 +18,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import BottomNav from '../components/BottomNav';
-import ConnectDrawer from '../components/ConnectDrawer';
 import ConnectPopover from '../components/ConnectPopover';
 import { useAuth } from '../hooks/useAuth';
 import { useStorage } from '../hooks/useStorage';
@@ -32,7 +31,6 @@ function MyApp({ Component, pageProps }) {
     const [mounted, setMounted] = useState(false);
     const [showConnectDrawer, setShowConnectDrawer] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
 
     const isPendingProfileSync = router.pathname === '/' && (authLoading || (user && !profileSynced))
     const isHomeRedirecting = router.pathname === '/' && !authLoading && isReady && profileSynced && (profile || user)
@@ -41,14 +39,6 @@ function MyApp({ Component, pageProps }) {
     // Must be first effect — gates everything else
     useEffect(() => {
         setMounted(true);
-    }, []);
-
-    // Detect mobile vs desktop
-    useEffect(() => {
-        const check = () => setIsMobile(window.innerWidth < 768);
-        check();
-        window.addEventListener('resize', check);
-        return () => window.removeEventListener('resize', check);
     }, []);
 
     // ── Routing gatekeeper ────────────────────────────────────
@@ -81,6 +71,12 @@ function MyApp({ Component, pageProps }) {
         }
     }, []);
 
+    useEffect(() => {
+        if (!showConnectDrawer) return;
+        document.body.style.overflow = "hidden";
+        return () => { document.body.style.overflow = ""; };
+    }, [showConnectDrawer]);
+
     // ── Capture the install prompt app-wide ───────────────────
     useEffect(() => {
         const onPrompt = (e) => {
@@ -103,7 +99,7 @@ function MyApp({ Component, pageProps }) {
         setIsDropdownOpen(false);
     }, [router.pathname, router.query.tab]);
 
-    // ── Connect drawer/popover handlers ───────────────────────
+    // ── Connect popover handlers ──────────────────────────────
     const handleConnectClick = () => setShowConnectDrawer(true);
 
     const handleDrawerSelect = (action) => {
@@ -186,17 +182,10 @@ function MyApp({ Component, pageProps }) {
                 />
             )}
             {showConnectDrawer && (
-                isMobile ? (
-                    <ConnectDrawer
-                        onSelectAction={handleDrawerSelect}
-                        onClose={handleDrawerClose}
-                    />
-                ) : (
-                    <ConnectPopover
-                        onSelectAction={handleDrawerSelect}
-                        onClose={handleDrawerClose}
-                    />
-                )
+                <ConnectPopover
+                    onSelectAction={handleDrawerSelect}
+                    onClose={handleDrawerClose}
+                />
             )}
         </div>
     );

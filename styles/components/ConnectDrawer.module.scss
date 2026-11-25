@@ -1,57 +1,70 @@
-@import '../variables';
+@use '../variables' as *;
 
-// ══════════════════════════════════════════════════════════════
-// ConnectDrawer Component Styles (Modal Overlay)
-// ══════════════════════════════════════════════════════════════
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes slideUpMobile {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes slideDownMobile {
+    from { transform: translateY(0); }
+    to { transform: translateY(100%); }
+}
 
 .backdrop {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1100;
     animation: fadeIn 0.2s ease-out;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+.backdropClosing {
+    animation: fadeOut 0.2s ease-in forwards;
 }
 
+// Same shell as the filter panel on mobile, but sized to its content
 .drawer {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: $cream;
-    border-top: 3px solid $black;
-    border-radius: 12px 12px 0 0;
-    z-index: 10000000;
-    max-height: 70vh;
-    overflow: hidden;
+    max-width: 400px;
+    margin: 0 auto;
+    background: $cream;
+    z-index: 1101;
     display: flex;
     flex-direction: column;
-    animation: slideUp 0.35s ease-out;
+    border-top: 3px solid $black;
+    border-left: 3px solid $black;
+    border-right: 3px solid $black;
+    border-radius: 16px 16px 0 0;
+    padding-bottom: env(safe-area-inset-bottom); // iPhone home bar
+    animation: slideUpMobile 0.3s ease-out;
 }
 
-@keyframes slideUp {
-    from { transform: translateY(100%); opacity: 0.6; }
-    to   { transform: translateY(0); opacity: 1; }
+.drawerClosing {
+    animation: slideDownMobile 0.22s ease-in forwards;
 }
 
-// ── Header ────────────────────────────────────────────────────
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $spacing-lg $spacing-md;
-    border-bottom: 2px solid $black;
+    padding: $spacing-lg;
+    padding-bottom: $spacing-md;
+    border-bottom: 1px solid rgba($black, 0.12);
+    margin: 0 0 1rem;
+    flex-shrink: 0;
 }
 
 .title {
@@ -59,137 +72,81 @@
     font-weight: 600;
     margin: 0;
     color: $black;
+    font-family: $font-mono;
 }
 
-.closeButton {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: 2px solid $black;
-    border-radius: 2px;
-    font-size: 1.25rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all $transition-fast;
-    
-    &:hover {
-        background-color: rgba(0, 0, 0, 0.05);
-        border-color: $orange;
-        color: $orange;
-    }
-    
-    &:active {
-        background-color: rgba(0, 0, 0, 0.1);
-    }
+.body {
+    padding: 0 $spacing-lg $spacing-lg;
 }
 
-// ── Actions ───────────────────────────────────────────────────
+// One white card holding both rows, like the desktop popover
 .actions {
     display: flex;
     flex-direction: column;
-    gap: $spacing-sm;
-    padding: $spacing-md;
-    overflow-y: auto;
+    background: $white;
+    border: 2px solid $black;
+    border-radius: 2px;
+    overflow: hidden;
 }
 
 .actionCard {
     display: flex;
     align-items: center;
-    gap: $spacing-md;
-    padding: 1.5rem;
+    gap: 1rem;
+    width: 100%;
+    padding: $spacing-md $spacing-lg;
     background: $white;
-    border: 1.5px solid $black;
-    border-radius: 2px;
+    border: none;
+    border-bottom: 1.5px solid rgba(0, 0, 0, 0.15);
     cursor: pointer;
-    transition: all $transition-fast;
-    box-shadow: 3.5px 3.5px 0px rgba(0, 0, 0, 0.1);
-    
+    font-family: $font-mono;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+    transition: background $transition-fast;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
     &:hover {
-        background: rgba(245, 114, 47, 0.07);
-        border-color: $orange;
-        transform: translate(-0.5px, -0.5px);
-        box-shadow: 4.5px 4.5px 0px rgba(0, 0, 0, 0.2);
+        background: rgba(245, 114, 47, 0.06);
     }
-    
+
     &:active {
-        transform: translate(1px, 1px);
-        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
-    }
-    @media (max-width: 480px) {
-        padding: 1rem;
+        background: rgba(245, 114, 47, 0.12);
     }
 }
 
-// ── Action Icon ───────────────────────────────────────────────
 .actionIcon {
-    height: 48px;
-    width: 48px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    
-    svg {
-        width: 24px;
-        height: 24px;
-        stroke-width: 2;
-        color: $orange;
-        filter: opacity(0.72);
-    }
-
-    img {
-        filter: opacity(0.72);
-    }
 }
 
-// ── Action Text ───────────────────────────────────────────────
 .actionText {
     flex: 1;
     text-align: left;
 }
 
 .actionLabel {
-    font-size: 1.125rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    margin: 0 0 2px 0;
+    margin: 0 0 2px;
     color: $black;
 }
 
 .actionDescription {
-    font-size: 0.875rem;
-    /*font-weight: 600;*/
-    margin: 0;
+    font-size: 0.75rem;
+    margin: 4px 0 0;
     color: $medium-gray;
 }
 
-// ── Action Arrow ──────────────────────────────────────────────
-.actionArrow {
-    flex-shrink: 0;
-    
-    svg {
-        width: 32px;
-        height: 32px;
-        color: $dark-gray;
+@media (prefers-reduced-motion: reduce) {
+    .backdrop,
+    .drawer {
+        animation: none;
     }
-}
-
-.backdropClosing {
-    animation: fadeOut 0.28s ease-in forwards;
-}
-
-.drawerClosing {
-    animation: slideDown 0.28s ease-in forwards;
-}
-
-@keyframes fadeOut {
-    from { opacity: 1; }
-    to   { opacity: 0; }
-}
-
-@keyframes slideDown {
-    from { transform: translateY(0); }
-    to   { transform: translateY(100%); }
 }

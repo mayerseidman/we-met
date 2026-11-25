@@ -24,15 +24,31 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
+
+    @media (max-width: 480px) {
+        flex-direction: row;
+        gap: 1rem;
+    }
 }
 
 .qrName {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: $black;
-    text-align: center;
+    min-width: 0;
     overflow-wrap: anywhere;
+    text-align: center;
+    font-size: 1.75rem;
+    line-height: 1.15;
+
+    @media (max-width: 480px) {
+        text-align: left;
+        font-size: 1.4rem;
+
+    }
+}
+
+.qrHeader img,
+.qrHeader > div:first-child {
+    flex-shrink: 0;
 }
 
 .emptyState .qrCard {

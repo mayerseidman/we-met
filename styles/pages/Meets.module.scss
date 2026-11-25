@@ -8,6 +8,22 @@
     font-family: $font-mono;
 }
 
+.stickyTop {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: $cream;
+    padding-bottom: $spacing-md; // room for the search box's hard shadow
+
+    .header {
+        padding-bottom: 1rem; // was 1.5rem, tighter while stuck
+    }
+
+    .searchRow {
+        margin-bottom: 0; // the padding above replaces it
+    }
+}
+
 .inner {
     max-width: 400px;
     margin: 0 auto;
@@ -18,7 +34,7 @@
 
 // ── Header ────────────────────────────────────────────────────
 .header {
-    padding: $spacing-xl $spacing-md $spacing-md;
+    padding: 1.25rem;
     padding-bottom: 1.5rem;
     text-align: center;
 }
@@ -165,6 +181,12 @@
     letter-spacing: 1.5px;
     color: rgba($black, 0.72);
     padding: 0 0.25rem;
+    position: sticky;
+    top: calc(var(--meets-sticky-h, 8rem) - 1px);
+    z-index: 10;                            
+    background: $cream;
+    padding-bottom: 0.5rem;
+    box-shadow: 12px 0 0 $cream;
 }
 
 // ── Card ──────────────────────────────────────────────────────
@@ -675,7 +697,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-top: -$spacing-md;
+    margin-top: 0;
     margin-bottom: $spacing-lg;
 }
 
