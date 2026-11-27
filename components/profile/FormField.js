@@ -25,17 +25,26 @@ const FormField = ({ field, value, onChange, showError, onBlur }) => {
     }
     
     const inputClassName = hasError ? styles.error : '';
-
     const handleTextareaInput = (e) => {
-        e.target.style.height = 'auto';
-        e.target.style.height = e.target.scrollHeight + 'px';
+        const el = e.target;
+        el.style.height = 'auto';
+        el.style.height = el.scrollHeight + (el.offsetHeight - el.clientHeight) + 'px';
     };
+    useEffect(() => {
+        const el = textareaRef.current;
+        if (!el) return;
+        el.style.height = 'auto';
+        el.style.height = el.scrollHeight + (el.offsetHeight - el.clientHeight) + 'px';
+    }, [value]);
 
     const [bump, setBump] = useState(false);
     const aboutLen = (value || '').length;
+    const prevLenRef = useRef(aboutLen);
 
     useEffect(() => {
-        if (name === 'about' && aboutLen >= ABOUT_MAX) {
+        const prev = prevLenRef.current;
+        prevLenRef.current = aboutLen;
+        if (name === 'about' && aboutLen >= ABOUT_MAX && prev < ABOUT_MAX) {
             setBump(true);
             const t = setTimeout(() => setBump(false), 1500);
             return () => clearTimeout(t);

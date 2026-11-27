@@ -101,6 +101,19 @@ function MyApp({ Component, pageProps }) {
 
     // ── Connect popover handlers ──────────────────────────────
     const handleConnectClick = () => setShowConnectDrawer((open) => !open);
+    useEffect(() => {
+        if (!showConnectDrawer) return;
+        const html = document.documentElement;
+        const body = document.body;
+        const prevHtml = html.style.overflow;
+        const prevBody = body.style.overflow;
+        html.style.overflow = 'hidden';
+        body.style.overflow = 'hidden';
+        return () => {
+            html.style.overflow = prevHtml;
+            body.style.overflow = prevBody;
+        };
+    }, [showConnectDrawer]);
 
     const handleDrawerSelect = (action) => {
         setShowConnectDrawer(false);

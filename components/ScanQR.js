@@ -173,7 +173,7 @@ export default function ScanQR({
     if (devMode.noProfile || !profile) {
         return (
             <div style={{ background: '#FFEFD7', minHeight: '100vh', paddingBottom: '5rem' }}>
-                <h1 style={{ textAlign: 'center', padding: '1.25rem 0 1rem', fontSize: '2rem', margin: '0', fontWeight: 900, fontFamily: 'inherit' }}>
+                <h1 style={{ textAlign: 'center', padding: '1.25rem 0 1rem', fontSize: '2rem', margin: '0', fontWeight: 900, fontFamily: 'inherit', color: '#fff' }}>
                     Scan QR
                 </h1>
                 <div style={{ maxWidth: '375px', margin: '0 auto' }}>
@@ -185,7 +185,7 @@ export default function ScanQR({
 
     return (
         <div className={styles.scanQr}>
-            <h1 style={{ textAlign: 'center', padding: '1.25rem 0 1rem', fontSize: '2rem', margin: '0', fontWeight: 900, fontFamily: 'inherit' }}>
+            <h1 style={{ textAlign: 'center', padding: '1.25rem 0 1rem', fontSize: '2rem', margin: '0', fontWeight: 900, fontFamily: 'inherit', color: '#fff' }}>
                 Scan QR
             </h1>
             <div className={styles.inner}>
@@ -265,7 +265,7 @@ export default function ScanQR({
                 <MismatchDrawer
                     scannerName="Big Maestro"
                     scannedEvent="Afrikaburn"
-                    selectedEvent={selectedEvent || "Burning Man 2025"}
+                    selectedEvent={selectedEvent || "Burning Man"}
                     onSelect={onEventChange}
                     onClose={onCloseMismatch}
                     isModal={!isMobile}
@@ -298,13 +298,18 @@ export default function ScanQR({
 }
 
 const ScanSuccessModal = ({ name, photo, onDismiss }) => {
+    const [closing, setClosing] = useState(false);
+    const handleDismiss = () => {
+        setClosing(true);
+        setTimeout(onDismiss, 280);
+    };
     useEffect(() => {
-        const timer = setTimeout(onDismiss, 4500);
+        const timer = setTimeout(handleDismiss, 4500);
         return () => clearTimeout(timer);
     }, []);
 
     return (
-        <div className={`${toastStyles.toast} ${styles.toastLight}`} onClick={onDismiss}>
+        <div className={`${toastStyles.toast} ${styles.toastLight} ${closing ? toastStyles.toastClosing : ''}`} onClick={handleDismiss}>
             <Avatar src={photo} name={name} size={44} />
             <div className={styles.successText}>
                 <div className={styles.successTitle}>New Connection Added</div>
@@ -315,13 +320,18 @@ const ScanSuccessModal = ({ name, photo, onDismiss }) => {
 };
 
 const AlreadyConnectedModal = ({ name, daysAgo, onDismiss }) => {
+    const [closing, setClosing] = useState(false);
+    const handleDismiss = () => {
+        setClosing(true);
+        setTimeout(onDismiss, 280);
+    };
     useEffect(() => {
-        const timer = setTimeout(onDismiss, 4500);
+        const timer = setTimeout(handleDismiss, 4500);
         return () => clearTimeout(timer);
     }, []);
 
     return (
-        <div className={`${toastStyles.toast} ${styles.toastLight}`} onClick={onDismiss}>
+        <div className={`${toastStyles.toast} ${styles.toastLight} ${closing ? toastStyles.toastClosing : ''}`} onClick={handleDismiss}>
             <div className={styles.successEmoji}>
                 <img src={`${POP}/handshake.svg`} alt="" width={36} height={36} />
             </div>
@@ -336,13 +346,18 @@ const AlreadyConnectedModal = ({ name, daysAgo, onDismiss }) => {
 };
 
 const ScanErrorModal = ({ onDismiss }) => {
+    const [closing, setClosing] = useState(false);
+    const handleDismiss = () => {
+        setClosing(true);
+        setTimeout(onDismiss, 280);
+    };
     useEffect(() => {
-        const timer = setTimeout(onDismiss, 4500);
+        const timer = setTimeout(handleDismiss, 4500);
         return () => clearTimeout(timer);
     }, []);
 
     return (
-        <div className={`${toastStyles.toast} ${styles.toastLight}`} onClick={onDismiss}>
+        <div className={`${toastStyles.toast} ${styles.toastLight} ${closing ? toastStyles.toastClosing : ''}`} onClick={handleDismiss}>
             <img src="/icons/pop/warning-triangle.svg" alt="" width={24} height={24} />
             <div className={styles.successText}>
                 <div className={styles.successTitle}>Scan Failed</div>

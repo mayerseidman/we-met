@@ -312,7 +312,7 @@ const HeroSection = ({ heroRef, bubbles, icons, waving, onIconClick, onGetStarte
                 Never lose<br />a connection.
             </h1>
             <p className={styles.tagline}>
-                No signal? No problem. Save people you meet with a simple QR scan.
+                No signal? No problem. Save people you meet with a simple QR{'\u00A0'}scan.
             </p>
             <div className={styles.ctaRow}>
                 <button className={styles.ctaPrimary} onClick={onGetStarted}>

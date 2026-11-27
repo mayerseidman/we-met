@@ -123,6 +123,7 @@
 
 .aboutContent {
     flex: 1;
+    min-width: 0;
     .aboutValue {
         font-weight: 600;
         color: $black;
@@ -191,8 +192,9 @@
 
 .contactText {
     flex: 1;
-    font-weight: bold;
+    min-width: 0;
     font-weight: 600;
+    overflow-wrap: anywhere;
 }
 
 // ── Edit Button ───────────────────────────────────────────────
