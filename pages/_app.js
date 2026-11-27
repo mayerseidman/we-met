@@ -100,7 +100,7 @@ function MyApp({ Component, pageProps }) {
     }, [router.pathname, router.query.tab]);
 
     // ── Connect popover handlers ──────────────────────────────
-    const handleConnectClick = () => setShowConnectDrawer(true);
+    const handleConnectClick = () => setShowConnectDrawer((open) => !open);
 
     const handleDrawerSelect = (action) => {
         setShowConnectDrawer(false);

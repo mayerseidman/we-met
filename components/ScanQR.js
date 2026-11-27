@@ -13,6 +13,11 @@ import styles from "../styles/components/ScanQR.module.scss";
 
 const POP = '/icons/pop';
 const DEV_PHOTO = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop";
+const daysSince = (iso) => {
+    if (!iso) return 0;
+    const startOfDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    return Math.round((startOfDay(new Date()) - startOfDay(new Date(iso))) / 86400000);
+};
 
 export default function ScanQR({ 
     user,
@@ -38,6 +43,7 @@ export default function ScanQR({
     const [cameraError, setCameraError] = useState(false);
     const [showWhatToDo, setShowWhatToDo] = useState(false);
     const scannerRef = useRef(null);
+    const [duplicate, setDuplicate] = useState(null);
 
     const userRef = useRef(user);
     const connectionsRef = useRef(connections);
@@ -75,14 +81,19 @@ export default function ScanQR({
             }
             try {
                 const connectionData = JSON.parse(decodedText);
-                const isDuplicate = connectionsRef.current.some(conn => {
+                console.log('SCAN DATA', connectionData, 'SAVED', connectionsRef.current.map(c => ({ name: c.name, phone: c.phone, id: c.connectedUserId })));
+                const existing = connectionsRef.current.find(conn => {
                     if (connectionData.userId && conn.connectedUserId) {
                         return conn.connectedUserId === connectionData.userId;
                     }
                     return conn.name === connectionData.name && conn.phone === connectionData.phone;
                 });
-                if (isDuplicate) {
-                    onShowAlreadyConnectedRef.current && onShowAlreadyConnectedRef.current(connectionData);
+                if (existing) {
+                    setDuplicate({
+                        name: existing.name,
+                        daysAgo: daysSince(existing.scannedAt),
+                        at: Date.now(),
+                    });
                     setTimeout(async () => {
                         isProcessingRef.current = false;
                         setIsProcessing(false);
@@ -162,10 +173,10 @@ export default function ScanQR({
     if (devMode.noProfile || !profile) {
         return (
             <div style={{ background: '#FFEFD7', minHeight: '100vh', paddingBottom: '5rem' }}>
-                <h1 style={{ textAlign: 'center', padding: '2rem 0 1rem', paddingBottom: '1.5rem', margin: 0, fontSize: '2rem', fontWeight: 900, fontFamily: 'inherit' }}>
+                <h1 style={{ textAlign: 'center', padding: '1.25rem 0 1rem', fontSize: '2rem', margin: '0', fontWeight: 900, fontFamily: 'inherit' }}>
                     Scan QR
                 </h1>
-                <div style={{ maxWidth: '375px', margin: '0 auto', padding: '0 1rem' }}>
+                <div style={{ maxWidth: '375px', margin: '0 auto' }}>
                     <EmptyState onSetEditing={onSetEditing} />
                 </div>
             </div>
@@ -174,7 +185,7 @@ export default function ScanQR({
 
     return (
         <div className={styles.scanQr}>
-            <h1 style={{ color: '#fff', textAlign: 'center', padding: '2rem 0 1rem', paddingBottom: '1.5rem', margin: 0, fontSize: '2rem', fontWeight: 900 }}>
+            <h1 style={{ textAlign: 'center', padding: '1.25rem 0 1rem', fontSize: '2rem', margin: '0', fontWeight: 900, fontFamily: 'inherit' }}>
                 Scan QR
             </h1>
             <div className={styles.inner}>
@@ -272,6 +283,15 @@ export default function ScanQR({
             )}
             {(devMode.whatToDo || showWhatToDo) && (
                 <WhatToDoModal onDismiss={devMode.whatToDo ? onCloseWhatToDo : () => setShowWhatToDo(false)} />
+            )}
+            {duplicate && (
+                <AlreadyConnectedModal
+                    key={duplicate.at}
+                    name={duplicate.name}
+                    daysAgo={duplicate.daysAgo}
+                    onDismiss={() => setDuplicate(null)}
+                    isMobile={isMobile}
+                />
             )}
         </div>
     );

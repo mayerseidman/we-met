@@ -164,33 +164,37 @@ export default function ProfilePage({ user, authLoading }) {
         setEditingProfile(prev => ({ ...prev, photo: null }));
     };
 
-   const handleSubmit = async (e) => {
-       e.preventDefault()
-       if (!isFormValid) {
-           setShowErrors(true)
-           return
-       }
-       isSavingRef.current = true
-       setButtonState('saving')
-       const saveStart = Date.now()
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        if (!isFormValid) {
+            setShowErrors(true)
+            return
+        }
+        isSavingRef.current = true
+        setButtonState('saving')
+        const saveStart = Date.now()
 
-       try {
+        // Tidy the name: trim ends + collapse double spaces. Keep their capitalization as typed.
+        const cleaned = { ...editingProfile, name: editingProfile.name.trim().replace(/\s+/g, ' ') }
+        setEditingProfile(cleaned)
+
+        try {
             const success = await saveProfile({
-                ...editingProfile,
-                photoUrl: editingProfile.photo ? (profile?.photoUrl || null) : null,
+                ...cleaned,
+                photoUrl: cleaned.photo ? (profile?.photoUrl || null) : null,
             })
             console.log('save result:', success)
-           
-           if (success) {
+
+            if (success) {
                 if (user) {
                     const syncToCloud = async () => {
-                        let profileToSave = { ...editingProfile }
-                        if (editingProfile.photo && editingProfile.photo.startsWith('data:')) {
-                            const { url } = await uploadAvatar(user.id, editingProfile.photo)
+                        let profileToSave = { ...cleaned }
+                        if (cleaned.photo && cleaned.photo.startsWith('data:')) {
+                            const { url } = await uploadAvatar(user.id, cleaned.photo)
                             if (url) {
                                 profileToSave.photo = url
                                 console.log('photoUrl saving locally:', url)
-                                await saveProfile({ ...editingProfile, photoUrl: url })
+                                await saveProfile({ ...cleaned, photoUrl: url })
                             }
                         }
                         const { success: cloudSuccess, error } = await saveUserProfile(user.id, profileToSave)
@@ -204,7 +208,7 @@ export default function ProfilePage({ user, authLoading }) {
                 const remaining = Math.max(0, 800 - elapsed)
                 setTimeout(() => {
                     setButtonState('saved')
-                    setInitialProfile(editingProfile)
+                    setInitialProfile(cleaned)
                     setShowErrors(false)
                     setTimeout(() => setIsEditing(false), 1200)
                     setTimeout(() => {
@@ -218,15 +222,15 @@ export default function ProfilePage({ user, authLoading }) {
                     }, 4000)
                 }, remaining)
             } else {
-               alert("Failed to save profile. Please try again.")
-               setButtonState('default')
-               isSavingRef.current = false
+                alert("Failed to save profile. Please try again.")
+                setButtonState('default')
+                isSavingRef.current = false
             }
         } catch (error) {
-           console.error("Error saving profile:", error)
-           alert("Failed to save profile. Please try again.")
-           setButtonState('default')
-           isSavingRef.current = false
+            console.error("Error saving profile:", error)
+            alert("Failed to save profile. Please try again.")
+            setButtonState('default')
+            isSavingRef.current = false
         }
     }
 

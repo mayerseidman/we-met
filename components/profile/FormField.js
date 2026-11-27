@@ -108,6 +108,7 @@ const FormField = ({ field, value, onChange, showError, onBlur }) => {
                 placeholder={placeholder}
                 className={inputClassName}
                 onBlur={onBlur}
+                autoCapitalize={name === 'name' ? 'words' : undefined}
             />
             {hasError && displayMessage && (
                 <div className={styles.errorMessage}>

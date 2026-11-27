@@ -8,7 +8,6 @@ import ScanQR from "../components/ScanQR";
 import ShowQR from "../components/ShowQR";
 import DevModeToggle from "../components/profile/DevModeToggle";
 import ScanSuccessModal from "../components/ScanSuccessModal";
-import AlreadyConnectedModal from "../components/AlreadyConnectedModal";
 
 import styles from "../styles/pages/Connect.module.scss";
 
@@ -95,7 +94,7 @@ export default function ConnectPage({ onDropdownToggle }) {
         return 'show';
     });
 
-    const devProfile = devMode.noProfile ? null : {
+    const devProfile = (devMode.noProfile || !profile) ? null : {
         ...profile,
         photo: devMode.hasPhoto ? DEV_PHOTO : profile?.photo,
     };
@@ -265,14 +264,6 @@ export default function ConnectPage({ onDropdownToggle }) {
                     isMobile={isMobile}
                 />
             )}
-            {process.env.NODE_ENV === "development" && scanDevMode.alreadyConnected && (
-                <AlreadyConnectedModal
-                    name="Big Maestro"
-                    daysAgo={3}
-                    onDismiss={() => setScanDevMode(prev => ({ ...prev, alreadyConnected: false }))}
-                    isMobile={isMobile}
-                />
-            )}
 
             {/* Real scan modals */}
             {scanSuccessData && (
@@ -280,14 +271,6 @@ export default function ConnectPage({ onDropdownToggle }) {
                     name={scanSuccessData.name}
                     photo={scanSuccessData.photo}
                     onDismiss={() => setScanSuccessData(null)}
-                    isMobile={isMobile}
-                />
-            )}
-            {alreadyConnectedData && (
-                <AlreadyConnectedModal
-                    name={alreadyConnectedData.name}
-                    daysAgo={0}
-                    onDismiss={() => setAlreadyConnectedData(null)}
                     isMobile={isMobile}
                 />
             )}
